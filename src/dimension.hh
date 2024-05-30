@@ -1,9 +1,11 @@
+#pragma once
+
 #include <type_traits>
 
 #include <cstdint>
 #include <ratio>
 
-namespace lmc::units::dimensions
+namespace lmc::units::dimensional
 {
 
 namespace identification
@@ -99,5 +101,5 @@ are_dimensional_vectors_equal() -> bool
                typename vector_b::substance>;
 }
 
-} // namespace lmc::units::dimensions
+} // namespace lmc::units::dimensional
 
