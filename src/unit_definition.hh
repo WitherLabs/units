@@ -30,13 +30,16 @@ struct unit_definition: identification::unit_definition_tag
     using unit_ratio = unit_ratio_t;
 };
 
-using base_unit_ratio  = std::ratio<1>;
-using base_unit_prefix = std::ratio<1>;
+namespace ratios
+{
+using unit_base_ratio  = std::ratio<1>;
+using unit_base_prefix = std::ratio<1>;
 
 template <std::intmax_t num, std::intmax_t den, typename wrt_definition>
 requires identification::is_unit_definition<wrt_definition>::value
 using unit_ratio_wrt = std::
     ratio_multiply<typename wrt_definition::unit_ratio, std::ratio<num, den>>;
+} // namespace ratios
 
 namespace conversion
 {

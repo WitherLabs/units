@@ -60,8 +60,8 @@ public:
           && dimensional::are_dimensional_vectors_equal<
                  typename definition::dimensions,
                  typename unit_container_to::definition::dimensions>::value
-    [[nodiscard]]
-    constexpr
+    [[nodiscard]] constexpr
+    // NOLINTNEXTLINE // we do not want to mark this as explicit
     operator unit_container_to () const noexcept
     {
         return this->convert_to<unit_container_to>();

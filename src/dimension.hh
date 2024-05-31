@@ -11,21 +11,54 @@ namespace lmc::units::dimensional
 namespace identification
 {
 
-#define DEFINE_DIMENSION_IDENTIFIER(name)                                      \
-    struct name##_dimension                                                    \
-    {                                                                          \
-    };                                                                         \
-                                                                               \
-    template <typename t>                                                      \
-    using is_##name##_dimension = std::is_base_of<name##_dimension, t>;
+struct length_dimension
+{
+};
 
-DEFINE_DIMENSION_IDENTIFIER(length)
-DEFINE_DIMENSION_IDENTIFIER(mass)
-DEFINE_DIMENSION_IDENTIFIER(time)
-DEFINE_DIMENSION_IDENTIFIER(current)
-DEFINE_DIMENSION_IDENTIFIER(temperature)
-DEFINE_DIMENSION_IDENTIFIER(luminosity)
-DEFINE_DIMENSION_IDENTIFIER(substance)
+template <typename t>
+using is_length_dimension = std ::is_base_of<length_dimension, t>;
+
+struct mass_dimension
+{
+};
+
+template <typename t>
+using is_mass_dimension = std ::is_base_of<mass_dimension, t>;
+
+struct time_dimension
+{
+};
+
+template <typename t>
+using is_time_dimension = std ::is_base_of<time_dimension, t>;
+
+struct current_dimension
+{
+};
+
+template <typename t>
+using is_current_dimension = std ::is_base_of<current_dimension, t>;
+
+struct temperature_dimension
+{
+};
+
+template <typename t>
+using is_temperature_dimension = std ::is_base_of<temperature_dimension, t>;
+
+struct luminosity_dimension
+{
+};
+
+template <typename t>
+using is_luminosity_dimension = std ::is_base_of<luminosity_dimension, t>;
+
+struct substance_dimension
+{
+};
+
+template <typename t>
+using is_substance_dimension = std ::is_base_of<substance_dimension, t>;
 
 struct dimensional_vector_tag
 {
@@ -36,21 +69,54 @@ using is_dimensional_vector = std::is_base_of<dimensional_vector_tag, t>;
 
 } // namespace identification
 
-#define DEFINE_BASIC_DIMENSIONAL_RATIO(name)                                   \
-    template <std::intmax_t num, std::intmax_t den = 1>                        \
-    struct name                                                                \
-    : public identification::name##_dimension                                  \
-    , public std::ratio<num, den>                                              \
-    {                                                                          \
-    };
+template <std ::intmax_t num, std ::intmax_t den = 1>
+struct length
+: public identification ::length_dimension
+, public std ::ratio<num, den>
+{
+};
 
-DEFINE_BASIC_DIMENSIONAL_RATIO(length)
-DEFINE_BASIC_DIMENSIONAL_RATIO(mass)
-DEFINE_BASIC_DIMENSIONAL_RATIO(time)
-DEFINE_BASIC_DIMENSIONAL_RATIO(current)
-DEFINE_BASIC_DIMENSIONAL_RATIO(temperature)
-DEFINE_BASIC_DIMENSIONAL_RATIO(luminosity)
-DEFINE_BASIC_DIMENSIONAL_RATIO(substance)
+template <std ::intmax_t num, std ::intmax_t den = 1>
+struct mass
+: public identification ::mass_dimension
+, public std ::ratio<num, den>
+{
+};
+
+template <std ::intmax_t num, std ::intmax_t den = 1>
+struct time
+: public identification ::time_dimension
+, public std ::ratio<num, den>
+{
+};
+
+template <std ::intmax_t num, std ::intmax_t den = 1>
+struct current
+: public identification ::current_dimension
+, public std ::ratio<num, den>
+{
+};
+
+template <std ::intmax_t num, std ::intmax_t den = 1>
+struct temperature
+: public identification ::temperature_dimension
+, public std ::ratio<num, den>
+{
+};
+
+template <std ::intmax_t num, std ::intmax_t den = 1>
+struct luminosity
+: public identification ::luminosity_dimension
+, public std ::ratio<num, den>
+{
+};
+
+template <std ::intmax_t num, std ::intmax_t den = 1>
+struct substance
+: public identification ::substance_dimension
+, public std ::ratio<num, den>
+{
+};
 
 template <
     typename length_dimension,
