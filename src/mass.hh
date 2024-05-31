@@ -8,3 +8,43 @@ LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
     grams,
     lmc::units::ratios::unit_base_ratio
 )
+LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
+    mass,
+    pounds,
+    (lmc::units::ratios::unit_ratio_wrt<45359237, 100000000, kilograms>)
+)
+LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
+    mass,
+    grains,
+    (lmc::units::ratios::unit_ratio_wrt<1, 7000, pounds>)
+)
+LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
+    mass,
+    drachms,
+    (lmc::units::ratios::unit_ratio_wrt<1, 256, pounds>)
+)
+LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
+    mass,
+    ounces,
+    (lmc::units::ratios::unit_ratio_wrt<1, 16, pounds>)
+)
+LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
+    mass,
+    stones,
+    (lmc::units::ratios::unit_ratio_wrt<14, 1, pounds>)
+)
+LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
+    mass,
+    quarters,
+    (lmc::units::ratios::unit_ratio_wrt<28, 1, pounds>)
+)
+LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
+    mass,
+    hundredweights,
+    (lmc::units::ratios::unit_ratio_wrt<112, 1, pounds>)
+)
+LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
+    mass,
+    tons,
+    (lmc::units::ratios::unit_ratio_wrt<2240, 1, pounds>)
+)
