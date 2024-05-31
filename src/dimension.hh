@@ -79,27 +79,31 @@ struct dimensional_vector: identification::dimensional_vector_tag
 };
 
 template <typename vector_a, typename vector_b>
-requires identification::is_dimensional_vector<vector_a>::value
-      && identification::is_dimensional_vector<vector_b>::value
-[[nodiscard]]
-constexpr auto
-are_dimensional_vectors_equal() -> bool
+struct are_dimensional_vectors_equal
+: std::conditional_t<
+      identification::is_dimensional_vector<vector_a>::value
+          && identification::is_dimensional_vector<vector_b>::value
+          && std::
+              is_same_v<typename vector_a::length, typename vector_b::length>
+          && std::is_same_v<typename vector_a::mass, typename vector_b::mass>
+          && std::is_same_v<typename vector_a::time, typename vector_b::time>
+          && std::
+              is_same_v<typename vector_a::current, typename vector_b::current>
+          && std::is_same_v<
+              typename vector_a::temperature,
+              typename vector_b::temperature>
+          && std::is_same_v<
+              typename vector_a::luminosity,
+              typename vector_b::luminosity>
+          && std::is_same_v<
+              typename vector_a::substance,
+              typename vector_b::substance>
+
+      ,
+      std::true_type,
+      std::false_type>
 {
-    return std::is_same_v<typename vector_a::length, typename vector_b::length>
-        && std::is_same_v<typename vector_a::mass, typename vector_b::mass>
-        && std::is_same_v<typename vector_a::time, typename vector_b::time>
-        && std::
-               is_same_v<typename vector_a::current, typename vector_b::current>
-        && std::is_same_v<
-               typename vector_a::temperature,
-               typename vector_b::temperature>
-        && std::is_same_v<
-               typename vector_a::luminosity,
-               typename vector_b::luminosity>
-        && std::is_same_v<
-               typename vector_a::substance,
-               typename vector_b::substance>;
-}
+};
 
 } // namespace lmc::units::dimensional
 
