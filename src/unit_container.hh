@@ -1,6 +1,9 @@
 #pragma once
 
 #include "unit_definition.hh"
+#include "util.hh"
+
+#include <ratio>
 
 namespace lmc::units
 {
@@ -48,10 +51,25 @@ public:
                  typename unit_container_to::definition::dimensions>::value
     [[nodiscard]]
     constexpr auto
+    get_delta_to() const noexcept -> long double
+    {
+        return util::convert_ratio_to_real<std::ratio_subtract<
+            typename unit_container_to::definition::delta,
+            typename definition::delta>>();
+    }
+
+    template <typename unit_container_to>
+    requires identification::is_unit_container<unit_container_to>::value
+          && dimensional::are_dimensional_vectors_equal<
+                 typename definition::dimensions,
+                 typename unit_container_to::definition::dimensions>::value
+    [[nodiscard]]
+    constexpr auto
     convert_to() const noexcept -> unit_container_to
     {
         return unit_container_to {
-            this->get_conversion_factor_to<unit_container_to>() * _measurement
+            this->get_conversion_factor_to<unit_container_to>()
+            * (_measurement + this->get_delta_to<unit_container_to>())
         };
     }
 

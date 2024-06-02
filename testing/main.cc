@@ -1,4 +1,7 @@
 #include "length.hh"
+#include "temperature.hh"
+#include "unit_container.hh"
+#include "unit_definition.hh"
 
 #include <iostream>
 #include <ostream>
@@ -20,42 +23,25 @@ lmc::units::length::nautical_miles constexpr m13 { 1 };
 lmc::units::length::links constexpr m14 { 1 };
 lmc::units::length::rods constexpr m15 { 1 };
 
+lmc::units::temperature::kelvins constexpr k { 0 };
+lmc::units::temperature::celsius constexpr d { k };
+lmc::units::temperature::kelvins constexpr k2 { d };
+lmc::units::temperature::fahrenheit constexpr fd { d };
+lmc::units::temperature::fahrenheit constexpr fk { k };
+
+long double constexpr x = d.get_measurement();
+long double constexpr y = fd.get_measurement();
+long double constexpr z = fk.get_measurement();
+long double constexpr w = k2.get_measurement();
+
 auto
 main() -> int
 {
     std::println(
         std::cout,
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n"
-        "to m = {}\n",
-        m0.convert_to<lmc::units::length::meters>().get_measurement(),
-        m1.convert_to<lmc::units::length::meters>().get_measurement(),
-        m2.convert_to<lmc::units::length::meters>().get_measurement(),
-        m3.convert_to<lmc::units::length::meters>().get_measurement(),
-        m4.convert_to<lmc::units::length::meters>().get_measurement(),
-        m5.convert_to<lmc::units::length::meters>().get_measurement(),
-        m6.convert_to<lmc::units::length::meters>().get_measurement(),
-        m7.convert_to<lmc::units::length::meters>().get_measurement(),
-        m8.convert_to<lmc::units::length::meters>().get_measurement(),
-        m9.convert_to<lmc::units::length::meters>().get_measurement(),
-        m10.convert_to<lmc::units::length::meters>().get_measurement(),
-        m11.convert_to<lmc::units::length::meters>().get_measurement(),
-        m12.convert_to<lmc::units::length::meters>().get_measurement(),
-        m13.convert_to<lmc::units::length::meters>().get_measurement(),
-        m14.convert_to<lmc::units::length::meters>().get_measurement(),
-        m15.convert_to<lmc::units::length::meters>().get_measurement()
+        "K = {}, D = {}, F = {}",
+        k.get_measurement(),
+        d.get_measurement(),
+        fk.get_measurement()
     );
 }

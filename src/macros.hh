@@ -86,14 +86,16 @@ template <typename t, typename u> struct extract_argument_type<t(u)>
     dimension_name,                                                            \
     name,                                                                      \
     prefix,                                                                    \
-    base_ratio                                                                 \
+    base_ratio,                                                                \
+    delta_ratio                                                                \
 )                                                                              \
     namespace lmc::units::dimension_name::definition                           \
     {                                                                          \
     using name = unit_definition<                                              \
         dimension,                                                             \
         extract_argument_type<void(prefix)>::type,                             \
-        extract_argument_type<void(base_ratio)>::type>;                        \
+        extract_argument_type<void(base_ratio)>::type,                         \
+        extract_argument_type<void(delta_ratio)>::type>;                       \
     }
 
 #define LMC_UNITS_DEFINE_UNIT_CONTAINER(dimension_name, name)                  \
@@ -102,8 +104,20 @@ template <typename t, typename u> struct extract_argument_type<t(u)>
     using name = dimension_name##_unit<definition::name>;                      \
     }
 
-#define LMC_UNITS_DEFINE_UNIT_WHOLE(dimension_name, name, prefix, base_ratio)  \
-    LMC_UNITS_DEFINE_UNIT_DEFINITION(dimension_name, name, prefix, base_ratio) \
+#define LMC_UNITS_DEFINE_UNIT_WHOLE(                                           \
+    dimension_name,                                                            \
+    name,                                                                      \
+    prefix,                                                                    \
+    base_ratio,                                                                \
+    delta_ratio                                                                \
+)                                                                              \
+    LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
+        dimension_name,                                                        \
+        name,                                                                  \
+        prefix,                                                                \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
+    )                                                                          \
     LMC_UNITS_DEFINE_UNIT_CONTAINER(dimension_name, name)
 
 //
@@ -113,109 +127,127 @@ template <typename t, typename u> struct extract_argument_type<t(u)>
 #define LMC_UNITS_DEFINE_UNIT_DEFINITION_WITH_SI_PREFIXES(                     \
     dimension_name,                                                            \
     name,                                                                      \
-    base_ratio                                                                 \
+    base_ratio,                                                                \
+    delta_ratio                                                                \
 )                                                                              \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         exa##name,                                                             \
         std::exa,                                                              \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         peta##name,                                                            \
         std::peta,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         tera##name,                                                            \
         std::tera,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         giga##name,                                                            \
         std::giga,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         mega##name,                                                            \
         std::mega,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         kilo##name,                                                            \
         std::kilo,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         hecto##name,                                                           \
         std::hecto,                                                            \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         deca##name,                                                            \
         std::deca,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         name,                                                                  \
         std::ratio<1>,                                                         \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         deci##name,                                                            \
         std::deci,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         centi##name,                                                           \
         std::centi,                                                            \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         milli##name,                                                           \
         std::milli,                                                            \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         micro##name,                                                           \
         std::micro,                                                            \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         nano##name,                                                            \
         std::nano,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         pico##name,                                                            \
         std::pico,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         femto##name,                                                           \
         std::femto,                                                            \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_DEFINITION(                                          \
         dimension_name,                                                        \
         atto##name,                                                            \
         std::atto,                                                             \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )
 
 #define LMC_UNITS_DEFINE_UNIT_CONTAINER_WITH_SI_PREFIXES(dimension_name, name) \
@@ -240,12 +272,14 @@ template <typename t, typename u> struct extract_argument_type<t(u)>
 #define LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(                          \
     dimension_name,                                                            \
     name,                                                                      \
-    base_ratio                                                                 \
+    base_ratio,                                                                \
+    delta_ratio                                                                \
 )                                                                              \
     LMC_UNITS_DEFINE_UNIT_DEFINITION_WITH_SI_PREFIXES(                         \
         dimension_name,                                                        \
         name,                                                                  \
-        base_ratio                                                             \
+        base_ratio,                                                            \
+        delta_ratio                                                            \
     )                                                                          \
     LMC_UNITS_DEFINE_UNIT_CONTAINER_WITH_SI_PREFIXES(dimension_name, name)
 

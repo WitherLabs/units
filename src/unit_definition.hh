@@ -20,25 +20,57 @@ using is_unit_definition = std::is_base_of<unit_definition_tag, t>;
 
 } // namespace identification
 
-template <typename dimensions_t, typename prefix_t, typename unit_ratio_t>
+template <
+    typename dimensions_t,
+    typename prefix_t,
+    typename unit_ratio_t,
+    typename delta_t>
 requires dimensional::identification::is_dimensional_vector<dimensions_t>::value
       && util::is_ratio<prefix_t>::value && util::is_ratio<unit_ratio_t>::value
+      && util::is_ratio<delta_t>::value
 struct unit_definition: identification::unit_definition_tag
 {
     using dimensions = dimensions_t;
     using prefix     = prefix_t;
     using unit_ratio = unit_ratio_t;
+    using delta      = delta_t;
 };
+
+template <
+    typename base_unit_t,
+    typename prefix_t,
+    typename unit_ratio_t,
+    typename delta_t>
+requires identification::is_unit_definition<base_unit_t>::value
+          && util::is_ratio<prefix_t>::value
+          && util::is_ratio<unit_ratio_t>::value
+          && util::is_ratio<delta_t>::value
+using derived_unit_definition = unit_definition<
+    typename base_unit_t::dimensions,
+    std::ratio_multiply<typename base_unit_t::prefix, prefix_t>,
+    std::ratio_multiply<typename base_unit_t::unit_ratio, unit_ratio_t>,
+    std::ratio_add<
+        std::ratio_multiply<typename base_unit_t::unit_ratio, delta_t>,
+        typename base_unit_t::delta>>;
 
 namespace ratios
 {
 using unit_base_ratio  = std::ratio<1>;
 using unit_base_prefix = std::ratio<1>;
+using unit_base_delta  = std::ratio<0>;
 
 template <std::intmax_t num, std::intmax_t den, typename wrt_definition>
 requires identification::is_unit_definition<wrt_definition>::value
 using unit_ratio_wrt = std::
     ratio_multiply<typename wrt_definition::unit_ratio, std::ratio<num, den>>;
+
+template <std::intmax_t num, std::intmax_t den, typename wrt_definition>
+requires identification::is_unit_definition<wrt_definition>::value
+using unit_delta_wrt = std::ratio_add<
+    std::ratio_multiply<
+        typename wrt_definition::unit_ratio,
+        std::ratio<num, den>>,
+    typename wrt_definition::delta>;
 } // namespace ratios
 
 namespace conversion
