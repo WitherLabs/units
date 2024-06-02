@@ -11,54 +11,91 @@ namespace lmc::units::dimensional
 namespace identification
 {
 
-struct length_dimension
+// Length
+
+struct length_dimension_tag
 {
 };
 
 template <typename t>
-using is_length_dimension = std ::is_base_of<length_dimension, t>;
+using is_length_dimension = std::is_base_of<length_dimension_tag, t>;
 
-struct mass_dimension
+template <typename t>
+bool constexpr is_length_dimension_v = is_length_dimension<t>::value;
+
+// Mass
+
+struct mass_dimension_tag
 {
 };
 
 template <typename t>
-using is_mass_dimension = std ::is_base_of<mass_dimension, t>;
+using is_mass_dimension = std::is_base_of<mass_dimension_tag, t>;
 
-struct time_dimension
+template <typename t>
+bool constexpr is_mass_dimension_v = is_mass_dimension<t>::value;
+
+// Time
+
+struct time_dimension_tag
 {
 };
 
 template <typename t>
-using is_time_dimension = std ::is_base_of<time_dimension, t>;
+using is_time_dimension_tag = std::is_base_of<time_dimension_tag, t>;
 
-struct current_dimension
+template <typename t>
+bool constexpr is_time_dimension_v = is_time_dimension_tag<t>::value;
+
+// Current
+
+struct current_dimension_tag
 {
 };
 
 template <typename t>
-using is_current_dimension = std ::is_base_of<current_dimension, t>;
+using is_current_dimension = std::is_base_of<current_dimension_tag, t>;
 
-struct temperature_dimension
+template <typename t>
+bool constexpr is_current_dimension_v = is_current_dimension<t>::value;
+
+// Temperature
+
+struct temperature_dimension_tag
 {
 };
 
 template <typename t>
-using is_temperature_dimension = std ::is_base_of<temperature_dimension, t>;
+using is_temperature_dimension = std::is_base_of<temperature_dimension_tag, t>;
 
-struct luminosity_dimension
+template <typename t>
+bool constexpr is_temperature_dimension_v = is_temperature_dimension<t>::value;
+
+// Luminosity
+
+struct luminosity_dimension_tag
 {
 };
 
 template <typename t>
-using is_luminosity_dimension = std ::is_base_of<luminosity_dimension, t>;
+using is_luminosity_dimension = std::is_base_of<luminosity_dimension_tag, t>;
 
-struct substance_dimension
+template <typename t>
+bool constexpr is_luminosity_dimension_v = is_luminosity_dimension<t>::value;
+
+// Substance
+
+struct substance_dimension_tag
 {
 };
 
 template <typename t>
-using is_substance_dimension = std ::is_base_of<substance_dimension, t>;
+using is_substance_dimension = std::is_base_of<substance_dimension_tag, t>;
+
+template <typename t>
+bool constexpr is_substance_dimension_v = is_substance_dimension<t>::value;
+
+// Dimensional Vector
 
 struct dimensional_vector_tag
 {
@@ -67,109 +104,120 @@ struct dimensional_vector_tag
 template <typename t>
 using is_dimensional_vector = std::is_base_of<dimensional_vector_tag, t>;
 
+template <typename t>
+bool constexpr is_dimensional_vector_v = is_dimensional_vector<t>::value;
+
 } // namespace identification
 
-template <std ::intmax_t num, std ::intmax_t den = 1>
+template <std::intmax_t num, std::intmax_t den = 1>
 struct length
-: public identification ::length_dimension
-, public std ::ratio<num, den>
+: identification::length_dimension_tag
+, public std::ratio<num, den>
 {
 };
 
-template <std ::intmax_t num, std ::intmax_t den = 1>
+template <std::intmax_t num, std::intmax_t den = 1>
 struct mass
-: public identification ::mass_dimension
-, public std ::ratio<num, den>
+: identification::mass_dimension_tag
+, public std::ratio<num, den>
 {
 };
 
-template <std ::intmax_t num, std ::intmax_t den = 1>
+template <std::intmax_t num, std::intmax_t den = 1>
 struct time
-: public identification ::time_dimension
-, public std ::ratio<num, den>
+: identification::time_dimension_tag
+, public std::ratio<num, den>
 {
 };
 
-template <std ::intmax_t num, std ::intmax_t den = 1>
+template <std::intmax_t num, std::intmax_t den = 1>
 struct current
-: public identification ::current_dimension
-, public std ::ratio<num, den>
+: identification::current_dimension_tag
+, public std::ratio<num, den>
 {
 };
 
-template <std ::intmax_t num, std ::intmax_t den = 1>
+template <std::intmax_t num, std::intmax_t den = 1>
 struct temperature
-: public identification ::temperature_dimension
-, public std ::ratio<num, den>
+: identification::temperature_dimension_tag
+, public std::ratio<num, den>
 {
 };
 
-template <std ::intmax_t num, std ::intmax_t den = 1>
+template <std::intmax_t num, std::intmax_t den = 1>
 struct luminosity
-: public identification ::luminosity_dimension
-, public std ::ratio<num, den>
+: identification::luminosity_dimension_tag
+, public std::ratio<num, den>
 {
 };
 
-template <std ::intmax_t num, std ::intmax_t den = 1>
+template <std::intmax_t num, std::intmax_t den = 1>
 struct substance
-: public identification ::substance_dimension
-, public std ::ratio<num, den>
+: identification::substance_dimension_tag
+, public std::ratio<num, den>
 {
 };
 
 template <
-    typename length_dimension,
-    typename mass_dimension,
-    typename time_dimension,
-    typename current_dimension,
-    typename temperature_dimension,
-    typename luminosity_dimension,
-    typename substance_dimension>
-requires identification::is_length_dimension<length_dimension>::value
-      && identification::is_mass_dimension<mass_dimension>::value
-      && identification::is_time_dimension<time_dimension>::value
-      && identification::is_current_dimension<current_dimension>::value
-      && identification::is_temperature_dimension<temperature_dimension>::value
-      && identification::is_luminosity_dimension<luminosity_dimension>::value
-      && identification::is_substance_dimension<substance_dimension>::value
+    typename length_t,
+    typename mass_t,
+    typename time_t,
+    typename current_t,
+    typename temperature_t,
+    typename luminosity_t,
+    typename substance_t>
+requires identification::is_length_dimension_v<length_t>
+      && identification::is_mass_dimension_v<mass_t>
+      && identification::is_time_dimension_v<time_t>
+      && identification::is_current_dimension_v<current_t>
+      && identification::is_temperature_dimension_v<temperature_t>
+      && identification::is_luminosity_dimension_v<luminosity_t>
+      && identification::is_substance_dimension_v<substance_t>
 struct dimensional_vector: identification::dimensional_vector_tag
 {
-    using length      = length_dimension;
-    using mass        = mass_dimension;
-    using time        = time_dimension;
-    using current     = current_dimension;
-    using temperature = temperature_dimension;
-    using luminosity  = luminosity_dimension;
-    using substance   = substance_dimension;
+    using length      = length_t;
+    using mass        = mass_t;
+    using time        = time_t;
+    using current     = current_t;
+    using temperature = temperature_t;
+    using luminosity  = luminosity_t;
+    using substance   = substance_t;
 };
 
-template <typename vector_a, typename vector_b>
-struct are_dimensional_vectors_equal
+template <typename vector_a_t, typename vector_b_t>
+struct dimensional_vectors_are_equal
 : std::conditional_t<
-      identification::is_dimensional_vector<vector_a>::value
-          && identification::is_dimensional_vector<vector_b>::value
+      identification::is_dimensional_vector_v<vector_a_t>
+          && identification::is_dimensional_vector_v<vector_b_t>
+          && std::is_same_v<
+              typename vector_a_t::length,
+              typename vector_b_t::length>
           && std::
-              is_same_v<typename vector_a::length, typename vector_b::length>
-          && std::is_same_v<typename vector_a::mass, typename vector_b::mass>
-          && std::is_same_v<typename vector_a::time, typename vector_b::time>
+              is_same_v<typename vector_a_t::mass, typename vector_b_t::mass>
           && std::
-              is_same_v<typename vector_a::current, typename vector_b::current>
+              is_same_v<typename vector_a_t::time, typename vector_b_t::time>
           && std::is_same_v<
-              typename vector_a::temperature,
-              typename vector_b::temperature>
+              typename vector_a_t::current,
+              typename vector_b_t::current>
           && std::is_same_v<
-              typename vector_a::luminosity,
-              typename vector_b::luminosity>
+              typename vector_a_t::temperature,
+              typename vector_b_t::temperature>
           && std::is_same_v<
-              typename vector_a::substance,
-              typename vector_b::substance>
+              typename vector_a_t::luminosity,
+              typename vector_b_t::luminosity>
+          && std::is_same_v<
+              typename vector_a_t::substance,
+              typename vector_b_t::substance>
 
       ,
       std::true_type,
       std::false_type>
 {
 };
+
+template <typename vector_a_t, typename vector_b_t>
+bool constexpr dimensional_vectors_are_equal_v
+    = dimensional_vectors_are_equal<vector_a_t, vector_b_t>::value;
 
 } // namespace lmc::units::dimensional
 

@@ -19,7 +19,7 @@ using is_unit_container = std::is_base_of<unit_container_tag, t>;
 } // namespace identification
 
 template <typename unit_def>
-requires identification::is_unit_definition<unit_def>::value
+requires identification::is_unit_definition_v<unit_def>
 class unit_container: identification::unit_container_tag
 {
 public:
@@ -32,9 +32,9 @@ public:
 
     template <typename unit_container_to>
     requires identification::is_unit_container<unit_container_to>::value
-          && dimensional::are_dimensional_vectors_equal<
+          && dimensional::dimensional_vectors_are_equal_v<
                  typename definition::dimensions,
-                 typename unit_container_to::definition::dimensions>::value
+                 typename unit_container_to::definition::dimensions>
     [[nodiscard]]
     constexpr auto
     get_conversion_factor_to() const noexcept -> long double
@@ -46,9 +46,9 @@ public:
 
     template <typename unit_container_to>
     requires identification::is_unit_container<unit_container_to>::value
-          && dimensional::are_dimensional_vectors_equal<
+          && dimensional::dimensional_vectors_are_equal_v<
                  typename definition::dimensions,
-                 typename unit_container_to::definition::dimensions>::value
+                 typename unit_container_to::definition::dimensions>
     [[nodiscard]]
     constexpr auto
     get_delta_to() const noexcept -> long double
@@ -60,9 +60,9 @@ public:
 
     template <typename unit_container_to>
     requires identification::is_unit_container<unit_container_to>::value
-          && dimensional::are_dimensional_vectors_equal<
+          && dimensional::dimensional_vectors_are_equal_v<
                  typename definition::dimensions,
-                 typename unit_container_to::definition::dimensions>::value
+                 typename unit_container_to::definition::dimensions>
     [[nodiscard]]
     constexpr auto
     convert_to() const noexcept -> unit_container_to
@@ -75,9 +75,9 @@ public:
 
     template <typename unit_container_to>
     requires identification::is_unit_container<unit_container_to>::value
-          && dimensional::are_dimensional_vectors_equal<
+          && dimensional::dimensional_vectors_are_equal_v<
                  typename definition::dimensions,
-                 typename unit_container_to::definition::dimensions>::value
+                 typename unit_container_to::definition::dimensions>
     [[nodiscard]] constexpr
     // NOLINTNEXTLINE // we do not want to mark this as explicit
     operator unit_container_to () const noexcept

@@ -43,11 +43,10 @@ template <typename t, typename u> struct extract_argument_type<t(u)>
         = std::is_base_of<dimension_name##_unit_tag, t>;                       \
                                                                                \
     template <typename definition>                                             \
-    requires lmc::units::dimensional::are_dimensional_vectors_equal<           \
+    requires lmc::units::dimensional::dimensional_vectors_are_equal_v<         \
                  typename definition::dimensions,                              \
-                 dimension>::value                                             \
-              && lmc::units::identification::is_unit_definition<               \
-                  definition>::value                                           \
+                 dimension>                                                    \
+              && lmc::units::identification::is_unit_definition_v<definition>  \
     struct dimension_name##_unit                                               \
     : public lmc::units::unit_container<definition>                            \
     , dimension_name##_unit_tag                                                \

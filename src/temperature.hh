@@ -6,8 +6,8 @@ LMC_UNITS_DEFINE_UNIT_FRAMEWORK(temperature, length<0>, mass<0>, time<0>, curren
 LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
     temperature,
     kelvins,
-    lmc::units::ratios::unit_base_ratio,
-    lmc::units::ratios::unit_base_delta
+    lmc::units::ratios::base_unit_ratio,
+    lmc::units::ratios::base_unit_delta
 )
 
 LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(

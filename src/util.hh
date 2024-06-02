@@ -15,6 +15,8 @@ struct is_ratio<std::ratio<num, den>>: std::true_type
 {
 };
 
+template <typename r> bool constexpr is_ratio_v = is_ratio<r>::value;
+
 template <typename r>
 [[nodiscard]]
 constexpr auto
