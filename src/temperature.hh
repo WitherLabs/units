@@ -1,7 +1,6 @@
 #pragma once
 
 #include "macros.hh"
-#include "unit_definition.hh"
 
 LMC_UNITS_DEFINE_UNIT_FRAMEWORK(temperature, length<0>, mass<0>, time<0>, current<1>, temperature<1>, luminosity<0>, substance<0>)
 LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
