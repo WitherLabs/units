@@ -2,7 +2,7 @@
 
 #include "macros.hh"
 
-LMC_UNITS_DEFINE_UNIT_FRAMEWORK(temperature, length<0>, mass<0>, time<0>, current<1>, temperature<1>, luminosity<0>, substance<0>)
+LMC_UNITS_DEFINE_UNIT_FRAMEWORK(temperature, length<0>, mass<0>, time<0>, current<0>, temperature<1>, luminosity<0>, substance<0>)
 LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
     temperature,
     kelvins,
