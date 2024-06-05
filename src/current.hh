@@ -1,12 +1,33 @@
 #pragma once
 
-#include "macros.hh"
+#include "prefixes.hh"
+#include "unit_container.hh"
 
-LMC_UNITS_DEFINE_UNIT_FRAMEWORK(current, length<0>, mass<0>, time<0>, current<1>, temperature<0>, luminosity<0>, substance<0>)
+namespace lmc::units::current
+{
 
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    current,
-    amperes,
-    lmc::units::ratios::base_unit_ratio,
-    lmc::units::ratios::base_unit_delta
-)
+using dimension = impl::dim::dimensional_vector<
+    impl::dim::length<0>,
+    impl::dim::mass<0>,
+    impl::dim::time<0>,
+    impl::dim::current<1>,
+    impl::dim::temperature<0>,
+    impl::dim::luminosity<0>,
+    impl::dim::substance<0>>;
+
+template <impl::cnt::cpt::unit_container container>
+using is_current_unit
+    = dimension::equals<typename container::definition::dimension>;
+
+template <impl::cnt::cpt::unit_container container>
+constexpr bool is_current_unit_v = is_current_unit<container>::value;
+
+using amperes = impl::cnt::unit_container<impl::def::unit_definition<
+    dimension,
+    impl::cmp::base_unit_prefix,
+    impl::cmp::base_unit_ratio,
+    impl::cmp::base_unit_delta>>;
+
+ADD_PREFIXES_TO_CONTAINER(amperes)
+
+} // namespace lmc::units::current

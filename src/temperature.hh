@@ -1,26 +1,46 @@
 #pragma once
 
-#include "macros.hh"
+#include "prefixes.hh"
+#include "unit_container.hh"
+#include "unit_definition.hh"
 
-LMC_UNITS_DEFINE_UNIT_FRAMEWORK(temperature, length<0>, mass<0>, time<0>, current<0>, temperature<1>, luminosity<0>, substance<0>)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    temperature,
-    kelvins,
-    lmc::units::ratios::base_unit_ratio,
-    lmc::units::ratios::base_unit_delta
-)
+namespace lmc::units::temperature
+{
 
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    temperature,
-    celsius,
-    (lmc::units::ratios::unit_ratio_wrt<1, 1, kelvins>),
-    (std::ratio<-27315, 100>)
-)
+using dimension = impl::dim::dimensional_vector<
+    impl::dim::length<0>,
+    impl::dim::mass<0>,
+    impl::dim::time<0>,
+    impl::dim::current<0>,
+    impl::dim::temperature<1>,
+    impl::dim::luminosity<0>,
+    impl::dim::substance<0>>;
 
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    temperature,
-    fahrenheit,
-    (lmc::units::ratios::unit_ratio_wrt<5, 9, celsius>),
-    (lmc::units::ratios::unit_delta_wrt<160, 9, celsius>)
-)
+template <impl::cnt::cpt::unit_container container>
+using is_temperature_unit
+    = dimension::equals<typename container::definition::dimension>;
 
+template <impl::cnt::cpt::unit_container container>
+constexpr bool is_temperature_unit_v = is_temperature_unit<container>::value;
+
+using kelvins    = impl::cnt::unit_container<impl::def::unit_definition<
+    dimension,
+    impl::cmp::base_unit_prefix,
+    impl::cmp::base_unit_ratio,
+    impl::cmp::base_unit_delta>>;
+
+using celsius    = impl::cnt::unit_container<impl::def::unit_definition<
+    dimension,
+    impl::cmp::base_unit_prefix,
+    impl::def::derive_unit_ratio<std::ratio<1>, kelvins::definition>,
+    impl::cmp::unit_delta<std::ratio<-27315, 100>>>>;
+
+using fahrenheit = impl::cnt::unit_container<impl::def::unit_definition<
+    dimension,
+    impl::cmp::base_unit_prefix,
+    impl::def::derive_unit_ratio<std::ratio<5, 9>, celsius::definition>,
+    impl::def::derive_unit_delta<celsius::definition, std::ratio<160, 9>>>>;
+
+ADD_PREFIXES_TO_CONTAINER(kelvins)
+
+} // namespace lmc::units::temperature

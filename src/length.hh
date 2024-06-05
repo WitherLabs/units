@@ -1,108 +1,51 @@
 #pragma once
 
-#include "macros.hh"
+#include "prefixes.hh"
+#include "unit_container.hh"
 
-LMC_UNITS_DEFINE_UNIT_FRAMEWORK(length, length<1>, mass<0>, time<0>, current<0>, temperature<0>, luminosity<0>, substance<0>)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    meters,
-    lmc::units::ratios::base_unit_ratio,
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    feet,
-    (lmc::units::ratios::unit_ratio_wrt<381, 1250, meters>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    twips,
-    (lmc::units::ratios::unit_ratio_wrt<1, 17280, feet>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    thous,
-    (lmc::units::ratios::unit_ratio_wrt<1, 12000, feet>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    barleycorns,
-    (lmc::units::ratios::unit_ratio_wrt<1, 36, feet>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    inches,
-    (lmc::units::ratios::unit_ratio_wrt<3, 1, barleycorns>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    hands,
-    (lmc::units::ratios::unit_ratio_wrt<4, 1, inches>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    yards,
-    (lmc::units::ratios::unit_ratio_wrt<3, 1, feet>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    chains,
-    (lmc::units::ratios::unit_ratio_wrt<22, 1, yards>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    furlongs,
-    (lmc::units::ratios::unit_ratio_wrt<10, 1, chains>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    miles,
-    (lmc::units::ratios::unit_ratio_wrt<8, 1, furlongs>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    leagues,
-    (lmc::units::ratios::unit_ratio_wrt<3, 1, miles>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    fathoms,
-    (lmc::units::ratios::unit_ratio_wrt<463, 250, meters>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    cables,
-    (lmc::units::ratios::unit_ratio_wrt<100, 1, fathoms>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    nautical_miles,
-    (lmc::units::ratios::unit_ratio_wrt<10, 1, cables>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    links,
-    (lmc::units::ratios::unit_ratio_wrt<66, 100, feet>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    length,
-    rods,
-    (lmc::units::ratios::unit_ratio_wrt<25, 1, links>),
-    lmc::units::ratios::base_unit_delta
-)
+namespace lmc::units::length
+{
+
+using dimension = impl::dim::dimensional_vector<
+    impl::dim::length<1>,
+    impl::dim::mass<0>,
+    impl::dim::time<0>,
+    impl::dim::current<0>,
+    impl::dim::temperature<0>,
+    impl::dim::luminosity<0>,
+    impl::dim::substance<0>>;
+
+template <impl::cnt::cpt::unit_container container>
+using is_length_unit
+    = dimension::equals<typename container::definition::dimension>;
+
+template <impl::cnt::cpt::unit_container container>
+constexpr bool is_length_unit_v = is_length_unit<container>::value;
+
+using meters         = impl::cnt::unit_container<impl::def::unit_definition<
+    dimension,
+    impl::cmp::base_unit_prefix,
+    impl::cmp::base_unit_ratio,
+    impl::cmp::base_unit_delta>>;
+
+using feet           = impl::abbr::derive<std::ratio<381, 1250>, meters>;
+using twips          = impl::abbr::derive<std::ratio<1, 17280>, feet>;
+using thous          = impl::abbr::derive<std::ratio<1, 12000>, feet>;
+using barleycorns    = impl::abbr::derive<std::ratio<1, 36>, feet>;
+using inches         = impl::abbr::derive<std::ratio<3>, barleycorns>;
+using hands          = impl::abbr::derive<std::ratio<4>, inches>;
+using yards          = impl::abbr::derive<std::ratio<3>, feet>;
+using chains         = impl::abbr::derive<std::ratio<22>, yards>;
+using furlongs       = impl::abbr::derive<std::ratio<10>, chains>;
+using miles          = impl::abbr::derive<std::ratio<8>, furlongs>;
+using leagues        = impl::abbr::derive<std::ratio<3>, miles>;
+using fathoms        = impl::abbr::derive<std::ratio<463, 250>, meters>;
+using cables         = impl::abbr::derive<std::ratio<100>, fathoms>;
+using nautical_miles = impl::abbr::derive<std::ratio<10>, cables>;
+using links          = impl::abbr::derive<std::ratio<66, 100>, feet>;
+using rods           = impl::abbr::derive<std::ratio<25>, links>;
+
+ADD_PREFIXES_TO_CONTAINER(meters)
+
+} // namespace lmc::units::length
 

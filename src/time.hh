@@ -1,89 +1,47 @@
 #pragma once
 
-#include "macros.hh"
+#include "prefixes.hh"
+#include "unit_container.hh"
 
-LMC_UNITS_DEFINE_UNIT_FRAMEWORK(time, length<0>, mass<0>, time<1>, current<0>, temperature<0>, luminosity<0>, substance<0>)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    seconds,
-    lmc::units::ratios::base_unit_ratio,
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    minutes,
-    (lmc::units::ratios::unit_ratio_wrt<60, 1, seconds>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    hours,
-    (lmc::units::ratios::unit_ratio_wrt<60, 1, minutes>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    days,
-    (lmc::units::ratios::unit_ratio_wrt<24, 1, hours>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    weeks,
-    (lmc::units::ratios::unit_ratio_wrt<7, 1, days>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    months_28,
-    (lmc::units::ratios::unit_ratio_wrt<28, 1, days>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    months_29,
-    (lmc::units::ratios::unit_ratio_wrt<29, 1, days>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    months_30,
-    (lmc::units::ratios::unit_ratio_wrt<30, 1, days>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    months_31,
-    (lmc::units::ratios::unit_ratio_wrt<31, 1, days>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    year,
-    (lmc::units::ratios::unit_ratio_wrt<365, 1, days>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    leap_year,
-    (lmc::units::ratios::unit_ratio_wrt<366, 1, days>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    decade,
-    (lmc::units::ratios::unit_ratio_wrt<10, 1, year>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    century,
-    (lmc::units::ratios::unit_ratio_wrt<100, 1, year>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    time,
-    eon,
-    (lmc::units::ratios::unit_ratio_wrt<1000000000, 1, year>),
-    lmc::units::ratios::base_unit_delta
-)
+namespace lmc::units::time
+{
+
+using dimension = impl::dim::dimensional_vector<
+    impl::dim::length<0>,
+    impl::dim::mass<0>,
+    impl::dim::time<1>,
+    impl::dim::current<0>,
+    impl::dim::temperature<0>,
+    impl::dim::luminosity<0>,
+    impl::dim::substance<0>>;
+
+template <impl::cnt::cpt::unit_container container>
+using is_time_unit
+    = dimension::equals<typename container::definition::dimension>;
+
+template <impl::cnt::cpt::unit_container container>
+constexpr bool is_time_unit_v = is_time_unit<container>::value;
+
+using seconds    = impl::cnt::unit_container<impl::def::unit_definition<
+    dimension,
+    impl::cmp::base_unit_prefix,
+    impl::cmp::base_unit_ratio,
+    impl::cmp::base_unit_delta>>;
+
+using minutes    = impl::abbr::derive<std::ratio<60>, seconds>;
+using hours      = impl::abbr::derive<std::ratio<60>, minutes>;
+using days       = impl::abbr::derive<std::ratio<24>, hours>;
+using weeks      = impl::abbr::derive<std::ratio<7>, days>;
+using months_28  = impl::abbr::derive<std::ratio<28>, days>;
+using months_29  = impl::abbr::derive<std::ratio<29>, days>;
+using months_30  = impl::abbr::derive<std::ratio<30>, days>;
+using months_31  = impl::abbr::derive<std::ratio<31>, days>;
+using years      = impl::abbr::derive<std::ratio<365>, days>;
+using leap_years = impl::abbr::derive<std::ratio<366>, days>;
+using decades    = impl::abbr::derive<std::ratio<10>, years>;
+using centuries  = impl::abbr::derive<std::ratio<100>, years>;
+using eons       = impl::abbr::derive<std::ratio<1000000000>, years>;
+
+ADD_PREFIXES_TO_CONTAINER(seconds)
+
+} // namespace lmc::units::time

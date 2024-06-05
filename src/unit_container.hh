@@ -1,26 +1,36 @@
 #pragma once
 
 #include "unit_definition.hh"
-#include "util.hh"
 
-#include <ratio>
-
-namespace lmc::units
+namespace lmc::units::impl::cnt
 {
-namespace identification
+namespace check
 {
 
-struct unit_container_tag
+namespace tag
+{
+struct unit_container
 {
 };
+} // namespace tag
 
 template <typename t>
-using is_unit_container = std::is_base_of<unit_container_tag, t>;
-} // namespace identification
+using is_unit_container = std::is_base_of<tag::unit_container, t>;
 
-template <typename unit_def>
-requires identification::is_unit_definition_v<unit_def>
-class unit_container: identification::unit_container_tag
+template <typename t>
+bool constexpr is_unit_container_v = is_unit_container<t>::value;
+} // namespace check
+
+namespace cpt
+{
+template <typename t>
+concept unit_container
+    = requires { typename t::definition; } && check::is_unit_container_v<t>;
+
+} // namespace cpt
+
+template <def::cpt::unit_definition unit_def>
+class unit_container: check::tag::unit_container
 {
 public:
     using definition = unit_def;
@@ -30,64 +40,60 @@ public:
     {
     }
 
-    template <typename unit_container_to>
-    requires identification::is_unit_container<unit_container_to>::value
-          && dimensional::dimensional_vectors_are_equal_v<
-                 typename definition::dimensions,
-                 typename unit_container_to::definition::dimensions>
-    [[nodiscard]]
-    constexpr auto
-    get_conversion_factor_to() const noexcept -> long double
+    explicit constexpr unit_container()
+    : _measurement { 0.0L }
     {
-        return conversion::get_conversion_factor_between_definitions<
-            definition,
-            typename unit_container_to::definition>();
     }
 
-    template <typename unit_container_to>
-    requires identification::is_unit_container<unit_container_to>::value
-          && dimensional::dimensional_vectors_are_equal_v<
-                 typename definition::dimensions,
-                 typename unit_container_to::definition::dimensions>
-    [[nodiscard]]
-    constexpr auto
-    get_delta_to() const noexcept -> long double
-    {
-        return util::convert_ratio_to_real<std::ratio_subtract<
-            typename unit_container_to::definition::delta,
-            typename definition::delta>>();
-    }
-
-    template <typename unit_container_to>
-    requires identification::is_unit_container<unit_container_to>::value
-          && dimensional::dimensional_vectors_are_equal_v<
-                 typename definition::dimensions,
-                 typename unit_container_to::definition::dimensions>
-    [[nodiscard]]
-    constexpr auto
+    template <cpt::unit_container unit_container_to>
+    requires unit_container_to::definition::dimension::template
+    equals_v<typename definition::dimension> constexpr auto
     convert_to() const noexcept -> unit_container_to
     {
+        using conversion = def::
+            unit_conversion<definition, typename unit_container_to::definition>;
         return unit_container_to {
-            this->get_conversion_factor_to<unit_container_to>()
-            * (_measurement + this->get_delta_to<unit_container_to>())
+            def::apply_conversion<conversion>(_measurement)
         };
     }
 
-    template <typename unit_container_to>
-    requires identification::is_unit_container<unit_container_to>::value
-          && dimensional::dimensional_vectors_are_equal_v<
-                 typename definition::dimensions,
-                 typename unit_container_to::definition::dimensions>
-    [[nodiscard]] constexpr
+    template <cpt::unit_container unit_container_to>
+    requires unit_container_to::definition::dimension::template
+    equals_v<typename definition::dimension> [[nodiscard]] constexpr
     // NOLINTNEXTLINE // we do not want to mark this as explicit
     operator unit_container_to () const noexcept
     {
         return this->convert_to<unit_container_to>();
     }
 
+    template <cpt::unit_container other_unit_container>
+    requires other_unit_container::definition::dimension::template
+    equals_v<typename definition::dimension> [[nodiscard]]
+    constexpr auto
+    operator+ (other_unit_container container) const noexcept -> unit_container
+    {
+        return unit_container {
+            _measurement
+            + container.template convert_to<unit_container>()._measurement
+        };
+    }
+
+    template <cpt::unit_container other_unit_container>
+    requires other_unit_container::definition::dimension::template
+    equals_v<typename definition::dimension> [[nodiscard]]
+    constexpr auto
+    operator- (other_unit_container container) const noexcept -> unit_container
+    {
+        return unit_container {
+            _measurement
+            - container.template convert_to<unit_container>().get_measurement()
+        };
+    }
+
     [[nodiscard]]
     constexpr auto
     get_measurement() const noexcept -> long double
+
     {
         return _measurement;
     }
@@ -96,5 +102,19 @@ private:
     long double _measurement;
 };
 
-} // namespace lmc::units
+template <cpt::unit_container t, cmp::cpt::unit_prefix p>
+using container_with_different_prefix = unit_container<
+    def::definition_with_different_prefix<typename t::definition, p>>;
+
+template <util::cpt::ratio r, cpt::unit_container t>
+using container_with_derived_ratio = unit_container<
+    def::definition_with_derived_ratio<r, typename t::definition>>;
+
+} // namespace lmc::units::impl::cnt
+
+namespace lmc::units::impl::abbr
+{
+template <util::cpt::ratio r, cnt::cpt::unit_container t>
+using derive = impl::cnt::container_with_derived_ratio<r, t>;
+} // namespace lmc::units::impl::abbr
 

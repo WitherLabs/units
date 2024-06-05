@@ -1,179 +1,226 @@
 #pragma once
 
-#include <type_traits>
+#include "util.hh"
 
-#include <cstdint>
-#include <ratio>
-
-namespace lmc::units::dimensional
+namespace lmc::units::impl::dim
 {
 
-namespace identification
+namespace check
 {
 
-// Length
-
-struct length_dimension_tag
+namespace tag
+{
+struct length_dimension
 {
 };
 
+struct mass_dimension
+{
+};
+
+struct time_dimension
+{
+};
+
+struct current_dimension
+{
+};
+
+struct temperature_dimension
+{
+};
+
+struct luminosity_dimension
+{
+};
+
+struct substance_dimension
+{
+};
+
+struct dimensional_vector
+{
+};
+} // namespace tag
+
+// Length
+
 template <typename t>
-using is_length_dimension = std::is_base_of<length_dimension_tag, t>;
+using is_length_dimension = std::is_base_of<tag::length_dimension, t>;
 
 template <typename t>
 bool constexpr is_length_dimension_v = is_length_dimension<t>::value;
 
 // Mass
 
-struct mass_dimension_tag
-{
-};
-
 template <typename t>
-using is_mass_dimension = std::is_base_of<mass_dimension_tag, t>;
+using is_mass_dimension = std::is_base_of<tag::mass_dimension, t>;
 
 template <typename t>
 bool constexpr is_mass_dimension_v = is_mass_dimension<t>::value;
 
 // Time
 
-struct time_dimension_tag
-{
-};
+template <typename t>
+using is_time_dimension = std::is_base_of<tag::time_dimension, t>;
 
 template <typename t>
-using is_time_dimension_tag = std::is_base_of<time_dimension_tag, t>;
-
-template <typename t>
-bool constexpr is_time_dimension_v = is_time_dimension_tag<t>::value;
+bool constexpr is_time_dimension_v = is_time_dimension<t>::value;
 
 // Current
 
-struct current_dimension_tag
-{
-};
-
 template <typename t>
-using is_current_dimension = std::is_base_of<current_dimension_tag, t>;
+using is_current_dimension = std::is_base_of<tag::current_dimension, t>;
 
 template <typename t>
 bool constexpr is_current_dimension_v = is_current_dimension<t>::value;
 
 // Temperature
 
-struct temperature_dimension_tag
-{
-};
-
 template <typename t>
-using is_temperature_dimension = std::is_base_of<temperature_dimension_tag, t>;
+using is_temperature_dimension = std::is_base_of<tag::temperature_dimension, t>;
 
 template <typename t>
 bool constexpr is_temperature_dimension_v = is_temperature_dimension<t>::value;
 
 // Luminosity
 
-struct luminosity_dimension_tag
-{
-};
-
 template <typename t>
-using is_luminosity_dimension = std::is_base_of<luminosity_dimension_tag, t>;
+using is_luminosity_dimension = std::is_base_of<tag::luminosity_dimension, t>;
 
 template <typename t>
 bool constexpr is_luminosity_dimension_v = is_luminosity_dimension<t>::value;
 
 // Substance
 
-struct substance_dimension_tag
-{
-};
-
 template <typename t>
-using is_substance_dimension = std::is_base_of<substance_dimension_tag, t>;
+using is_substance_dimension = std::is_base_of<tag::substance_dimension, t>;
 
 template <typename t>
 bool constexpr is_substance_dimension_v = is_substance_dimension<t>::value;
 
 // Dimensional Vector
 
-struct dimensional_vector_tag
-{
-};
-
 template <typename t>
-using is_dimensional_vector = std::is_base_of<dimensional_vector_tag, t>;
+using is_dimensional_vector = std::is_base_of<tag::dimensional_vector, t>;
 
 template <typename t>
 bool constexpr is_dimensional_vector_v = is_dimensional_vector<t>::value;
 
-} // namespace identification
+} // namespace check
+
+namespace cpt
+{
+
+template <typename t>
+concept length
+    = check::is_length_dimension_v<t> && util::cpt::has_internal_ratio<t>;
+
+template <typename t>
+concept mass
+    = check::is_mass_dimension_v<t> && util::cpt::has_internal_ratio<t>;
+
+template <typename t>
+concept time
+    = check::is_time_dimension_v<t> && util::cpt::has_internal_ratio<t>;
+
+template <typename t>
+concept current
+    = check::is_current_dimension_v<t> && util::cpt::has_internal_ratio<t>;
+
+template <typename t>
+concept temperature
+    = check::is_temperature_dimension_v<t> && util::cpt::has_internal_ratio<t>;
+
+template <typename t>
+concept luminosity
+    = check::is_luminosity_dimension_v<t> && util::cpt::has_internal_ratio<t>;
+
+template <typename t>
+concept substance
+    = check::is_substance_dimension_v<t> && util::cpt::has_internal_ratio<t>;
+
+template <typename t>
+concept dimensional_vector = check::is_dimensional_vector_v<t>;
+
+} // namespace cpt
 
 template <std::intmax_t num, std::intmax_t den = 1>
-struct length
-: identification::length_dimension_tag
-, public std::ratio<num, den>
+struct length: check::tag::length_dimension
 {
+    using ratio                        = std::ratio<num, den>;
+    static constexpr long double value = util::ratio_to_real<ratio>;
 };
 
-template <std::intmax_t num, std::intmax_t den = 1>
-struct mass
-: identification::mass_dimension_tag
-, public std::ratio<num, den>
-{
-};
+template <util::cpt::ratio r> using length_from_ratio = length<r::num, r::den>;
 
 template <std::intmax_t num, std::intmax_t den = 1>
-struct time
-: identification::time_dimension_tag
-, public std::ratio<num, den>
+struct mass: check::tag::mass_dimension
 {
+    using ratio                        = std::ratio<num, den>;
+    static constexpr long double value = util::ratio_to_real<ratio>;
 };
 
-template <std::intmax_t num, std::intmax_t den = 1>
-struct current
-: identification::current_dimension_tag
-, public std::ratio<num, den>
-{
-};
+template <util::cpt::ratio r> using mass_from_ratio = mass<r::num, r::den>;
 
 template <std::intmax_t num, std::intmax_t den = 1>
-struct temperature
-: identification::temperature_dimension_tag
-, public std::ratio<num, den>
+struct time: check::tag::time_dimension
 {
+    using ratio                        = std::ratio<num, den>;
+    static constexpr long double value = util::ratio_to_real<ratio>;
 };
 
-template <std::intmax_t num, std::intmax_t den = 1>
-struct luminosity
-: identification::luminosity_dimension_tag
-, public std::ratio<num, den>
-{
-};
+template <util::cpt::ratio r> using time_from_ratio = time<r::num, r::den>;
 
 template <std::intmax_t num, std::intmax_t den = 1>
-struct substance
-: identification::substance_dimension_tag
-, public std::ratio<num, den>
+struct current: check::tag::current_dimension
 {
+    using ratio                        = std::ratio<num, den>;
+    static constexpr long double value = util::ratio_to_real<ratio>;
 };
+
+template <util::cpt::ratio r>
+using current_from_ratio = current<r::num, r::den>;
+
+template <std::intmax_t num, std::intmax_t den = 1>
+struct temperature: check::tag::temperature_dimension
+{
+    using ratio                        = std::ratio<num, den>;
+    static constexpr long double value = util::ratio_to_real<ratio>;
+};
+
+template <util::cpt::ratio r>
+using temperature_from_ratio = temperature<r::num, r::den>;
+
+template <std::intmax_t num, std::intmax_t den = 1>
+struct luminosity: check::tag::luminosity_dimension
+{
+    using ratio                        = std::ratio<num, den>;
+    static constexpr long double value = util::ratio_to_real<ratio>;
+};
+
+template <util::cpt::ratio r>
+using luminosity_from_ratio = luminosity<r::num, r::den>;
+
+template <std::intmax_t num, std::intmax_t den = 1>
+struct substance: check::tag::substance_dimension
+{
+    using ratio                        = std::ratio<num, den>;
+    static constexpr long double value = util::ratio_to_real<ratio>;
+};
+
+template <util::cpt::ratio r>
+using substance_from_ratio = substance<r::num, r::den>;
 
 template <
-    typename length_t,
-    typename mass_t,
-    typename time_t,
-    typename current_t,
-    typename temperature_t,
-    typename luminosity_t,
-    typename substance_t>
-requires identification::is_length_dimension_v<length_t>
-      && identification::is_mass_dimension_v<mass_t>
-      && identification::is_time_dimension_v<time_t>
-      && identification::is_current_dimension_v<current_t>
-      && identification::is_temperature_dimension_v<temperature_t>
-      && identification::is_luminosity_dimension_v<luminosity_t>
-      && identification::is_substance_dimension_v<substance_t>
-struct dimensional_vector: identification::dimensional_vector_tag
+    cpt::length      length_t,
+    cpt::mass        mass_t,
+    cpt::time        time_t,
+    cpt::current     current_t,
+    cpt::temperature temperature_t,
+    cpt::luminosity  luminosity_t,
+    cpt::substance   substance_t>
+struct dimensional_vector: check::tag::dimensional_vector
 {
     using length      = length_t;
     using mass        = mass_t;
@@ -182,42 +229,79 @@ struct dimensional_vector: identification::dimensional_vector_tag
     using temperature = temperature_t;
     using luminosity  = luminosity_t;
     using substance   = substance_t;
+
+    template <cpt::dimensional_vector t>
+    using equals = typename std::conditional_t<
+        check::is_dimensional_vector_v<t>
+            && std::is_same_v<length, typename t::length>
+            && std::is_same_v<mass, typename t::mass>
+            && std::is_same_v<time, typename t::time>
+            && std::is_same_v<current, typename t::current>
+            && std::is_same_v<temperature, typename t::temperature>
+            && std::is_same_v<luminosity, typename t::luminosity>
+            && std::is_same_v<substance, typename t::substance>,
+        std::true_type,
+        std::false_type>;
+
+    template <cpt::dimensional_vector t>
+    static constexpr bool equals_v = equals<t>::value;
+
+    template <cpt::dimensional_vector t>
+    using add = dimensional_vector<
+        length_from_ratio<
+            std::ratio_add<typename length::ratio, typename t::length::ratio>>,
+        mass_from_ratio<
+            std::ratio_add<typename mass::ratio, typename t::mass::ratio>>,
+        time_from_ratio<
+            std::ratio_add<typename time::ratio, typename t::time::ratio>>,
+        current_from_ratio<std::ratio_add<
+            typename current::ratio,
+            typename t::current::ratio>>,
+        temperature_from_ratio<std::ratio_add<
+            typename temperature::ratio,
+            typename t::temperature::ratio>>,
+        luminosity_from_ratio<std::ratio_add<
+            typename luminosity::ratio,
+            typename t::luminosity::ratio>>,
+        substance_from_ratio<std::ratio_add<
+            typename substance::ratio,
+            typename t::substance::ratio>>>;
+
+    template <cpt::dimensional_vector t>
+    using subtract = dimensional_vector<
+        length_from_ratio<std::ratio_subtract<
+            typename length::ratio,
+            typename t::length::ratio>>,
+        mass_from_ratio<
+            std::ratio_subtract<typename mass::ratio, typename t::mass::ratio>>,
+        time_from_ratio<
+            std::ratio_subtract<typename time::ratio, typename t::time::ratio>>,
+        current_from_ratio<std::ratio_subtract<
+            typename current::ratio,
+            typename t::current::ratio>>,
+        temperature_from_ratio<std::ratio_subtract<
+            typename temperature::ratio,
+            typename t::temperature::ratio>>,
+        luminosity_from_ratio<std::ratio_subtract<
+            typename luminosity::ratio,
+            typename t::luminosity::ratio>>,
+        substance_from_ratio<std::ratio_subtract<
+            typename substance::ratio,
+            typename t::substance::ratio>>>;
+
+    template <util::cpt::ratio r>
+    using multiply = dimensional_vector<
+        length_from_ratio<std::ratio_multiply<typename length::ratio, r>>,
+        mass_from_ratio<std::ratio_multiply<typename mass::ratio, r>>,
+        time_from_ratio<std::ratio_multiply<typename time::ratio, r>>,
+        current_from_ratio<std::ratio_multiply<typename current::ratio, r>>,
+        temperature_from_ratio<
+            std::ratio_multiply<typename temperature::ratio, r>>,
+        luminosity_from_ratio<
+            std::ratio_multiply<typename luminosity::ratio, r>>,
+        substance_from_ratio<
+            std::ratio_multiply<typename substance::ratio, r>>>;
 };
 
-template <typename vector_a_t, typename vector_b_t>
-struct dimensional_vectors_are_equal
-: std::conditional_t<
-      identification::is_dimensional_vector_v<vector_a_t>
-          && identification::is_dimensional_vector_v<vector_b_t>
-          && std::is_same_v<
-              typename vector_a_t::length,
-              typename vector_b_t::length>
-          && std::
-              is_same_v<typename vector_a_t::mass, typename vector_b_t::mass>
-          && std::
-              is_same_v<typename vector_a_t::time, typename vector_b_t::time>
-          && std::is_same_v<
-              typename vector_a_t::current,
-              typename vector_b_t::current>
-          && std::is_same_v<
-              typename vector_a_t::temperature,
-              typename vector_b_t::temperature>
-          && std::is_same_v<
-              typename vector_a_t::luminosity,
-              typename vector_b_t::luminosity>
-          && std::is_same_v<
-              typename vector_a_t::substance,
-              typename vector_b_t::substance>
-
-      ,
-      std::true_type,
-      std::false_type>
-{
-};
-
-template <typename vector_a_t, typename vector_b_t>
-bool constexpr dimensional_vectors_are_equal_v
-    = dimensional_vectors_are_equal<vector_a_t, vector_b_t>::value;
-
-} // namespace lmc::units::dimensional
+} // namespace lmc::units::impl::dim
 

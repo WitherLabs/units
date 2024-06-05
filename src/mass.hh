@@ -1,59 +1,42 @@
 #pragma once
 
-#include "macros.hh"
+#include "prefixes.hh"
+#include "unit_container.hh"
 
-LMC_UNITS_DEFINE_UNIT_FRAMEWORK(mass, length<0>, mass<1>, time<0>, current<0>, temperature<0>, luminosity<0>, substance<0>)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    grams,
-    lmc::units::ratios::base_unit_ratio,
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    pounds,
-    (lmc::units::ratios::unit_ratio_wrt<45359237, 100000000, kilograms>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    grains,
-    (lmc::units::ratios::unit_ratio_wrt<1, 7000, pounds>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    drachms,
-    (lmc::units::ratios::unit_ratio_wrt<1, 256, pounds>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    ounces,
-    (lmc::units::ratios::unit_ratio_wrt<1, 16, pounds>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    stones,
-    (lmc::units::ratios::unit_ratio_wrt<14, 1, pounds>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    quarters,
-    (lmc::units::ratios::unit_ratio_wrt<28, 1, pounds>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    hundredweights,
-    (lmc::units::ratios::unit_ratio_wrt<112, 1, pounds>),
-    lmc::units::ratios::base_unit_delta
-)
-LMC_UNITS_DEFINE_UNIT_WHOLE_WITH_SI_PREFIXES(
-    mass,
-    tons,
-    (lmc::units::ratios::unit_ratio_wrt<2240, 1, pounds>),
-    lmc::units::ratios::base_unit_delta
-)
+namespace lmc::units::mass
+{
+
+using dimension = impl::dim::dimensional_vector<
+    impl::dim::length<0>,
+    impl::dim::mass<1>,
+    impl::dim::time<0>,
+    impl::dim::current<0>,
+    impl::dim::temperature<0>,
+    impl::dim::luminosity<0>,
+    impl::dim::substance<0>>;
+
+template <impl::cnt::cpt::unit_container container>
+using is_mass_unit
+    = dimension::equals<typename container::definition::dimension>;
+
+template <impl::cnt::cpt::unit_container container>
+constexpr bool is_mass_unit_v = is_mass_unit<container>::value;
+
+using grams          = impl::cnt::unit_container<impl::def::unit_definition<
+    dimension,
+    impl::cmp::base_unit_prefix,
+    impl::cmp::base_unit_ratio,
+    impl::cmp::base_unit_delta>>;
+
+using pounds         = impl::abbr::derive<std::ratio<45359237, 100000>, grams>;
+using grains         = impl::abbr::derive<std::ratio<1, 7000>, pounds>;
+using drachms        = impl::abbr::derive<std::ratio<1, 256>, pounds>;
+using ounces         = impl::abbr::derive<std::ratio<1, 16>, pounds>;
+using stones         = impl::abbr::derive<std::ratio<14>, pounds>;
+using quarters       = impl::abbr::derive<std::ratio<28>, pounds>;
+using hundredweights = impl::abbr::derive<std::ratio<112>, pounds>;
+using tons           = impl::abbr::derive<std::ratio<2240>, pounds>;
+
+ADD_PREFIXES_TO_CONTAINER(grams)
+
+} // namespace lmc::units::mass
