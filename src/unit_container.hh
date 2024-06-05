@@ -90,6 +90,36 @@ public:
         };
     }
 
+    template <cpt::unit_container other_unit_container>
+    [[nodiscard]]
+    constexpr auto
+    operator* (other_unit_container other) const noexcept
+        -> unit_container<def::definition_multiply<
+            definition,
+            typename other_unit_container::definition>>
+    {
+        using type = unit_container<def::definition_multiply<
+            definition,
+            typename other_unit_container::definition>>;
+
+        return type { _measurement * other.get_measurement() };
+    }
+
+    template <cpt::unit_container other_unit_container>
+    [[nodiscard]]
+    constexpr auto
+    operator/ (other_unit_container other) const noexcept
+        -> unit_container<def::definition_divide<
+            definition,
+            typename other_unit_container::definition>>
+    {
+        using type = unit_container<def::definition_divide<
+            definition,
+            typename other_unit_container::definition>>;
+
+        return type { _measurement / other.get_measurement() };
+    }
+
     [[nodiscard]]
     constexpr auto
     get_measurement() const noexcept -> long double

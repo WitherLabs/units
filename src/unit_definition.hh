@@ -126,4 +126,18 @@ using definition_with_derived_ratio = unit_definition<
     derive_unit_ratio<r, t>,
     typename t::delta>;
 
+template <cpt::unit_definition a, cpt::unit_definition b>
+using definition_multiply = unit_definition<
+    typename a::dimension::template add<typename b::dimension>,
+    convert_unit_prefix<a, b>,
+    convert_unit_ratio<a, b>,
+    convert_unit_delta<a, b>>;
+
+template <cpt::unit_definition a, cpt::unit_definition b>
+using definition_divide = unit_definition<
+    typename a::dimension::template add<typename b::dimension>,
+    convert_unit_prefix<a, b>,
+    convert_unit_ratio<a, b>,
+    convert_unit_delta<a, b>>;
+
 } // namespace lmc::units::impl::def
