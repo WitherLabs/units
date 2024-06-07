@@ -1,3 +1,4 @@
+#include "acceleration.hh"
 #include "force.hh"
 #include "length.hh"
 #include "mass.hh"
@@ -8,17 +9,20 @@
 #include <iostream>
 #include <ostream>
 
-lmc::units::force::dynes   p { 10 };
-lmc::units::force::newtons n = p;
+constexpr lmc::units::acceleration::meters_per_second_squared g { 9.80665 };
+constexpr lmc::units::acceleration::feet_per_second_squared   f { g };
+
+long double constexpr x = f.get_measurement();
 
 auto
 main() -> int
 {
     std::println(
         std::cout,
-        "{} dynes= {} newtons",
-        p.get_measurement(),
-        n.get_measurement()
+        "{}kp = {}N = {}p",
+        kp.get_measurement(),
+        n.get_measurement(),
+        p.get_measurement()
     );
 }
 
