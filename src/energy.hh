@@ -4,15 +4,12 @@
 
 namespace lmc::units::energy
 {
+using joules = impl::cnt::unit_container<impl::def::definition_multiply<
+    force::newtons::definition,
+    length::meters::definition>>;
+ADD_PREFIXES_TO_CONTAINER(joules)
 
-using dimension = impl::dim::dimensional_vector<
-    impl::dim::length<1>,
-    impl::dim::mass<-1>,
-    impl::dim::time<-2>,
-    impl::dim::current<0>,
-    impl::dim::temperature<0>,
-    impl::dim::luminosity<0>,
-    impl::dim::substance<0>>;
+using dimension = joules::definition::dimension;
 
 template <impl::cnt::cpt::unit_container container>
 using is_energy_unit
@@ -21,13 +18,7 @@ using is_energy_unit
 template <impl::cnt::cpt::unit_container container>
 constexpr bool is_energy_unit_v = is_energy_unit<container>::value;
 
-using joules = impl::cnt::unit_container<impl::def::definition_multiply<
-    force::newtons::definition,
-    length::meters::definition>>;
-
-ADD_PREFIXES_TO_CONTAINER(joules)
-
-using foot_pound_force = impl::abbr::
+using foot_pound_force          = impl::abbr::
     derive<std::ratio_add<std::ratio<1>, std::ratio<1779, 5000>>, joules>;
 
 using horsepower_hour = impl::abbr::

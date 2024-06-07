@@ -5,15 +5,12 @@
 
 namespace lmc::units::catalytic_activity
 {
+using katals = impl::cnt::unit_container<impl::def::definition_divide<
+    substance::moles::definition,
+    time::seconds::definition>>;
+ADD_PREFIXES_TO_CONTAINER(katals)
 
-using dimension = impl::dim::dimensional_vector<
-    impl::dim::length<0>,
-    impl::dim::mass<0>,
-    impl::dim::time<1>,
-    impl::dim::current<1>,
-    impl::dim::temperature<0>,
-    impl::dim::luminosity<0>,
-    impl::dim::substance<0>>;
+using dimension = katals::definition::dimension;
 
 template <impl::cnt::cpt::unit_container container>
 using is_catalytic_activity_unit
@@ -22,9 +19,5 @@ using is_catalytic_activity_unit
 template <impl::cnt::cpt::unit_container container>
 constexpr bool is_catalytic_activity_unit_v
     = is_catalytic_activity_unit<container>::value;
-
-using katals = impl::cnt::unit_container<impl::def::definition_divide<
-    substance::moles::definition,
-    time::seconds::definition>>;
 
 } // namespace lmc::units::catalytic_activity
