@@ -8,8 +8,8 @@ namespace lmc::units::dose
 namespace absorbed
 {
 using grays = impl::cnt::unit_container<impl::def::definition_divide<
-    impl::def::definition_squared<energy::joules::definition>,
-    impl::def::definition_squared<mass::kilograms::definition>>>;
+    energy::joules::definition,
+    mass::kilograms::definition>>;
 ADD_PREFIXES_TO_CONTAINER(grays)
 
 } // namespace absorbed
@@ -17,8 +17,8 @@ ADD_PREFIXES_TO_CONTAINER(grays)
 namespace equivalent
 {
 using sieverts = impl::cnt::unit_container<impl::def::definition_divide<
-    impl::def::definition_squared<energy::joules::definition>,
-    impl::def::definition_squared<mass::kilograms::definition>>>;
+    energy::joules::definition,
+    mass::kilograms::definition>>;
 ADD_PREFIXES_TO_CONTAINER(sieverts)
 
 } // namespace equivalent
