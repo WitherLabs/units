@@ -1,21 +1,23 @@
-#include "temperature.hh"
+#include "acceleration.hh"
 
 #include <iostream>
 #include <ostream>
 
+constexpr lmc::units::acceleration::meters_per_second_squared gravity {
+    9.80665L
+};
+constexpr lmc::units::acceleration::feet_per_second_squared gravity_fts {
+    gravity
+};
+
 auto
 main() -> int
 {
-    constexpr lmc::units::temperature::kilokelvins k { 1 };
-    constexpr lmc::units::temperature::celsius     c { k };
-    constexpr lmc::units::temperature::fahrenheit  f { c };
-
     std::println(
         std::cout,
-        "{}Kk = {}c = {}f",
-        k.get_measurement(),
-        c.get_measurement(),
-        f.get_measurement()
+        "g = {}m/s = {}ft/s",
+        gravity.get_measurement(),
+        gravity_fts.get_measurement()
     );
 }
 

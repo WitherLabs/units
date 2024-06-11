@@ -107,9 +107,8 @@ template <cpt::unit_conversion t>
 constexpr auto
 apply_conversion(long double const measurement) noexcept -> long double
 {
-    return (
-        t::ratio::value * ((measurement * t::prefix::value) + t::delta::value)
-    );
+    return { t::ratio::value
+             * ((measurement * t::prefix::value) + t::delta::value) };
 }
 
 template <cpt::unit_definition t, cmp::cpt::unit_prefix p>
@@ -124,6 +123,30 @@ using definition_with_derived_ratio = unit_definition<
     typename t::dimension,
     typename t::prefix,
     derive_unit_ratio<r, t>,
+    typename t::delta>;
+
+template <cpt::unit_definition a, cpt::unit_definition b>
+using definition_multiply = unit_definition<
+    typename a::dimension::template add<typename b::dimension>,
+    convert_unit_prefix<a, b>,
+    convert_unit_ratio<a, b>,
+    convert_unit_delta<a, b>>;
+
+template <cpt::unit_definition a, cpt::unit_definition b>
+using definition_divide = unit_definition<
+    typename a::dimension::template subtract<typename b::dimension>,
+    convert_unit_prefix<a, b>,
+    convert_unit_ratio<a, b>,
+    convert_unit_delta<a, b>>;
+
+template <cpt::unit_definition t>
+using definition_squared = definition_multiply<t, t>;
+
+template <cpt::unit_definition t>
+using definition_reciprocate = unit_definition<
+    typename t::dimension::template multiply<std::ratio<-1>>,
+    typename t::prefix,
+    typename t::ratio,
     typename t::delta>;
 
 } // namespace lmc::units::impl::def
