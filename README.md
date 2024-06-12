@@ -8,17 +8,21 @@ analysis
 
 ## Installation
 ### Automated
-Work in progress
+- **UNIX Based**
+As `root`: execute the `installer.sh` script in the root directory.
+```sh
+./install.sh
+```
 
 ### Manual
-- **Linux/MacOS/UNIX**
+- **UNIX Based**
 ```sh
-# mkdir -p /usr/include/mooncat/units
-# mv ./src/*.hh /usr/include/mooncat/units
+mkdir -p /usr/include/mooncat/units
+mv ./src/*.hh /usr/include/mooncat/units
 ```
 
 - **Windows**
-Pending. We don't have a Windows guy on the team.
+Pending. We don't have a Windows guy on the team. \
 It most likely involves moving the files to your include path under the
 `mooncat/units` directory
 
@@ -76,7 +80,7 @@ main() -> int
 ```
 
 ## Creating custom units
-Coming Soon.
+Coming Soon. \
 It is currently possible to do so, however, there is no friendly api for it.
 It is a work in progress.
 
