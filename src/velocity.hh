@@ -1,7 +1,7 @@
 #pragma once
 
-#include "length.hh"
-#include "time.hh"
+#include <mooncat/units/length>
+#include <mooncat/units/time>
 
 namespace lmc::units::velocity
 {
@@ -43,4 +43,3 @@ using knots           = impl::cnt::unit_container<impl::def::definition_divide<
     time::hours::definition>>;
 
 } // namespace lmc::units::velocity
-

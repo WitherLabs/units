@@ -1,6 +1,6 @@
 #pragma once
 
-#include "util.hh"
+#include <mooncat/units/impl/util.hh>
 
 namespace lmc::units::impl::dim
 {

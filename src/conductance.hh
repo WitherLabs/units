@@ -1,6 +1,6 @@
 #pragma once
 
-#include "resistance.hh"
+#include <mooncat/units/resistance>
 
 namespace lmc::units::conductance
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "voltage.hh"
+#include <mooncat/units/voltage>
 
 namespace lmc::units::resistance
 {

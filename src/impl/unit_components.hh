@@ -1,7 +1,8 @@
 #pragma once
 
-#include "util.hh"
 #include <type_traits>
+
+#include <mooncat/units/impl/util.hh>
 
 namespace lmc::units::impl::cmp
 {

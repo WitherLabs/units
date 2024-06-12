@@ -1,7 +1,7 @@
 #pragma once
 
-#include "time.hh"
-#include "voltage.hh"
+#include <mooncat/units/time>
+#include <mooncat/units/voltage>
 
 namespace lmc::units::magnetic_flux
 {

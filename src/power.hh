@@ -1,6 +1,6 @@
 #pragma once
 
-#include "energy.hh"
+#include <mooncat/units/energy>
 
 namespace lmc::units::power
 {

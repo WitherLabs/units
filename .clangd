@@ -7,5 +7,4 @@ CompileFlags:
         "-Wno-pre-c++17-compat",
         "-Wno-c++98-compat",
         "-Wno-redundant-parens",
-        "-I../src"
     ]

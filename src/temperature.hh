@@ -1,8 +1,7 @@
 #pragma once
 
-#include "prefixes.hh"
-#include "unit_container.hh"
-#include "unit_definition.hh"
+#include <mooncat/units/impl/prefixes.hh>
+#include <mooncat/units/impl/unit_container.hh>
 
 namespace lmc::units::temperature
 {

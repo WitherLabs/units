@@ -1,7 +1,7 @@
 #pragma once
 
-#include "charge.hh"
-#include "voltage.hh"
+#include <mooncat/units/charge>
+#include <mooncat/units/voltage>
 
 namespace lmc::units::capacitance
 {

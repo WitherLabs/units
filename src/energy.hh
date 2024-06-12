@@ -1,6 +1,6 @@
 #pragma once
 
-#include "force.hh"
+#include <mooncat/units/force>
 
 namespace lmc::units::energy
 {

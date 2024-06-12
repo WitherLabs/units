@@ -1,7 +1,7 @@
 #pragma once
 
-#include "current.hh"
-#include "power.hh"
+#include <mooncat/units/current>
+#include <mooncat/units/power>
 
 namespace lmc::units::voltage
 {

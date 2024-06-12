@@ -1,6 +1,6 @@
 #pragma once
 
-#include "unit_definition.hh"
+#include <mooncat/units/impl/unit_definition.hh>
 
 #include <ratio>
 

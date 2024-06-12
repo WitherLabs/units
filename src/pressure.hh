@@ -1,6 +1,6 @@
 #pragma once
 
-#include "force.hh"
+#include <mooncat/units/force>
 
 namespace lmc::units::pressure
 {
@@ -32,4 +32,3 @@ using pounds_per_square_inch = impl::abbr::derive<
     pascals>;
 
 } // namespace lmc::units::pressure
-

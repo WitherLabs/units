@@ -1,7 +1,7 @@
 #pragma once
 
-#include "current.hh"
-#include "time.hh"
+#include <mooncat/units/current>
+#include <mooncat/units/time>
 
 namespace lmc::units::charge
 {

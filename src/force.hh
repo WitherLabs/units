@@ -1,8 +1,8 @@
 #pragma once
 
-#include "length.hh"
-#include "mass.hh"
-#include "time.hh"
+#include <mooncat/units/length>
+#include <mooncat/units/mass>
+#include <mooncat/units/time>
 
 namespace lmc::units::force
 {
@@ -34,4 +34,3 @@ using poundal
 using dynes = impl::abbr::derive<std::ratio<1, 100000>, newtons>;
 
 } // namespace lmc::units::force
-

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "velocity.hh"
+#include <mooncat/units/velocity>
 
 namespace lmc::units::acceleration
 {

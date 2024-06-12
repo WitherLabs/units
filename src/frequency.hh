@@ -1,6 +1,6 @@
 #pragma once
 
-#include "time.hh"
+#include <mooncat/units/time>
 
 namespace lmc::units::frequency
 {
@@ -18,4 +18,3 @@ template <impl::cnt::cpt::unit_container container>
 constexpr bool is_frequency_unit_v = is_frequency_unit<container>::value;
 
 } // namespace lmc::units::frequency
-

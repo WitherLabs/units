@@ -1,8 +1,8 @@
 #pragma once
 
-#include "dimension.hh"
-#include "unit_components.hh"
-#include "util.hh"
+#include <mooncat/units/impl/dimension.hh>
+#include <mooncat/units/impl/unit_components.hh>
+#include <mooncat/units/impl/util.hh>
 
 namespace lmc::units::impl::def
 {

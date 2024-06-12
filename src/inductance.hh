@@ -1,6 +1,6 @@
 #pragma once
 
-#include "magnetic_flux.hh"
+#include <mooncat/units/magnetic_flux>
 
 namespace lmc::units::inductance
 {

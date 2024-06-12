@@ -1,7 +1,7 @@
 #pragma once
 
-#include "substance.hh"
-#include "time.hh"
+#include <mooncat/units/substance>
+#include <mooncat/units/time>
 
 namespace lmc::units::catalytic_activity
 {
