@@ -13,29 +13,37 @@ As `root`: execute the `installer.sh` script in the root directory.
 ```sh
 ./install.sh
 ```
+This will copy the project's headers over to `/usr/include/mooncat/units`
+
+- **Windows** \
+As an administrator: execute the `installer.ps1` script in the root directory
+```ps1
+& .\installer.ps1
+```
+This will copy the project's headers over to
+`C:\Program Files\Mooncat\include\mooncat\units`in order to facilitate
+inclusion in MS projects
 
 ### Manual
 - **UNIX Based**
 ```sh
 mkdir -p /usr/include/mooncat/units
-mv ./src/*.hh /usr/include/mooncat/units
+mv ./include/* /usr/include/mooncat/units
 ```
 
 - **Windows** \
-Pending. We don't have a Windows guy on the team. \
-It most likely involves moving the files to your include path under the
-`mooncat/units` directory
-
+Copy the contents of the `include` directory over to
+`C:\Program Files\Mooncat\include\mooncat\units`
 
 ## Usage
-1. Import your desired unit type based on its dimension
-2. Use them to represent magnitudes of the specified units
+1. Include the header representing your desired unit type
+2. Use the units within the `lmc::units::<type>` namespace to represent magnitudes
 3. Enjoy
 
 Here is an example
 
 ```cpp
-#include <mooncat/units/length.hh>
+#include <mooncat/units/length>
 
 #include <iostream>
 #include <ostream>
