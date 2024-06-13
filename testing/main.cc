@@ -1,4 +1,4 @@
-#include "length.hh"
+#include <mooncat/units/length>
 
 #include <iostream>
 #include <ostream>
