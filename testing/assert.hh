@@ -7,7 +7,7 @@
 #include <mooncat/units/energy>
 #include <mooncat/units/force>
 #include <mooncat/units/frequency>
-#include <mooncat/units/impl/dimension.hh>
+#include <mooncat/units/impl/dimension>
 #include <mooncat/units/inductance>
 #include <mooncat/units/length>
 #include <mooncat/units/luminosity>

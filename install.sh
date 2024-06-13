@@ -24,14 +24,11 @@ else
     rm -rf "$INSTALL_DIR"/*
 fi
 
-SOURCE_DIR="$(pwd)/src"
+INCLUDE_DIR="$(pwd)/include"
 
-for FILE in "$SOURCE_DIR/"*.hh; do
-    NEW_FILENAME="$(basename $FILE | cut -d'.' -f1)"
-    cp "$FILE" "$INSTALL_DIR/$NEW_FILENAME"
+for FILE in "$INCLUDE_DIR/"*; do
+    cp -rf "$FILE" "$INSTALL_DIR"
 done
-
-cp -rf "$SOURCE_DIR/impl" "$INSTALL_DIR"
 
 echo "Completed: Instalaltion"
 

@@ -15,7 +15,7 @@ As `root`: execute the `installer.sh` script in the root directory.
 ```
 
 ### Manual
-- **UNIX Based** \
+- **UNIX Based**
 ```sh
 mkdir -p /usr/include/mooncat/units
 mv ./src/*.hh /usr/include/mooncat/units
@@ -69,7 +69,7 @@ main() -> int
     // 10 meters
     lmc::units::length::meters const distance { 10 };
 
-    // Will automaticlly convert to inchs and feet
+    // Will automatically convert to inches and feet
     print_meters(distance);
     print_inches(distance);
     print_feet(distance);
