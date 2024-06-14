@@ -2,15 +2,7 @@
 
 #pragma once
 
-#include "impl/unit_container"
-#include "impl/unit_definition"
-#include "impl/util"
-
 #include <mooncat/units/length>
-
-#include <cstdint>
-#include <numbers>
-#include <ratio>
 
 namespace lmc::units::angle
 {
@@ -29,11 +21,4 @@ using turns
 
 using degrees = impl::abbr::derive<std::ratio<1, 360>, turns>;
 
-constexpr radians r { std::numbers::pi_v<long double> * 2.0L };
-constexpr turns   t { r };
-constexpr degrees d { r };
-
-constexpr auto    x = t.get_measurement();
-constexpr auto    y = r.get_measurement();
-constexpr auto    z = d.get_measurement();
 } // namespace lmc::units::angle
