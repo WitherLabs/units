@@ -8,7 +8,7 @@
 namespace lmc::units::luminous_flux
 {
 
-using lumen = impl::cnt::unit_container<impl::def::definition_multiply<
+using lumens = impl::cnt::unit_container<impl::def::definition_multiply<
     luminosity::candelas::definition,
     solid_angle::steradians::definition>>;
 
