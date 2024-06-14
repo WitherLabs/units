@@ -1,6 +1,8 @@
+#include <mooncat/units/angle>
 #include <mooncat/units/length>
 
 #include <iostream>
+#include <numbers>
 #include <ostream>
 
 namespace
@@ -36,6 +38,8 @@ main() -> int
     print_meters(distance);
     print_inches(distance);
     print_feet(distance);
+
+    std::println(std::cout, "{}", 2.0L * std::numbers::pi_v<long double>);
 
     return 0;
 }

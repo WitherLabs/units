@@ -1,3 +1,31 @@
 // vim: set ft=cpp:
 
 #pragma once
+
+#include "impl/unit_container"
+
+#include <mooncat/units/length>
+
+#include <numbers>
+#include <ratio>
+
+namespace lmc::units::angle
+{
+
+using turns     = impl::cnt::unit_container<impl::def::definition_divide<
+    length::meters::definition,
+    length::meters::definition>>;
+
+using rotations = turns;
+
+using degrees   = impl::abbr::derive<std::ratio<1, 360>, turns>;
+
+using radians   = impl::abbr::derive<
+    std::ratio_divide<
+        std::ratio<1>,
+        std::ratio_add<
+            std::ratio<6>,
+            std::ratio<283185307179586477, 1000000000000000000>>>,
+    turns>;
+
+} // namespace lmc::units::angle
