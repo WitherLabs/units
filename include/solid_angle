@@ -10,4 +10,6 @@ namespace lmc::units::solid_angle
 using steradians = impl::cnt::unit_container<
     impl::def::definition_squared<angle::radians::definition>>;
 
+using dimension = steradians::definition::dimension;
+
 } // namespace lmc::units::solid_angle

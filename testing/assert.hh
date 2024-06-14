@@ -1,3 +1,4 @@
+#include <mooncat/units/angle>
 #include <mooncat/units/capacitance>
 #include <mooncat/units/catalytic_activity>
 #include <mooncat/units/charge>
@@ -7,16 +8,19 @@
 #include <mooncat/units/energy>
 #include <mooncat/units/force>
 #include <mooncat/units/frequency>
+#include <mooncat/units/illuminance>
 #include <mooncat/units/impl/dimension>
 #include <mooncat/units/inductance>
 #include <mooncat/units/length>
 #include <mooncat/units/luminosity>
+#include <mooncat/units/luminous_flux>
 #include <mooncat/units/magnetic_flux>
 #include <mooncat/units/magnetic_flux_density>
 #include <mooncat/units/mass>
 #include <mooncat/units/power>
 #include <mooncat/units/pressure>
 #include <mooncat/units/resistance>
+#include <mooncat/units/solid_angle>
 #include <mooncat/units/substance>
 #include <mooncat/units/temperature>
 #include <mooncat/units/time>
@@ -242,3 +246,42 @@ static_assert(lmc::units::impl::dim::dimensional_vector<
               lmc::units::impl::dim::substance<1>>::
                   equals_v<lmc::units::catalytic_activity::dimension>);
 
+static_assert(lmc::units::impl::dim::dimensional_vector<
+              lmc::units::impl::dim::length<0>,
+              lmc::units::impl::dim::mass<0>,
+              lmc::units::impl::dim::time<0>,
+              lmc::units::impl::dim::current<0>,
+              lmc::units::impl::dim::temperature<0>,
+              lmc::units::impl::dim::luminosity<0>,
+              lmc::units::impl::dim::substance<0>>::
+                  equals_v<lmc::units::angle::dimension>);
+
+static_assert(lmc::units::impl::dim::dimensional_vector<
+              lmc::units::impl::dim::length<0>,
+              lmc::units::impl::dim::mass<0>,
+              lmc::units::impl::dim::time<0>,
+              lmc::units::impl::dim::current<0>,
+              lmc::units::impl::dim::temperature<0>,
+              lmc::units::impl::dim::luminosity<0>,
+              lmc::units::impl::dim::substance<0>>::
+                  equals_v<lmc::units::solid_angle::dimension>);
+
+static_assert(lmc::units::impl::dim::dimensional_vector<
+              lmc::units::impl::dim::length<0>,
+              lmc::units::impl::dim::mass<0>,
+              lmc::units::impl::dim::time<0>,
+              lmc::units::impl::dim::current<0>,
+              lmc::units::impl::dim::temperature<0>,
+              lmc::units::impl::dim::luminosity<1>,
+              lmc::units::impl::dim::substance<0>>::
+                  equals_v<lmc::units::luminous_flux::dimension>);
+
+static_assert(lmc::units::impl::dim::dimensional_vector<
+              lmc::units::impl::dim::length<-2>,
+              lmc::units::impl::dim::mass<0>,
+              lmc::units::impl::dim::time<0>,
+              lmc::units::impl::dim::current<0>,
+              lmc::units::impl::dim::temperature<0>,
+              lmc::units::impl::dim::luminosity<1>,
+              lmc::units::impl::dim::substance<0>>::
+                  equals_v<lmc::units::illuminance::dimension>);

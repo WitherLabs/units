@@ -7,8 +7,10 @@
 namespace lmc::units::illuminance
 {
 
-using luxes = impl::cnt::unit_container<impl::def::definition_divide<
+using luxes     = impl::cnt::unit_container<impl::def::definition_divide<
     luminous_flux::lumens::definition,
     impl::def::definition_squared<length::meters::definition>>>;
+
+using dimension = luxes::definition::dimension;
 
 } // namespace lmc::units::illuminance
