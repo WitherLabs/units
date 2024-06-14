@@ -1,0 +1,14 @@
+// vim: set ft=cpp:
+
+#pragma once
+
+#include <mooncat/units/luminous_flux>
+
+namespace lmc::units::illuminance
+{
+
+using luxes = impl::cnt::unit_container<impl::def::definition_divide<
+    luminous_flux::lumens::definition,
+    impl::def::definition_squared<length::meters::definition>>>;
+
+} // namespace lmc::units::illuminance

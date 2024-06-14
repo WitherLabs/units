@@ -2,9 +2,14 @@
 
 #pragma once
 
+#include <type_traits>
+
 #include <mooncat/units/impl/dimension>
 #include <mooncat/units/impl/unit_components>
 #include <mooncat/units/impl/util>
+
+#include <cmath>
+#include <numbers>
 
 namespace lmc::units::impl::def
 {
@@ -61,13 +66,15 @@ template <
     dim::cpt::dimensional_vector dimension_t,
     cmp::cpt::unit_prefix        prefix_t,
     cmp::cpt::unit_ratio         ratio_t,
-    cmp::cpt::unit_delta         delta_t>
+    cmp::cpt::unit_delta         delta_t,
+    cmp::cpt::unit_pi_exponent   pi_exponent_t = cmp::base_unit_pi_exponent>
 struct unit_definition: check::tag::unit_definition
 {
-    using dimension = dimension_t;
-    using prefix    = prefix_t;
-    using ratio     = ratio_t;
-    using delta     = delta_t;
+    using dimension   = dimension_t;
+    using prefix      = prefix_t;
+    using ratio       = ratio_t;
+    using delta       = delta_t;
+    using pi_exponent = pi_exponent_t;
 };
 
 template <util::cpt::ratio r, cpt::unit_definition to>
@@ -91,20 +98,28 @@ template <cpt::unit_definition from, cpt::unit_definition to>
 using convert_unit_delta
     = cmp::convert_unit_delta<typename from::delta, typename to::delta>;
 
+template <cpt::unit_definition from, cpt::unit_definition to>
+using convert_unit_pi_exponent = cmp::convert_unit_pi_exponent<
+    typename from::pi_exponent,
+    typename to::pi_exponent>;
+
 template <cpt::unit_definition def_from, cpt::unit_definition def_to>
-// requires def_from::dimension::template
-// equals_v<def_to>
 struct unit_conversion: check::tag::unit_conversion
 {
-    using from   = def_from;
-    using to     = def_to;
+    using from        = def_from;
+    using to          = def_to;
 
-    using prefix = convert_unit_prefix<from, to>;
-    using ratio  = convert_unit_ratio<from, to>;
-    using delta  = convert_unit_delta<from, to>;
+    using prefix      = convert_unit_prefix<from, to>;
+    using ratio       = convert_unit_ratio<from, to>;
+    using delta       = convert_unit_delta<from, to>;
+    using pi_exponent = convert_unit_pi_exponent<from, to>;
 };
 
 template <cpt::unit_conversion t>
+requires std::conditional_t<
+    t::pi_exponent::ratio::num == 0,
+    std::true_type,
+    std::false_type>::value
 [[nodiscard]]
 constexpr auto
 apply_conversion(long double const measurement) noexcept -> long double
@@ -113,33 +128,52 @@ apply_conversion(long double const measurement) noexcept -> long double
              * ((measurement * t::prefix::value) + t::delta::value) };
 }
 
+template <cpt::unit_conversion t>
+requires std::conditional_t<
+    t::pi_exponent::ratio::num != 0,
+    std::true_type,
+    std::false_type>::value
+[[nodiscard]]
+auto
+apply_conversion(long double const measurement) noexcept -> long double
+{
+    return { (t::ratio::value
+              * std::pow(std::numbers::pi_v<long double>, t::pi_exponent::value)
+             )
+             * ((measurement * t::prefix::value) + t::delta::value) };
+}
+
 template <cpt::unit_definition t, cmp::cpt::unit_prefix p>
 using definition_with_different_prefix = unit_definition<
     typename t::dimension,
     p,
     typename t::ratio,
-    typename t::delta>;
+    typename t::delta,
+    typename t::pi_exponent>;
 
 template <util::cpt::ratio r, cpt::unit_definition t>
 using definition_with_derived_ratio = unit_definition<
     typename t::dimension,
     typename t::prefix,
     derive_unit_ratio<r, t>,
-    typename t::delta>;
+    typename t::delta,
+    typename t::pi_exponent>;
 
 template <cpt::unit_definition a, cpt::unit_definition b>
 using definition_multiply = unit_definition<
     typename a::dimension::template add<typename b::dimension>,
     convert_unit_prefix<a, b>,
     convert_unit_ratio<a, b>,
-    convert_unit_delta<a, b>>;
+    convert_unit_delta<a, b>,
+    convert_unit_pi_exponent<a, b>>;
 
 template <cpt::unit_definition a, cpt::unit_definition b>
 using definition_divide = unit_definition<
     typename a::dimension::template subtract<typename b::dimension>,
     convert_unit_prefix<a, b>,
     convert_unit_ratio<a, b>,
-    convert_unit_delta<a, b>>;
+    convert_unit_delta<a, b>,
+    convert_unit_pi_exponent<a, b>>;
 
 template <cpt::unit_definition t>
 using definition_squared = definition_multiply<t, t>;
