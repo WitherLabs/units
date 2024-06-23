@@ -1,0 +1,8 @@
+[project]
+name = "units"
+version = "0.0.1"
+type = "library"
+
+[development]
+lang = "c++"
+
