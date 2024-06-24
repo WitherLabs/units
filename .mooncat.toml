@@ -1,6 +1,6 @@
 [project]
 name = "units"
-version = "0.4.0"
+version = "0.4.1"
 type = "library"
 
 [development]

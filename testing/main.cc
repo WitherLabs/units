@@ -30,7 +30,7 @@ auto
 main() -> int
 {
     // 10 meters
-    lmc::units::length::meters const distance { 10 };
+    auto const distance = 10_meters;
 
     // Will automaticlly convert to inchs and feet
     print_meters(distance);

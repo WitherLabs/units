@@ -70,6 +70,7 @@ using exa   = impl::cmp::unit_prefix<std::exa>;
     LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, milli##name)             \
     LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, centi##name)             \
     LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, deci##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, name)                    \
     LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, deca##name)              \
     LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, hecto##name)             \
     LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, kilo##name)              \
