@@ -7,33 +7,14 @@ Facilitates operations regarding phyical unit manipulation and dimensional
 analysis
 
 ## Installation
-### Automated
-- **UNIX Based** \
-As `root`: execute the `installer.sh` script in the root directory.
-```sh
-./install.sh
-```
-This will copy the project's headers over to `/usr/include/mooncat/units`
+Installation is done through the
+[MoonCat Project Manager](https://github.com/MooncatCorps/mooncat-project-manager)
+python library
 
-- **Windows** \
-As an administrator: execute the `installer.ps1` script in the root directory
-```ps1
-& .\installer.ps1
+```py
+from mooncat.mcpm import actions
+actions.install()
 ```
-This will copy the project's headers over to
-`C:\Program Files\Mooncat\include\mooncat\units`in order to facilitate
-inclusion in MS projects
-
-### Manual
-- **UNIX Based**
-```sh
-mkdir -p /usr/include/mooncat/units
-mv ./include/* /usr/include/mooncat/units
-```
-
-- **Windows** \
-Copy the contents of the `include` directory over to
-`C:\Program Files\Mooncat\include\mooncat\units`
 
 ## Usage
 1. Include the header representing your desired unit type
