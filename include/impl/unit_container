@@ -150,3 +150,18 @@ template <util::cpt::ratio r, cnt::cpt::unit_container t>
 using derive = impl::cnt::container_with_derived_ratio<r, t>;
 } // namespace lmc::units::impl::abbr
 
+#define LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, name)                \
+    [[nodiscard]]                                                              \
+    constexpr auto                                                             \
+    operator""_##name (long double value) -> lmc::units::dimension::name       \
+    {                                                                          \
+        return lmc::units::dimension::name { value };                          \
+    }                                                                          \
+    [[nodiscard]]                                                              \
+    constexpr auto                                                             \
+    operator""_##name (unsigned long long value)                               \
+        -> lmc::units::dimension::name                                         \
+    {                                                                          \
+        return lmc::units::dimension::name { static_cast<long double>(value    \
+        ) };                                                                   \
+    }

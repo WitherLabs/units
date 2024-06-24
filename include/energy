@@ -9,7 +9,7 @@ namespace lmc::units::energy
 using joules = impl::cnt::unit_container<impl::def::definition_multiply<
     force::newtons::definition,
     length::meters::definition>>;
-ADD_PREFIXES_TO_CONTAINER(joules)
+LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(joules)
 
 using dimension = joules::definition::dimension;
 
@@ -20,7 +20,7 @@ using is_energy_unit
 template <impl::cnt::cpt::unit_container container>
 constexpr bool is_energy_unit_v = is_energy_unit<container>::value;
 
-using foot_pound_force          = impl::abbr::
+using foot_pound_force = impl::abbr::
     derive<std::ratio_add<std::ratio<1>, std::ratio<1779, 5000>>, joules>;
 
 using horsepower_hour = impl::abbr::
@@ -42,3 +42,14 @@ using electronvolts
 using ton_of_tnt = impl::abbr::derive<std::ratio<4184>, joules>;
 
 } // namespace lmc::units::energy
+
+inline namespace ilmc
+{
+LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(energy, joules)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(energy, foot_pound_force)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(energy, horsepower_hour)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(energy, kilowatt_hour)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(energy, calories_it)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(energy, electronvolts)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(energy, ton_of_tnt)
+} // namespace ilmc

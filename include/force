@@ -13,7 +13,7 @@ using newtons = impl::cnt::unit_container<impl::def::definition_divide<
         mass::kilograms::definition,
         length::meters::definition>,
     impl::def::definition_squared<time::seconds::definition>>>;
-ADD_PREFIXES_TO_CONTAINER(newtons)
+LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(newtons)
 
 using dimension = newtons::definition::dimension;
 
@@ -24,7 +24,7 @@ using is_force_unit
 template <impl::cnt::cpt::unit_container container>
 constexpr bool is_force_unit_v = is_force_unit<container>::value;
 
-using kilopond                 = impl::abbr::
+using kilopond = impl::abbr::
     derive<std::ratio_add<std::ratio<9>, std::ratio<16133, 20000>>, newtons>;
 
 using pounds = impl::abbr::
@@ -36,3 +36,8 @@ using poundal
 using dynes = impl::abbr::derive<std::ratio<1, 100000>, newtons>;
 
 } // namespace lmc::units::force
+
+inline namespace ilmc
+{
+LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(force, newtons)
+} // namespace ilmc

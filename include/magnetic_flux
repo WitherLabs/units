@@ -10,7 +10,7 @@ namespace lmc::units::magnetic_flux
 using webers = impl::cnt::unit_container<impl::def::definition_multiply<
     voltage::volts::definition,
     time::seconds::definition>>;
-ADD_PREFIXES_TO_CONTAINER(webers)
+LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(webers)
 
 using dimension = webers::definition::dimension;
 
@@ -23,3 +23,8 @@ constexpr bool is_magnetic_flux_unit_v
     = is_magnetic_flux_unit<container>::value;
 
 } // namespace lmc::units::magnetic_flux
+
+inline namespace ilmc
+{
+LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(magnetic_flux, webers)
+} // namespace ilmc
