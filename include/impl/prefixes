@@ -27,7 +27,7 @@ using peta  = impl::cmp::unit_prefix<std::peta>;
 using exa   = impl::cmp::unit_prefix<std::exa>;
 } // namespace lmc::units::prefix
 
-#define ADD_PREFIXES_TO_CONTAINER(name)                                        \
+#define LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(name)                              \
     using atto##name = impl::cnt::                                             \
         container_with_different_prefix<name, lmc::units::prefix::atto>;       \
     using femto##name = impl::cnt::                                            \
@@ -60,4 +60,22 @@ using exa   = impl::cmp::unit_prefix<std::exa>;
         container_with_different_prefix<name, lmc::units::prefix::peta>;       \
     using exa##name = impl::cnt::                                              \
         container_with_different_prefix<name, lmc::units::prefix::exa>;
+
+#define LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(dimension, name)       \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, atto##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, femto##name)             \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, pico##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, nano##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, micro##name)             \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, milli##name)             \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, centi##name)             \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, deci##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, deca##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, hecto##name)             \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, kilo##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, mega##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, giga##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, tera##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, peta##name)              \
+    LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(dimension, exa##name)
 

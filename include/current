@@ -30,6 +30,11 @@ using amperes = impl::cnt::unit_container<impl::def::unit_definition<
     impl::cmp::base_unit_ratio,
     impl::cmp::base_unit_delta>>;
 
-ADD_PREFIXES_TO_CONTAINER(amperes)
+LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(amperes)
 
 } // namespace lmc::units::current
+
+inline namespace ilmc
+{
+LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(current, amperes)
+} // namespace ilmc

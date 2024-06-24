@@ -13,3 +13,9 @@ using steradians = impl::cnt::unit_container<
 using dimension = steradians::definition::dimension;
 
 } // namespace lmc::units::solid_angle
+
+inline namespace ilmc
+{
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(solid_angle, steradians)
+} // namespace ilmc
+

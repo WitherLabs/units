@@ -1,3 +1,4 @@
+#include <mooncat/units/acceleration>
 #include <mooncat/units/angle>
 #include <mooncat/units/capacitance>
 #include <mooncat/units/catalytic_activity>
@@ -24,6 +25,7 @@
 #include <mooncat/units/substance>
 #include <mooncat/units/temperature>
 #include <mooncat/units/time>
+#include <mooncat/units/velocity>
 #include <mooncat/units/voltage>
 
 static_assert(lmc::units::impl::dim::dimensional_vector<
@@ -95,6 +97,26 @@ static_assert(lmc::units::impl::dim::dimensional_vector<
               lmc::units::impl::dim::luminosity<0>,
               lmc::units::impl::dim::substance<1>>::
                   equals_v<lmc::units::substance::dimension>);
+
+static_assert(lmc::units::impl::dim::dimensional_vector<
+              lmc::units::impl::dim::length<1>,
+              lmc::units::impl::dim::mass<0>,
+              lmc::units::impl::dim::time<-1>,
+              lmc::units::impl::dim::current<0>,
+              lmc::units::impl::dim::temperature<0>,
+              lmc::units::impl::dim::luminosity<0>,
+              lmc::units::impl::dim::substance<0>>::
+                  equals_v<lmc::units::velocity::dimension>);
+
+static_assert(lmc::units::impl::dim::dimensional_vector<
+              lmc::units::impl::dim::length<1>,
+              lmc::units::impl::dim::mass<0>,
+              lmc::units::impl::dim::time<-2>,
+              lmc::units::impl::dim::current<0>,
+              lmc::units::impl::dim::temperature<0>,
+              lmc::units::impl::dim::luminosity<0>,
+              lmc::units::impl::dim::substance<0>>::
+                  equals_v<lmc::units::acceleration::dimension>);
 
 static_assert(lmc::units::impl::dim::dimensional_vector<
               lmc::units::impl::dim::length<0>,
@@ -285,3 +307,4 @@ static_assert(lmc::units::impl::dim::dimensional_vector<
               lmc::units::impl::dim::luminosity<1>,
               lmc::units::impl::dim::substance<0>>::
                   equals_v<lmc::units::illuminance::dimension>);
+

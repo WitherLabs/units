@@ -1,7 +1,5 @@
 // vim: set ft=cpp:
 
-// vim: set ft=cpp:
-
 #pragma once
 
 #include <mooncat/units/impl/prefixes>
@@ -26,7 +24,7 @@ using is_length_unit
 template <impl::cnt::cpt::unit_container container>
 constexpr bool is_length_unit_v = is_length_unit<container>::value;
 
-using meters         = impl::cnt::unit_container<impl::def::unit_definition<
+using meters = impl::cnt::unit_container<impl::def::unit_definition<
     dimension,
     impl::cmp::base_unit_prefix,
     impl::cmp::base_unit_ratio,
@@ -49,6 +47,28 @@ using nautical_miles = impl::abbr::derive<std::ratio<10>, cables>;
 using links          = impl::abbr::derive<std::ratio<66, 100>, feet>;
 using rods           = impl::abbr::derive<std::ratio<25>, links>;
 
-ADD_PREFIXES_TO_CONTAINER(meters)
+LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(meters)
 
 } // namespace lmc::units::length
+
+inline namespace ilmc
+{
+LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(length, meters)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, feet)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, twips)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, thous)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, barleycorns)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, inches)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, hands)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, yards)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, chains)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, furlongs)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, miles)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, leagues)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, fathoms)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, cables)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, nautical_miles)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, links)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(length, rods)
+} // namespace ilmc
+
