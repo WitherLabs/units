@@ -107,6 +107,13 @@ public:
         return type { _measurement * other.get_measurement() };
     }
 
+    [[nodiscard]]
+    constexpr auto
+    operator* (long double multiplier) const noexcept -> unit_container
+    {
+        return unit_container { _measurement * multiplier };
+    }
+
     template <cpt::unit_container other_unit_container>
     [[nodiscard]]
     constexpr auto
@@ -120,6 +127,13 @@ public:
             typename other_unit_container::definition>>;
 
         return type { _measurement / other.get_measurement() };
+    }
+
+    [[nodiscard]]
+    constexpr auto
+    operator/ (long double divisor) const noexcept -> unit_container
+    {
+        return unit_container { _measurement * divisor };
     }
 
     [[nodiscard]]
