@@ -10,7 +10,7 @@ using meters_per_second_squared
     = impl::cnt::unit_container<impl::def::definition_divide<
         velocity::meters_per_second::definition,
         time::seconds::definition>>;
-ADD_PREFIXES_TO_CONTAINER(meters_per_second_squared)
+LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(meters_per_second_squared)
 
 using dimension = meters_per_second_squared::definition::dimension;
 
@@ -31,3 +31,13 @@ using knots_per_second = impl::cnt::unit_container<impl::def::definition_divide<
     time::seconds::definition>>;
 
 } // namespace lmc::units::acceleration
+
+inline namespace ilmc
+{
+LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(
+    acceleration,
+    meters_per_second_squared
+)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(acceleration, feet_per_second_squared)
+LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(acceleration, knots_per_second)
+} // namespace ilmc
