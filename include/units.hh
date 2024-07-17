@@ -37,6 +37,9 @@ ratio_to_real() -> fp
 
 namespace impl
 {
+namespace dimension
+{
+
 struct dimension_tag
 {
 };
@@ -123,7 +126,7 @@ struct dimension: dimension_tag
         std::ratio_divide<luminous_intensity, factor>>;
 };
 
-using empty_dimension = dimension<
+using none = dimension<
     std::ratio<0>,
     std::ratio<0>,
     std::ratio<0>,
@@ -131,6 +134,8 @@ using empty_dimension = dimension<
     std::ratio<0>,
     std::ratio<0>,
     std::ratio<0>>;
+
+} // namespace dimension
 
 namespace prefix
 {
@@ -200,6 +205,9 @@ using convert = std::ratio_divide<ratio_a, ratio_b>;
 
 template <util::ratio_cpt ratio_a, util::ratio_cpt ratio_b>
 using derive = std::ratio_multiply<ratio_a, ratio_b>;
+
+using base = std::ratio<1, 1>;
+
 } // namespace ratio
 
 namespace delta
@@ -212,6 +220,9 @@ template <
     util::ratio_cpt delta_a,
     util::ratio_cpt delta_b>
 using derive = std::ratio_add<std::ratio_multiply<ratio_a, delta_a>, delta_b>;
+
+using none = std::ratio<0, 1>;
+
 } // namespace delta
 
 namespace kind
@@ -229,10 +240,10 @@ template <typename type>
 concept kind_cpt = is_kind_v<type>;
 
 template <
-    dimension_cpt   dimension_t,
-    util::ratio_cpt prefix_t,
-    util::ratio_cpt ratio_t,
-    util::ratio_cpt delta_t>
+    dimension::dimension_cpt dimension_t,
+    util::ratio_cpt          prefix_t,
+    util::ratio_cpt          ratio_t,
+    util::ratio_cpt          delta_t>
 struct kind: kind_tag
 {
     using dimension = dimension_t;
