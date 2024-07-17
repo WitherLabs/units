@@ -1,5 +1,3 @@
-// vim: set ft=cpp:
-
 #pragma once
 
 namespace units::implementation
