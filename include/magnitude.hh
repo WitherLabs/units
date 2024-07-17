@@ -3,12 +3,12 @@
 namespace units::implementation
 {
 
-template <typename kind_t> class magnitude
+template <typename kind_t> class unit
 {
 public:
     using kind = kind_t;
 
-    explicit constexpr magnitude(double value)
+    explicit constexpr unit(double value)
     : _value { value }
     {
     }
@@ -23,21 +23,22 @@ public:
     template <typename other_kind>
     [[nodiscard]]
     constexpr auto
-    convert_to() const noexcept -> magnitude<other_kind>
+    convert_to() const noexcept -> unit<other_kind>
     {
         double ratio_cv = kind::ratio / other_kind::ratio;
-        return magnitude<other_kind> { _value * ratio_cv };
+        return unit<other_kind> { _value * ratio_cv };
     }
 
-    template <typename other_magnitude>
+    template <typename other_unit>
     [[nodiscard]]
     constexpr
-    operator other_magnitude () const noexcept // NOLINT: No explicit pls
+    operator other_unit () const noexcept // NOLINT: No explicit pls
     {
-        return convert_to<typename other_magnitude::kind>();
+        return convert_to<typename other_unit::kind>();
     }
 
 private:
+    double _ratio;
     double _value;
 };
 

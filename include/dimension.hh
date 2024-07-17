@@ -1,9 +1,24 @@
 #pragma once
 
+#include <type_traits>
+
 #include <ratio>
 
 namespace units::implementation
 {
+
+struct dimension_tag
+{
+};
+
+template <typename type>
+using is_dimension = std::is_base_of<dimension_tag, type>;
+
+template <typename type>
+constexpr bool is_dimension_v = is_dimension<type>::value;
+
+template <typename type>
+concept is_dimension_c = is_dimension_v<type>;
 
 template <
     typename _length,
@@ -13,7 +28,7 @@ template <
     typename _temperature,
     typename _substance,
     typename _luminous_intensity>
-struct kind_dimension
+struct dimension: dimension_tag
 {
     using length             = _length;
     using mass               = _mass;
@@ -36,7 +51,7 @@ struct kind_dimension
               typename other::luminous_intensity>;
 
     template <typename other>
-    using add = kind_dimension<
+    using add = dimension<
         std::ratio_add<length, typename other::length>,
         std::ratio_add<mass, typename other::mass>,
         std::ratio_add<time, typename other::time>,
@@ -46,7 +61,7 @@ struct kind_dimension
         std::ratio_add<luminous_intensity, typename other::luminous_intensity>>;
 
     template <typename other>
-    using subtract = kind_dimension<
+    using subtract = dimension<
         std::ratio_subtract<length, typename other::length>,
         std::ratio_subtract<mass, typename other::mass>,
         std::ratio_subtract<time, typename other::time>,
@@ -58,7 +73,7 @@ struct kind_dimension
             typename other::luminous_intensity>>;
 
     template <typename factor>
-    using times = kind_dimension<
+    using times = dimension<
         std::ratio_multiply<length, factor>,
         std::ratio_multiply<mass, factor>,
         std::ratio_multiply<time, factor>,
@@ -68,7 +83,7 @@ struct kind_dimension
         std::ratio_multiply<luminous_intensity, factor>>;
 
     template <typename factor>
-    using divide = kind_dimension<
+    using divide = dimension<
         std::ratio_divide<length, factor>,
         std::ratio_divide<mass, factor>,
         std::ratio_divide<time, factor>,
