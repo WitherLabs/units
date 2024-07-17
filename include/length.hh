@@ -17,11 +17,7 @@ using length_dimension = impl::dimension<
 
 namespace kind
 {
-using metres = impl::kind<
-    length_dimension,
-    impl::prefix::none,
-    impl::ratio::base,
-    impl::delta::none>;
+using metres = impl::basic_kind<length_dimension>;
 using meters = metres;
 
 using feet           = impl::derived_kind<meters, std::ratio<381, 1250>>::value;
