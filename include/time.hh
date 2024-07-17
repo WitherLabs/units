@@ -1,59 +1,54 @@
-// vim: set ft=cpp:
-
 #pragma once
 
-#include <mooncat/units/impl/prefixes>
-#include <mooncat/units/impl/unit_container>
+#include <wither/units/units.hh>
 
-namespace lmc::units::time
+namespace units
 {
 
-using dimension = impl::dim::dimensional_vector<
-    impl::dim::length<0>,
-    impl::dim::mass<0>,
-    impl::dim::time<1>,
-    impl::dim::current<0>,
-    impl::dim::temperature<0>,
-    impl::dim::luminosity<0>,
-    impl::dim::substance<0>>;
+using time_dimension = impl::dimension<
+    std::ratio<0>, // length
+    std::ratio<0>, // mass
+    std::ratio<1>, // time
+    std::ratio<0>, // current
+    std::ratio<0>, // temperature
+    std::ratio<0>, // substance
+    std::ratio<0>  // luminous intensity
+    >;
 
-template <impl::cnt::cpt::unit_container container>
-using is_time_unit
-    = dimension::equals<typename container::definition::dimension>;
-
-template <impl::cnt::cpt::unit_container container>
-constexpr bool is_time_unit_v = is_time_unit<container>::value;
-
-using seconds = impl::cnt::unit_container<impl::def::unit_definition<
-    dimension,
-    impl::cmp::base_unit_prefix,
-    impl::cmp::base_unit_ratio,
-    impl::cmp::base_unit_delta>>;
-
-using minutes    = impl::abbr::derive<std::ratio<60>, seconds>;
-using hours      = impl::abbr::derive<std::ratio<60>, minutes>;
-using days       = impl::abbr::derive<std::ratio<24>, hours>;
-using weeks      = impl::abbr::derive<std::ratio<7>, days>;
-using months_28  = impl::abbr::derive<std::ratio<28>, days>;
-using months_29  = impl::abbr::derive<std::ratio<29>, days>;
-using months_30  = impl::abbr::derive<std::ratio<30>, days>;
-using months_31  = impl::abbr::derive<std::ratio<31>, days>;
-using years      = impl::abbr::derive<std::ratio<365>, days>;
-using leap_years = impl::abbr::derive<std::ratio<366>, days>;
-using decades    = impl::abbr::derive<std::ratio<10>, years>;
-using centuries  = impl::abbr::derive<std::ratio<100>, years>;
-using eons       = impl::abbr::derive<std::ratio<1000000000>, years>;
-
-LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(seconds)
-
-} // namespace lmc::units::time
-
-inline namespace ilmc
+namespace kind
 {
-LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(time, seconds)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(time, minutes)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(time, hours)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(time, days)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(time, weeks)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(time, years)
-} // namespace ilmc
+
+using seconds = impl::basic_kind<time_dimension>;
+
+using minutes    = impl::derived_kind<seconds, std::ratio<60>>::value;
+using hours      = impl::derived_kind<minutes, std::ratio<60>>::value;
+using days       = impl::derived_kind<hours, std::ratio<24>>::value;
+using weeks      = impl::derived_kind<days, std::ratio<7>>::value;
+using months_28  = impl::derived_kind<days, std::ratio<28>>::value;
+using months_29  = impl::derived_kind<days, std::ratio<29>>::value;
+using months_30  = impl::derived_kind<days, std::ratio<30>>::value;
+using months_31  = impl::derived_kind<days, std::ratio<31>>::value;
+using years      = impl::derived_kind<days, std::ratio<365>>::value;
+using leap_years = impl::derived_kind<days, std::ratio<366>>::value;
+using decades    = impl::derived_kind<years, std::ratio<10>>::value;
+using centuries  = impl::derived_kind<years, std::ratio<100>>::value;
+using eons       = impl::derived_kind<years, std::ratio<1000000000>>::value;
+
+} // namespace kind
+
+using minutes    = impl::magnitude<kind::minutes, double>;
+using hours      = impl::magnitude<kind::hours, double>;
+using days       = impl::magnitude<kind::days, double>;
+using weeks      = impl::magnitude<kind::weeks, double>;
+using months_28  = impl::magnitude<kind::months_28, double>;
+using months_29  = impl::magnitude<kind::months_29, double>;
+using months_30  = impl::magnitude<kind::months_30, double>;
+using months_31  = impl::magnitude<kind::months_31, double>;
+using years      = impl::magnitude<kind::years, double>;
+using leap_years = impl::magnitude<kind::leap_years, double>;
+using decades    = impl::magnitude<kind::decades, double>;
+using centuries  = impl::magnitude<kind::centuries, double>;
+using eons       = impl::magnitude<kind::eons, double>;
+
+} // namespace units
+
