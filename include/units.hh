@@ -38,15 +38,25 @@ ratio_to_real() -> internal_data_type
 
 namespace impl
 {
-namespace dimension
-{
 
-struct dimension_tag
+namespace tag
+{
+struct dimension
 {
 };
 
+struct kind
+{
+};
+
+struct magnitude
+{
+};
+
+} // namespace tag
+
 template <typename type>
-using is_dimension = std::is_base_of<dimension_tag, type>;
+using is_dimension = std::is_base_of<tag::dimension, type>;
 
 template <typename type>
 constexpr bool is_dimension_v = is_dimension<type>::value;
@@ -62,7 +72,7 @@ template <
     util::ratio_cpt _temperature,
     util::ratio_cpt _substance,
     util::ratio_cpt _luminous_intensity>
-struct dimension: dimension_tag
+struct dimension: tag::dimension
 {
     using length             = _length;
     using mass               = _mass;
@@ -74,7 +84,7 @@ struct dimension: dimension_tag
 };
 
 template <dimension_cpt dim_a, dimension_cpt dim_b>
-static constexpr bool equals
+static constexpr bool equal_dimensions
     = std::ratio_equal_v<typename dim_a::length, typename dim_b::length>
    && std::ratio_equal_v<typename dim_a::mass, typename dim_b::mass>
    && std::ratio_equal_v<typename dim_a::time, typename dim_b::time>
@@ -88,7 +98,7 @@ static constexpr bool equals
           typename dim_b::luminous_intensity>;
 
 template <dimension_cpt dim_a, dimension_cpt dim_b>
-using add = dimension<
+using add_dimensions = dimension<
     std::ratio_add<typename dim_a::length, typename dim_b::length>,
     std::ratio_add<typename dim_a::mass, typename dim_b::mass>,
     std::ratio_add<typename dim_a::time, typename dim_b::time>,
@@ -100,7 +110,7 @@ using add = dimension<
         typename dim_b::luminous_intensity>>;
 
 template <dimension_cpt dim_a, dimension_cpt dim_b>
-using subtract = dimension<
+using subtract_dimensions = dimension<
     std::ratio_subtract<typename dim_a::length, typename dim_b::length>,
     std::ratio_subtract<typename dim_a::mass, typename dim_b::mass>,
     std::ratio_subtract<typename dim_a::time, typename dim_b::time>,
@@ -114,7 +124,7 @@ using subtract = dimension<
         typename dim_b::luminous_intensity>>;
 
 template <dimension_cpt dim_a, util::ratio_cpt factor>
-using times = dimension<
+using multiply_dimension = dimension<
     std::ratio_multiply<typename dim_a::length, factor>,
     std::ratio_multiply<typename dim_a::mass, factor>,
     std::ratio_multiply<typename dim_a::time, factor>,
@@ -124,7 +134,7 @@ using times = dimension<
     std::ratio_multiply<typename dim_a::luminous_intensity, factor>>;
 
 template <dimension_cpt dim, util::ratio_cpt factor>
-using divide = dimension<
+using divide_dimension = dimension<
     std::ratio_divide<typename dim::length, factor>,
     std::ratio_divide<typename dim::mass, factor>,
     std::ratio_divide<typename dim::time, factor>,
@@ -133,7 +143,7 @@ using divide = dimension<
     std::ratio_divide<typename dim::substance, factor>,
     std::ratio_divide<typename dim::luminous_intensity, factor>>;
 
-using none = dimension<
+using no_dimension = dimension<
     std::ratio<0>,
     std::ratio<0>,
     std::ratio<0>,
@@ -141,8 +151,6 @@ using none = dimension<
     std::ratio<0>,
     std::ratio<0>,
     std::ratio<0>>;
-
-} // namespace dimension
 
 namespace prefix
 {
@@ -187,12 +195,13 @@ using quetta = std::quetta;
 #    endif
 #endif
 
-using kibi = std::ratio<1024>;
-using mebi = std::ratio<1048576>;
-using gibi = std::ratio<1073741824>;
-using tebi = std::ratio<1099511627776>;
-using pebi = std::ratio<1125899907000000>;
-using exbi = std::ratio<1152921505000000000>;
+// Funny how it thinks they're not constant
+using kibi = std::ratio<1024>;                // NOLINT
+using mebi = std::ratio<1048576>;             // NOLINT
+using gibi = std::ratio<1073741824>;          // NOLINT
+using tebi = std::ratio<1099511627776>;       // NOLINT
+using pebi = std::ratio<1125899907000000>;    // NOLINT
+using exbi = std::ratio<1152921505000000000>; // NOLINT
 
 #if __INTMAX_WIDTH__ >= 96
 using zebi = std::ratio<1180591621000000000000>;
@@ -232,14 +241,7 @@ using none = std::ratio<0, 1>;
 
 } // namespace delta
 
-namespace kind
-{
-
-struct kind_tag
-{
-};
-
-template <typename type> using is_kind = std::is_base_of<kind_tag, type>;
+template <typename type> using is_kind = std::is_base_of<tag::kind, type>;
 
 template <typename type> constexpr bool is_kind_v = is_kind<type>::value;
 
@@ -247,11 +249,11 @@ template <typename type>
 concept kind_cpt = is_kind_v<type>;
 
 template <
-    dimension::dimension_cpt dimension_t,
-    util::ratio_cpt          prefix_t,
-    util::ratio_cpt          ratio_t,
-    util::ratio_cpt          delta_t>
-struct kind: kind_tag
+    dimension_cpt   dimension_t,
+    util::ratio_cpt prefix_t,
+    util::ratio_cpt ratio_t,
+    util::ratio_cpt delta_t>
+struct kind: tag::kind
 {
     using dimension = dimension_t;
     using prefix    = prefix_t;
@@ -260,9 +262,10 @@ struct kind: kind_tag
 };
 
 template <kind_cpt kind_a, kind_cpt kind_b>
-requires dimension::
-    equals<typename kind_a::dimension, typename kind_b::dimension>
-    struct conversion
+requires equal_dimensions<
+    typename kind_a::dimension,
+    typename kind_b::dimension>
+struct conversion
 {
     using prefix_cvr
         = prefix::convert<typename kind_a::prefix, typename kind_b::prefix>;
@@ -292,14 +295,14 @@ requires dimension::
 template <kind_cpt kind_t>
 using clone = kind<
     typename kind_t::dimension,
-    typename kind_t::prefix_t,
+    typename kind_t::prefix,
     typename kind_t::ratio,
     typename kind_t::delta>;
 
-template <kind_cpt kind_t, dimension::dimension_cpt dimension_t>
+template <kind_cpt kind_t, dimension_cpt dimension_t>
 using swap_dimension = kind<
     dimension_t,
-    typename kind_t::prefix_t,
+    typename kind_t::prefix,
     typename kind_t::ratio,
     typename kind_t::delta>;
 
@@ -313,28 +316,36 @@ using swap_prefix = kind<
 template <kind_cpt kind_t, util::ratio_cpt ratio_t>
 using swap_ratio = kind<
     typename kind_t::dimension,
-    typename kind_t::prefix_t,
+    typename kind_t::prefix,
     ratio_t,
     typename kind_t::delta>;
 
 template <kind_cpt kind_t, util::ratio_cpt delta_t>
 using swap_delta = kind<
     typename kind_t::dimension,
-    typename kind_t::prefix_t,
+    typename kind_t::prefix,
     typename kind_t::ratio,
     delta_t>;
 
-} // namespace kind
-
-namespace magnitude
+template <
+    kind_cpt        kind_t,
+    util::ratio_cpt ratio_t,
+    util::ratio_cpt delta_t = std::ratio<0>>
+struct derived_kind
 {
+    using derived_ratio = ratio::derive<typename kind_t::ratio, ratio_t>;
+    using derived_delta = delta::
+        derive<typename kind_t::ratio, typename kind_t::delta, delta_t>;
 
-struct magnitude_tag
-{
+    using value = kind<
+        typename kind_t::dimension,
+        typename kind_t::prefix,
+        derived_ratio,
+        derived_delta>;
 };
 
 template <typename type>
-using is_magnitude = std::is_base_of<magnitude_tag, type>;
+using is_magnitude = std::is_base_of<tag::magnitude, type>;
 
 template <typename type>
 constexpr bool is_magnitude_v = is_magnitude<type>::value;
@@ -342,21 +353,24 @@ constexpr bool is_magnitude_v = is_magnitude<type>::value;
 template <typename type>
 concept magnitude_cpt = is_magnitude_v<type>;
 
-template <kind::kind_cpt kind_t, typename internal_data_type> struct magnitude
+template <kind_cpt kind_t, typename internal_data_type>
+struct magnitude: tag::magnitude
 {
 public:
+    using magkind = kind_t;
+
     explicit constexpr magnitude(internal_data_type measurement)
     : _measurement { measurement }
     {
     }
 
-    template <kind::kind_cpt new_kind_t>
+    template <kind_cpt new_kind_t>
     [[nodiscard]]
     constexpr auto
-    convert_to() -> magnitude<new_kind_t, internal_data_type>
+    convert_to() const noexcept -> magnitude<new_kind_t, internal_data_type>
     {
         return magnitude<new_kind_t, internal_data_type> {
-            kind::conversion<kind_t, new_kind_t>::apply_to(_measurement)
+            conversion<kind_t, new_kind_t>::apply_to(_measurement)
         };
     }
 
@@ -365,6 +379,14 @@ public:
     get_measurement() const noexcept -> internal_data_type
     {
         return _measurement;
+    }
+
+    template <magnitude_cpt other_magnitude_t>
+    [[nodiscard]]
+    constexpr // NOLINTNEXTLINE: No explicit pls
+    operator other_magnitude_t () const noexcept
+    {
+        return convert_to<typename other_magnitude_t::magkind>();
     }
 
 private:
@@ -381,8 +403,6 @@ swap_internal_data_type(magnitude_t mag
         mag.get_measurement()
     };
 }
-
-} // namespace magnitude
 
 } // namespace impl
 
