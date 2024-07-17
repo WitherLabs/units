@@ -292,6 +292,9 @@ struct conversion
     }
 };
 
+template <dimension_cpt dimension_t>
+using basic_kind = kind<dimension_t, prefix::none, ratio::base, delta::none>;
+
 template <kind_cpt kind_t>
 using clone = kind<
     typename kind_t::dimension,

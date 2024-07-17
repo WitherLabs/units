@@ -1,57 +1,33 @@
-// vim: set ft=cpp:
-
 #pragma once
 
-#include <mooncat/units/impl/prefixes>
-#include <mooncat/units/impl/unit_container>
+#include <wither/units/units.hh>
 
-namespace lmc::units::mass
+namespace units
 {
 
-using dimension = impl::dim::dimensional_vector<
-    impl::dim::length<0>,
-    impl::dim::mass<1>,
-    impl::dim::time<0>,
-    impl::dim::current<0>,
-    impl::dim::temperature<0>,
-    impl::dim::luminosity<0>,
-    impl::dim::substance<0>>;
+using mass_dimension = impl::dimension<
+    std::ratio<0>, // length
+    std::ratio<1>, // mass
+    std::ratio<0>, // time
+    std::ratio<0>, // current
+    std::ratio<0>, // temperature
+    std::ratio<0>, // substance
+    std::ratio<0>  // luminous intensity
+    >;
 
-template <impl::cnt::cpt::unit_container container>
-using is_mass_unit
-    = dimension::equals<typename container::definition::dimension>;
-
-template <impl::cnt::cpt::unit_container container>
-constexpr bool is_mass_unit_v = is_mass_unit<container>::value;
-
-using grams = impl::cnt::unit_container<impl::def::unit_definition<
-    dimension,
-    impl::cmp::base_unit_prefix,
-    impl::cmp::base_unit_ratio,
-    impl::cmp::base_unit_delta>>;
-
-using pounds         = impl::abbr::derive<std::ratio<45359237, 100000>, grams>;
-using grains         = impl::abbr::derive<std::ratio<1, 7000>, pounds>;
-using drachms        = impl::abbr::derive<std::ratio<1, 256>, pounds>;
-using ounces         = impl::abbr::derive<std::ratio<1, 16>, pounds>;
-using stones         = impl::abbr::derive<std::ratio<14>, pounds>;
-using quarters       = impl::abbr::derive<std::ratio<28>, pounds>;
-using hundredweights = impl::abbr::derive<std::ratio<112>, pounds>;
-using tons           = impl::abbr::derive<std::ratio<2240>, pounds>;
-
-LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(grams)
-
-} // namespace lmc::units::mass
-
-inline namespace ilmc
+namespace kind
 {
-LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(mass, grams)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(mass, pounds)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(mass, grains)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(mass, drachms)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(mass, ounces)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(mass, stones)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(mass, quarters)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(mass, hundredweights)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(mass, tons)
-} // namespace ilmc
+using grams = impl::basic_kind<mass_dimension>;
+
+using pounds   = impl::derived_kind<grams, std::ratio<45359237, 100000>>::value;
+using grains   = impl::derived_kind<pounds, std::ratio<1, 7000>>::value;
+using drachms  = impl::derived_kind<pounds, std::ratio<1, 256>>::value;
+using ounces   = impl::derived_kind<pounds, std::ratio<1, 16>>::value;
+using stones   = impl::derived_kind<pounds, std::ratio<14>>::value;
+using quarters = impl::derived_kind<pounds, std::ratio<28>>::value;
+using hundredweights = impl::derived_kind<pounds, std::ratio<112>>::value;
+using tons           = impl::derived_kind<pounds, std::ratio<2240>>::value;
+} // namespace kind
+
+} // namespace units
+
