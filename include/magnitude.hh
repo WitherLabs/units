@@ -1,6 +1,6 @@
 #pragma once
 
-namespace units::implementation
+namespace units::impl
 {
 
 template <typename kind_t> class unit
@@ -25,8 +25,14 @@ public:
     constexpr auto
     convert_to() const noexcept -> unit<other_kind>
     {
-        double ratio_cv = kind::ratio / other_kind::ratio;
-        return unit<other_kind> { _value * ratio_cv };
+        using prefix_ratio =
+            typename kind::prefix::template convert_to<other_kind>;
+        using uratio_ratio =
+            typename kind::uratio::template convert_to<other_kind>;
+        using udelta_ratio = typename kind::udelta::
+            template convert_to<uratio_ratio, other_kind>;
+
+        constexpr double factor =
     }
 
     template <typename other_unit>
@@ -38,9 +44,8 @@ public:
     }
 
 private:
-    double _ratio;
     double _value;
 };
 
-} // namespace units::implementation
+} // namespace units::impl
 
