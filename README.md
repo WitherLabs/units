@@ -1,4 +1,4 @@
-# LibMooncat Units
+# Units
 
 A generic compile-time-able units meta-library for dimensional analysis
 
@@ -7,24 +7,16 @@ Facilitates operations regarding phyical unit manipulation and dimensional
 analysis
 
 ## Installation
-Installation is done through the
-[MoonCat Project Manager](https://github.com/MooncatCorps/mooncat-project-manager)
-python library
-
-```py
-from mooncat.mcpm import actions
-actions.install()
-```
+Sorry, postponed!
 
 ## Usage
 1. Include the header representing your desired unit type
-2. Use the units within the `lmc::units::<type>` namespace to represent magnitudes
-3. Enjoy
+2. Use the units within the `units` namespace to represent magnitudes
 
 Here is an example
 
 ```cpp
-#include <mooncat/units/length>
+#include <wither/units/length.hh>
 
 #include <iostream>
 #include <ostream>
@@ -33,19 +25,19 @@ namespace
 {
 
 auto
-print_inches(lmc::units::length::inches inches) -> void
+print_inches(units::inches inches) -> void
 {
     std::println(std::cout, "{} inches", inches.get_measurement());
 }
 
 auto
-print_feet(lmc::units::length::feet feet) -> void
+print_feet(units::feet feet) -> void
 {
     std::println(std::cout, "{} feet", feet.get_measurement());
 }
 
 auto
-print_meters(lmc::units::length::meters meters) -> void
+print_meters(units::meters meters) -> void
 {
     std::println(std::cout, "{} meters", meters.get_measurement());
 }
@@ -56,7 +48,7 @@ auto
 main() -> int
 {
     // 10 meters
-    lmc::units::length::meters const distance { 10 };
+    units::meters const distance { 10 };
 
     // Will automatically convert to inches and feet
     print_meters(distance);
@@ -70,5 +62,36 @@ main() -> int
 
 ## Creating custom units
 Coming Soon. \
-It is currently possible to do so, however, there is no friendly api for it.
+It is currently possible to do so, however, there is no explicit api for it.
+
+## How does it work?
+A more in-depth explanation will be provided soon. Expect a wiki.
+
+For now, any unit you see has the following internal structure:
+Here, we use degrees fahrenheit as an example
+
+```
+┌ units::fahrenheit temp{144.6};
+│
+├ Magnitude: 144.6
+└ Kind: Fahrenheit
+  ├ Dimension : Temperature
+  ├ Prefix    : None    : 1
+  ├ Ratio     : Derived : 5 / 9
+  ├ Delta     : Derived : 45967 / 180
+  └ Derived from: Celsius [+5463, 20]
+    ├ Dimension : Temperature
+    ├ Prefix    : None    : 1
+    ├ Ratio     : Basic   : 1
+    ├ Delta     : Derived : 5463 / 20
+    └ Derived from: Kelvins
+      ├ Dimension : Temperature
+      ├ Prefix    : None  : 1
+      ├ Ratio     : Basic : 1
+      ├ Delta     : None  : 0
+      └ Kelvins are a base unit
+```
+
+These are not really nested, they are merely derived. Each entity only bases off
+of the last and break off as independent units.
 
