@@ -1,58 +1,37 @@
-// vim: set ft=cpp:
-
 #pragma once
 
-#include <mooncat/units/length>
-#include <mooncat/units/time>
+#include <wither/units/length.hh>
+#include <wither/units/time.hh>
 
-namespace lmc::units::velocity
+namespace units
 {
-using meters_per_second
-    = impl::cnt::unit_container<impl::def::definition_divide<
-        length::meters::definition,
-        time::seconds::definition>>;
-LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(meters_per_second)
 
-using dimension = meters_per_second::definition::dimension;
-
-template <impl::cnt::cpt::unit_container container>
-using is_velocity_unit
-    = dimension::equals<typename container::definition::dimension>;
-
-template <impl::cnt::cpt::unit_container container>
-constexpr bool is_velocity_unit_v = is_velocity_unit<container>::value;
-
-using meters_per_hour = impl::cnt::unit_container<impl::def::definition_divide<
-    length::kilometers::definition,
-    time::hours::definition>>;
-LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(meters_per_hour)
-
-using miles_per_hour = impl::cnt::unit_container<impl::def::definition_divide<
-    length::miles::definition,
-    time::hours::definition>>;
-
-using inches_per_second
-    = impl::cnt::unit_container<impl::def::definition_divide<
-        length::inches::definition,
-        time::seconds::definition>>;
-
-using feet_per_second = impl::cnt::unit_container<impl::def::definition_divide<
-    length::feet::definition,
-    time::seconds::definition>>;
-
-using knots = impl::cnt::unit_container<impl::def::definition_divide<
-    length::nautical_miles::definition,
-    time::hours::definition>>;
-
-} // namespace lmc::units::velocity
-
-inline namespace ilmc
+namespace kind
 {
-LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(velocity, meters_per_second)
-LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(velocity, meters_per_hour)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(velocity, miles_per_hour)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(velocity, inches_per_second)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(velocity, feet_per_second)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(velocity, knots)
-} // namespace ilmc
+
+using metres_per_second = impl::divide_kinds<metres, seconds>;
+
+using kilometres_per_hour = impl::divide_kinds<kilometres, hours>;
+using miles_per_hour      = impl::divide_kinds<miles, hours>;
+using inches_per_second   = impl::divide_kinds<inches, seconds>;
+using feet_per_second     = impl::divide_kinds<feet, seconds>;
+using knots               = impl::divide_kinds<nautical_miles, hours>;
+
+} // namespace kind
+
+using metres_per_second   = impl::magnitude<kind::metres_per_second, double>;
+using kilometres_per_hour = impl::magnitude<kind::kilometres_per_hour, double>;
+using miles_per_hour      = impl::magnitude<kind::miles_per_hour, double>;
+using inches_per_second   = impl::magnitude<kind::inches_per_second, double>;
+using feet_per_second     = impl::magnitude<kind::feet_per_second, double>;
+using knots               = impl::magnitude<kind::knots, double>;
+
+namespace dim
+{
+
+using velocity = kind::metres_per_second::dimension;
+
+} // namespace dim
+
+} // namespace units
 
