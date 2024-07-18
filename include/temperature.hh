@@ -21,7 +21,7 @@ namespace kind
 {
 using kelvin  = impl::basic_kind<temperature_dimension>;
 using celsius = impl::
-    derived_kind<kelvin, impl::ratio::base, std::ratio<27315, 100>>::value;
+    derived_kind<kelvin, impl::ratio::base, std::ratio<5463, 20>>::value;
 using fahrenheit
     = impl::derived_kind<celsius, std::ratio<5, 9>, std::ratio<-160, 9>>::value;
 
