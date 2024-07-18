@@ -455,7 +455,7 @@ public:
         using bkp = multiply_kinds<bk1, bk2>;
 
         auto const mag1 = convert_to<bk1>();
-        auto const mag2 = mag1.template convert_to<bk2>();
+        auto const mag2 = mag.template convert_to<bk2>();
 
         auto const magp
             = magnitude<bkp, internal_data_type> { mag1.get_measurement()
@@ -478,7 +478,7 @@ public:
         using bkp = divide_kinds<bk1, bk2>;
 
         auto const mag1 = convert_to<bk1>();
-        auto const mag2 = mag1.template convert_to<bk2>();
+        auto const mag2 = mag.template convert_to<bk2>();
 
         auto const magp
             = magnitude<bkp, internal_data_type> { mag1.get_measurement()
