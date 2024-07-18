@@ -58,7 +58,6 @@ using rods           = impl::derived_kind<links, std::ratio<25>>::value;
 } // namespace kind
 
 using metres = impl::magnitude<kind::metres, double>;
-using meters = metres;
 
 using attometres  = impl::magnitude<kind::attometres, double>;
 using femtometres = impl::magnitude<kind::femtometres, double>;
