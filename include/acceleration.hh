@@ -1,43 +1,53 @@
-// vim: set ft=cpp:
-
 #pragma once
 
-#include <mooncat/units/velocity>
+#include <wither/units/velocity.hh>
 
-namespace lmc::units::acceleration
+namespace units
 {
-using meters_per_second_squared
-    = impl::cnt::unit_container<impl::def::definition_divide<
-        velocity::meters_per_second::definition,
-        time::seconds::definition>>;
-LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(meters_per_second_squared)
 
-using dimension = meters_per_second_squared::definition::dimension;
+namespace kind
+{
 
-template <impl::cnt::cpt::unit_container container>
-using is_acceleration_unit
-    = dimension::equals<typename container::definition::dimension>;
+using metres_per_second_squared
+    = impl::divide_kinds<metres_per_second, seconds>;
 
-template <impl::cnt::cpt::unit_container container>
-constexpr bool is_acceleration_unit_v = is_acceleration_unit<container>::value;
+using kilometres_per_hour_squared
+    = impl::divide_kinds<kilometres_per_hour, hours>;
+
+using kilometres_per_hour_per_second
+    = impl::divide_kinds<kilometres_per_hour, seconds>;
+
+using feet_per_second_squared = impl::divide_kinds<feet_per_second, seconds>;
+
+using inches_per_second_squared
+    = impl::divide_kinds<inches_per_second, seconds>;
+
+using knots_per_second = impl::divide_kinds<knots, seconds>;
+using knots_per_hour   = impl::divide_kinds<knots, hours>;
+
+} // namespace kind
+
+using metres_per_second_squared
+    = impl::magnitude<kind::metres_per_second_squared, double>;
+
+using kilometres_per_hour_squared
+    = impl::magnitude<kind::kilometres_per_hour_squared, double>;
+
+using kilometres_per_hour_per_second
+    = impl::magnitude<kind::kilometres_per_hour_per_second, double>;
 
 using feet_per_second_squared
-    = impl::cnt::unit_container<impl::def::definition_divide<
-        length::feet::definition,
-        impl::def::definition_squared<time::seconds::definition>>>;
+    = impl::magnitude<kind::feet_per_second_squared, double>;
 
-using knots_per_second = impl::cnt::unit_container<impl::def::definition_divide<
-    velocity::knots::definition,
-    time::seconds::definition>>;
+using inches_per_second_squared
+    = impl::magnitude<kind::inches_per_second_squared, double>;
 
-} // namespace lmc::units::acceleration
+using knots_per_second = impl::magnitude<kind::knots_per_second, double>;
+using knots_per_hour   = impl::magnitude<kind::knots_per_hour, double>;
 
-inline namespace ilmc
+namespace dim
 {
-LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(
-    acceleration,
-    meters_per_second_squared
-)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(acceleration, feet_per_second_squared)
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(acceleration, knots_per_second)
-} // namespace ilmc
+}
+
+} // namespace units
+
