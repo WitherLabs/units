@@ -440,6 +440,13 @@ public:
         return magnitude { _measurement - converted._measurement };
     }
 
+    [[nodiscard]]
+    constexpr auto
+    operator* (internal_data_type value) -> magnitude
+    {
+        return magnitude { _measurement * value };
+    }
+
     template <magnitude_cpt magnitude_t>
     [[nodiscard]]
     constexpr auto
@@ -461,6 +468,13 @@ public:
             = magnitude<bkp, internal_data_type> { mag1.get_measurement()
                                                    * mag2.get_measurement() };
         return magp.template convert_to<nkind>();
+    }
+
+    [[nodiscard]]
+    constexpr auto
+    operator/ (internal_data_type value) -> magnitude
+    {
+        return magnitude { _measurement / value };
     }
 
     template <magnitude_cpt magnitude_t>
