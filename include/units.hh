@@ -392,6 +392,38 @@ public:
         return convert_to<typename other_magnitude_t::magkind>();
     }
 
+    [[nodiscard]]
+    constexpr auto
+    operator+ () const noexcept -> magnitude
+    {
+        return magnitude { _measurement };
+    }
+
+    [[nodiscard]]
+    constexpr auto
+    operator- () const noexcept -> magnitude
+    {
+        return magnitude { -_measurement };
+    }
+
+    template <magnitude_cpt other_magnitude_t>
+    [[nodiscard]]
+    constexpr auto
+    operator+ (other_magnitude_t const mag) const noexcept -> magnitude
+    {
+        magnitude const converted { mag };
+        return magnitude { _measurement + converted._measurement };
+    }
+
+    template <magnitude_cpt other_magnitude_t>
+    [[nodiscard]]
+    constexpr auto
+    operator- (other_magnitude_t const mag) const noexcept -> magnitude
+    {
+        magnitude const converted { mag };
+        return magnitude { _measurement - converted._measurement };
+    }
+
 private:
     internal_data_type _measurement;
 };
