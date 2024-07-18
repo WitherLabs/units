@@ -43,19 +43,19 @@ using teraseconds  = impl::swap_kind_prefix<seconds, impl::prefix::tera>;
 using petaseconds  = impl::swap_kind_prefix<seconds, impl::prefix::peta>;
 using exaseconds   = impl::swap_kind_prefix<seconds, impl::prefix::exa>;
 
-using minutes    = impl::derived_kind<seconds, std::ratio<60>>::value;
-using hours      = impl::derived_kind<minutes, std::ratio<60>>::value;
-using days       = impl::derived_kind<hours, std::ratio<24>>::value;
-using weeks      = impl::derived_kind<days, std::ratio<7>>::value;
-using months_28  = impl::derived_kind<days, std::ratio<28>>::value;
-using months_29  = impl::derived_kind<days, std::ratio<29>>::value;
-using months_30  = impl::derived_kind<days, std::ratio<30>>::value;
-using months_31  = impl::derived_kind<days, std::ratio<31>>::value;
-using years      = impl::derived_kind<days, std::ratio<365>>::value;
-using leap_years = impl::derived_kind<days, std::ratio<366>>::value;
-using decades    = impl::derived_kind<years, std::ratio<10>>::value;
-using centuries  = impl::derived_kind<years, std::ratio<100>>::value;
-using eons       = impl::derived_kind<years, std::ratio<1000000000>>::value;
+using minutes    = impl::derived_kind<seconds, std::ratio<60>>;
+using hours      = impl::derived_kind<minutes, std::ratio<60>>;
+using days       = impl::derived_kind<hours, std::ratio<24>>;
+using weeks      = impl::derived_kind<days, std::ratio<7>>;
+using months_28  = impl::derived_kind<days, std::ratio<28>>;
+using months_29  = impl::derived_kind<days, std::ratio<29>>;
+using months_30  = impl::derived_kind<days, std::ratio<30>>;
+using months_31  = impl::derived_kind<days, std::ratio<31>>;
+using years      = impl::derived_kind<days, std::ratio<365>>;
+using leap_years = impl::derived_kind<days, std::ratio<366>>;
+using decades    = impl::derived_kind<years, std::ratio<10>>;
+using centuries  = impl::derived_kind<years, std::ratio<100>>;
+using eons       = impl::derived_kind<years, std::ratio<1000000000>>;
 
 } // namespace kind
 

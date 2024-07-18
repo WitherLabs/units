@@ -34,6 +34,15 @@ ratio_to_real() -> internal_data_type
          / static_cast<internal_data_type>(ratio_t::den);
 }
 
+template <typename ratio_t>
+using ratio_reciprocal = std::conditional_t<
+    ratio_t::num == 0,
+    std::ratio<0>,
+    std::ratio<ratio_t::den, ratio_t::num>>;
+
+template <std::intmax_t iv, ratio_cpt ratio_t>
+using mixed_ratio = std::ratio_add<std::ratio<iv>, ratio_t>;
+
 } // namespace util
 
 namespace impl
@@ -330,18 +339,11 @@ template <
     kind_cpt        kind_t,
     util::ratio_cpt ratio_t,
     util::ratio_cpt delta_t = std::ratio<0>>
-struct derived_kind
-{
-    using derived_ratio = ratio::derive<typename kind_t::ratio, ratio_t>;
-    using derived_delta = delta::
-        derive<typename kind_t::ratio, typename kind_t::delta, delta_t>;
-
-    using value = kind<
-        typename kind_t::dimension,
-        typename kind_t::prefix,
-        derived_ratio,
-        derived_delta>;
-};
+using derived_kind = kind<
+    typename kind_t::dimension,
+    typename kind_t::prefix,
+    ratio::derive<typename kind_t::ratio, ratio_t>,
+    delta::derive<typename kind_t::ratio, typename kind_t::delta, delta_t>>;
 
 template <kind_cpt kind_a, kind_cpt kind_b>
 using multiply_kinds = kind<
@@ -350,12 +352,20 @@ using multiply_kinds = kind<
     std::ratio_multiply<typename kind_a::ratio, typename kind_b::ratio>,
     std::ratio_add<typename kind_a::delta, typename kind_b::delta>>;
 
+template <kind_cpt kind_t>
+using kind_reciprocal = kind<
+    multiply_dimension<typename kind_t::dimension, std::ratio<-1>>,
+    typename kind_t::prefix,
+    util::ratio_reciprocal<typename kind_t::ratio>,
+    util::ratio_reciprocal<typename kind_t::delta>>;
+
 template <kind_cpt kind_a, kind_cpt kind_b>
-using divide_kinds = kind<
-    subtract_dimensions<typename kind_a::dimension, typename kind_b::dimension>,
-    std::ratio_divide<typename kind_a::prefix, typename kind_b::prefix>,
-    std::ratio_divide<typename kind_a::ratio, typename kind_b::ratio>,
-    std::ratio_subtract<typename kind_a::delta, typename kind_b::delta>>;
+using divide_kinds = multiply_kinds<kind_a, kind_reciprocal<kind_b>>;
+
+template <kind_cpt kind_t> using kind_squared = multiply_kinds<kind_t, kind_t>;
+
+template <kind_cpt kind_t>
+using unit_cubed = multiply_kinds<kind_squared<kind_t>, kind_t>;
 
 template <typename type>
 using is_magnitude = std::is_base_of<tag::magnitude, type>;

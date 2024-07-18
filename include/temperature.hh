@@ -45,11 +45,11 @@ using terakelvin  = impl::swap_kind_prefix<kelvin, impl::prefix::tera>;
 using petakelvin  = impl::swap_kind_prefix<kelvin, impl::prefix::peta>;
 using exakelvin   = impl::swap_kind_prefix<kelvin, impl::prefix::exa>;
 
-using celsius = impl::
-    derived_kind<kelvin, impl::ratio::base, std::ratio<5463, 20>>::value;
+using celsius
+    = impl::derived_kind<kelvin, impl::ratio::base, std::ratio<5463, 20>>;
 
 using fahrenheit
-    = impl::derived_kind<celsius, std::ratio<5, 9>, std::ratio<-160, 9>>::value;
+    = impl::derived_kind<celsius, std::ratio<5, 9>, std::ratio<-160, 9>>;
 
 } // namespace kind
 

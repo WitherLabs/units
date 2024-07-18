@@ -43,22 +43,22 @@ using terametres  = impl::swap_kind_prefix<metres, impl::prefix::tera>;
 using petametres  = impl::swap_kind_prefix<metres, impl::prefix::peta>;
 using exametres   = impl::swap_kind_prefix<metres, impl::prefix::exa>;
 
-using feet           = impl::derived_kind<metres, std::ratio<381, 1250>>::value;
-using twips          = impl::derived_kind<feet, std::ratio<1, 17280>>::value;
-using thous          = impl::derived_kind<feet, std::ratio<1, 12000>>::value;
-using barleycorns    = impl::derived_kind<feet, std::ratio<1, 36>>::value;
-using inches         = impl::derived_kind<barleycorns, std::ratio<3>>::value;
-using hands          = impl::derived_kind<inches, std::ratio<4>>::value;
-using yards          = impl::derived_kind<feet, std::ratio<3>>::value;
-using chains         = impl::derived_kind<yards, std::ratio<22>>::value;
-using furlongs       = impl::derived_kind<chains, std::ratio<10>>::value;
-using miles          = impl::derived_kind<furlongs, std::ratio<8>>::value;
-using leagues        = impl::derived_kind<miles, std::ratio<3>>::value;
-using fathoms        = impl::derived_kind<metres, std::ratio<463, 250>>::value;
-using cables         = impl::derived_kind<fathoms, std::ratio<100>>::value;
-using nautical_miles = impl::derived_kind<cables, std::ratio<10>>::value;
-using links          = impl::derived_kind<feet, std::ratio<66, 100>>::value;
-using rods           = impl::derived_kind<links, std::ratio<25>>::value;
+using feet           = impl::derived_kind<metres, std::ratio<381, 1250>>;
+using twips          = impl::derived_kind<feet, std::ratio<1, 17280>>;
+using thous          = impl::derived_kind<feet, std::ratio<1, 12000>>;
+using barleycorns    = impl::derived_kind<feet, std::ratio<1, 36>>;
+using inches         = impl::derived_kind<barleycorns, std::ratio<3>>;
+using hands          = impl::derived_kind<inches, std::ratio<4>>;
+using yards          = impl::derived_kind<feet, std::ratio<3>>;
+using chains         = impl::derived_kind<yards, std::ratio<22>>;
+using furlongs       = impl::derived_kind<chains, std::ratio<10>>;
+using miles          = impl::derived_kind<furlongs, std::ratio<8>>;
+using leagues        = impl::derived_kind<miles, std::ratio<3>>;
+using fathoms        = impl::derived_kind<metres, std::ratio<463, 250>>;
+using cables         = impl::derived_kind<fathoms, std::ratio<100>>;
+using nautical_miles = impl::derived_kind<cables, std::ratio<10>>;
+using links          = impl::derived_kind<feet, std::ratio<66, 100>>;
+using rods           = impl::derived_kind<links, std::ratio<25>>;
 
 } // namespace kind
 

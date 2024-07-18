@@ -42,14 +42,14 @@ using teragrams  = impl::swap_kind_prefix<grams, impl::prefix::tera>;
 using petagrams  = impl::swap_kind_prefix<grams, impl::prefix::peta>;
 using exagrams   = impl::swap_kind_prefix<grams, impl::prefix::exa>;
 
-using pounds   = impl::derived_kind<grams, std::ratio<45359237, 100000>>::value;
-using grains   = impl::derived_kind<pounds, std::ratio<1, 7000>>::value;
-using drachms  = impl::derived_kind<pounds, std::ratio<1, 256>>::value;
-using ounces   = impl::derived_kind<pounds, std::ratio<1, 16>>::value;
-using stones   = impl::derived_kind<pounds, std::ratio<14>>::value;
-using quarters = impl::derived_kind<pounds, std::ratio<28>>::value;
-using hundredweights = impl::derived_kind<pounds, std::ratio<112>>::value;
-using tons           = impl::derived_kind<pounds, std::ratio<2240>>::value;
+using pounds         = impl::derived_kind<grams, std::ratio<45359237, 100000>>;
+using grains         = impl::derived_kind<pounds, std::ratio<1, 7000>>;
+using drachms        = impl::derived_kind<pounds, std::ratio<1, 256>>;
+using ounces         = impl::derived_kind<pounds, std::ratio<1, 16>>;
+using stones         = impl::derived_kind<pounds, std::ratio<14>>;
+using quarters       = impl::derived_kind<pounds, std::ratio<28>>;
+using hundredweights = impl::derived_kind<pounds, std::ratio<112>>;
+using tons           = impl::derived_kind<pounds, std::ratio<2240>>;
 
 } // namespace kind
 
