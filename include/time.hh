@@ -20,6 +20,24 @@ namespace kind
 
 using seconds = impl::basic_kind<time_dimension>;
 
+using attoseconds  = impl::swap_kind_prefix<seconds, impl::prefix::atto>;
+using femtoseconds = impl::swap_kind_prefix<seconds, impl::prefix::femto>;
+using picoseconds  = impl::swap_kind_prefix<seconds, impl::prefix::pico>;
+using nanoseconds  = impl::swap_kind_prefix<seconds, impl::prefix::nano>;
+using microseconds = impl::swap_kind_prefix<seconds, impl::prefix::micro>;
+using milliseconds = impl::swap_kind_prefix<seconds, impl::prefix::milli>;
+using centiseconds = impl::swap_kind_prefix<seconds, impl::prefix::centi>;
+using deciseconds  = impl::swap_kind_prefix<seconds, impl::prefix::deci>;
+using noneseconds  = impl::swap_kind_prefix<seconds, impl::prefix::none>;
+using decaseconds  = impl::swap_kind_prefix<seconds, impl::prefix::deca>;
+using hectoseconds = impl::swap_kind_prefix<seconds, impl::prefix::hecto>;
+using kiloseconds  = impl::swap_kind_prefix<seconds, impl::prefix::kilo>;
+using megaseconds  = impl::swap_kind_prefix<seconds, impl::prefix::mega>;
+using gigaseconds  = impl::swap_kind_prefix<seconds, impl::prefix::giga>;
+using teraseconds  = impl::swap_kind_prefix<seconds, impl::prefix::tera>;
+using petaseconds  = impl::swap_kind_prefix<seconds, impl::prefix::peta>;
+using exaseconds   = impl::swap_kind_prefix<seconds, impl::prefix::exa>;
+
 using minutes    = impl::derived_kind<seconds, std::ratio<60>>::value;
 using hours      = impl::derived_kind<minutes, std::ratio<60>>::value;
 using days       = impl::derived_kind<hours, std::ratio<24>>::value;
@@ -35,6 +53,26 @@ using centuries  = impl::derived_kind<years, std::ratio<100>>::value;
 using eons       = impl::derived_kind<years, std::ratio<1000000000>>::value;
 
 } // namespace kind
+
+using seconds = impl::magnitude<kind::seconds, double>;
+
+using attoseconds  = impl::magnitude<kind::attoseconds, double>;
+using femtoseconds = impl::magnitude<kind::femtoseconds, double>;
+using picoseconds  = impl::magnitude<kind::picoseconds, double>;
+using nanoseconds  = impl::magnitude<kind::nanoseconds, double>;
+using microseconds = impl::magnitude<kind::microseconds, double>;
+using milliseconds = impl::magnitude<kind::milliseconds, double>;
+using centiseconds = impl::magnitude<kind::centiseconds, double>;
+using deciseconds  = impl::magnitude<kind::deciseconds, double>;
+using noneseconds  = impl::magnitude<kind::noneseconds, double>;
+using decaseconds  = impl::magnitude<kind::decaseconds, double>;
+using hectoseconds = impl::magnitude<kind::hectoseconds, double>;
+using kiloseconds  = impl::magnitude<kind::kiloseconds, double>;
+using megaseconds  = impl::magnitude<kind::megaseconds, double>;
+using gigaseconds  = impl::magnitude<kind::gigaseconds, double>;
+using teraseconds  = impl::magnitude<kind::teraseconds, double>;
+using petaseconds  = impl::magnitude<kind::petaseconds, double>;
+using exaseconds   = impl::magnitude<kind::exaseconds, double>;
 
 using minutes    = impl::magnitude<kind::minutes, double>;
 using hours      = impl::magnitude<kind::hours, double>;
