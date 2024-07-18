@@ -7,7 +7,10 @@
 namespace units
 {
 
-using temperature_dimension = impl::dimension<
+namespace dim
+{
+
+using temperature = impl::dimension<
     std::ratio<0>, // length
     std::ratio<0>, // mass
     std::ratio<0>, // time
@@ -17,9 +20,12 @@ using temperature_dimension = impl::dimension<
     std::ratio<0>  // luminous intensity
     >;
 
+} // namespace dim
+
 namespace kind
 {
-using kelvin = impl::basic_kind<temperature_dimension>;
+
+using kelvin = impl::basic_kind<dim::temperature>;
 
 using attokelvin  = impl::swap_kind_prefix<kelvin, impl::prefix::atto>;
 using femtokelvin = impl::swap_kind_prefix<kelvin, impl::prefix::femto>;

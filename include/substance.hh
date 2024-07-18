@@ -5,7 +5,10 @@
 namespace units
 {
 
-using substance_dimension = impl::dimension<
+namespace dim
+{
+
+using substance = impl::dimension<
     std::ratio<0>, // length
     std::ratio<0>, // mass
     std::ratio<0>, // time
@@ -15,10 +18,12 @@ using substance_dimension = impl::dimension<
     std::ratio<0>  // luminous intensity
     >;
 
+} // namespace dim
+
 namespace kind
 {
 
-using moles = impl::basic_kind<substance_dimension>;
+using moles = impl::basic_kind<dim::substance>;
 
 using attomoles  = impl::swap_kind_prefix<moles, impl::prefix::atto>;
 using femtomoles = impl::swap_kind_prefix<moles, impl::prefix::femto>;

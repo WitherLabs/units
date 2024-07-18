@@ -5,7 +5,10 @@
 namespace units
 {
 
-using luminous_intensity_dimension = impl::dimension<
+namespace dim
+{
+
+using luminous_intensity = impl::dimension<
     std::ratio<0>, // length
     std::ratio<0>, // mass
     std::ratio<0>, // time
@@ -15,10 +18,12 @@ using luminous_intensity_dimension = impl::dimension<
     std::ratio<1>  // luminous intensity
     >;
 
+} // namespace dim
+
 namespace kind
 {
 
-using candelas = impl::basic_kind<luminous_intensity_dimension>;
+using candelas = impl::basic_kind<dim::luminous_intensity>;
 
 using attocandelas  = impl::swap_kind_prefix<candelas, impl::prefix::atto>;
 using femtocandelas = impl::swap_kind_prefix<candelas, impl::prefix::femto>;

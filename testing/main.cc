@@ -1,4 +1,6 @@
+#include <wither/units/area.hh>
 #include <wither/units/length.hh>
+#include <wither/units/mass.hh>
 
 #include <iostream>
 #include <ostream>
@@ -30,7 +32,11 @@ auto
 main() -> int
 {
     // 10 meters
-    units::meters const distance { 10 };
+    units::attometres constexpr distance { 32 };
+    units::exametres constexpr length { 16 };
+
+    constexpr units::metres_squared product = distance * length;
+    constexpr double                val     = product.get_measurement();
 
     // Will automatically convert to inches and feet
     print_meters(distance);

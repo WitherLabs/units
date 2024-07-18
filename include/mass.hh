@@ -5,7 +5,9 @@
 namespace units
 {
 
-using mass_dimension = impl::dimension<
+namespace dim
+{
+using mass = impl::dimension<
     std::ratio<0>, // length
     std::ratio<1>, // mass
     std::ratio<0>, // time
@@ -15,10 +17,12 @@ using mass_dimension = impl::dimension<
     std::ratio<0>  // luminous intensity
     >;
 
+} // namespace dim
+
 namespace kind
 {
 
-using grams = impl::basic_kind<mass_dimension>;
+using grams = impl::basic_kind<dim::mass>;
 
 using attograms  = impl::swap_kind_prefix<grams, impl::prefix::atto>;
 using femtograms = impl::swap_kind_prefix<grams, impl::prefix::femto>;

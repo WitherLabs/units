@@ -5,7 +5,10 @@
 namespace units
 {
 
-using current_dimension = impl::dimension<
+namespace dim
+{
+
+using current = impl::dimension<
     std::ratio<0>, // length
     std::ratio<0>, // mass
     std::ratio<0>, // time
@@ -15,10 +18,12 @@ using current_dimension = impl::dimension<
     std::ratio<0>  // luminous intensity
     >;
 
+} // namespace dim
+
 namespace kind
 {
 
-using amperes = impl::basic_kind<current_dimension>;
+using amperes = impl::basic_kind<dim::current>;
 
 using attoamperes  = impl::swap_kind_prefix<amperes, impl::prefix::atto>;
 using femtoamperes = impl::swap_kind_prefix<amperes, impl::prefix::femto>;

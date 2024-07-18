@@ -5,7 +5,10 @@
 namespace units
 {
 
-using length_dimension = impl::dimension<
+namespace dim
+{
+
+using length = impl::dimension<
     std::ratio<1>, // length
     std::ratio<0>, // mass
     std::ratio<0>, // time
@@ -15,10 +18,12 @@ using length_dimension = impl::dimension<
     std::ratio<0>  // luminous intensity
     >;
 
+} // namespace dim
+
 namespace kind
 {
 
-using metres = impl::basic_kind<length_dimension>;
+using metres = impl::basic_kind<dim::length>;
 
 using attometres  = impl::swap_kind_prefix<metres, impl::prefix::atto>;
 using femtometres = impl::swap_kind_prefix<metres, impl::prefix::femto>;

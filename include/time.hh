@@ -5,7 +5,10 @@
 namespace units
 {
 
-using time_dimension = impl::dimension<
+namespace dim
+{
+
+using time = impl::dimension<
     std::ratio<0>, // length
     std::ratio<0>, // mass
     std::ratio<1>, // time
@@ -15,10 +18,12 @@ using time_dimension = impl::dimension<
     std::ratio<0>  // luminous intensity
     >;
 
+} // namespace dim
+
 namespace kind
 {
 
-using seconds = impl::basic_kind<time_dimension>;
+using seconds = impl::basic_kind<dim::time>;
 
 using attoseconds  = impl::swap_kind_prefix<seconds, impl::prefix::atto>;
 using femtoseconds = impl::swap_kind_prefix<seconds, impl::prefix::femto>;
