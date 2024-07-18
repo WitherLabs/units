@@ -1,6 +1,4 @@
-#include <wither/units/area.hh>
 #include <wither/units/length.hh>
-#include <wither/units/mass.hh>
 
 #include <iostream>
 #include <ostream>
@@ -21,7 +19,7 @@ print_feet(units::feet feet) -> void
 }
 
 auto
-print_meters(units::meters meters) -> void
+print_meters(units::metres meters) -> void
 {
     std::println(std::cout, "{} meters", meters.get_measurement());
 }
@@ -32,11 +30,7 @@ auto
 main() -> int
 {
     // 10 meters
-    units::attometres constexpr distance { 32 };
-    units::exametres constexpr length { 16 };
-
-    constexpr units::metres_squared product = distance * length;
-    constexpr double                val     = product.get_measurement();
+    units::metres distance { 10 };
 
     // Will automatically convert to inches and feet
     print_meters(distance);
