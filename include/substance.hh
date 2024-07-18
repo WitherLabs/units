@@ -1,40 +1,28 @@
-// vim: set ft=cpp:
-
 #pragma once
 
-#include <mooncat/units/impl/prefixes>
-#include <mooncat/units/impl/unit_container>
+#include <wither/units/units.hh>
 
-namespace lmc::units::substance
+namespace units
 {
 
-using dimension = impl::dim::dimensional_vector<
-    impl::dim::length<0>,
-    impl::dim::mass<0>,
-    impl::dim::time<0>,
-    impl::dim::current<0>,
-    impl::dim::temperature<0>,
-    impl::dim::luminosity<0>,
-    impl::dim::substance<1>>;
+using substance_dimension = impl::dimension<
+    std::ratio<0>, // length
+    std::ratio<0>, // mass
+    std::ratio<0>, // time
+    std::ratio<0>, // current
+    std::ratio<0>, // temperature
+    std::ratio<1>, // substance
+    std::ratio<0>  // luminous intensity
+    >;
 
-template <impl::cnt::cpt::unit_container container>
-using is_substance_unit
-    = dimension::equals<typename container::definition::dimension>;
-
-template <impl::cnt::cpt::unit_container container>
-constexpr bool is_substance_unit_v = is_substance_unit<container>::value;
-
-using moles = impl::cnt::unit_container<impl::def::unit_definition<
-    dimension,
-    impl::cmp::base_unit_prefix,
-    impl::cmp::base_unit_ratio,
-    impl::cmp::base_unit_delta>>;
-
-LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(moles)
-
-} // namespace lmc::units::substance
-
-inline namespace ilmc
+namespace kind
 {
-LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(substance, moles)
-} // namespace ilmc
+
+using moles = impl::basic_kind<substance_dimension>;
+
+} // namespace kind
+
+using moles = impl::magnitude<kind::moles, double>;
+
+} // namespace units
+
