@@ -261,11 +261,7 @@ struct kind: tag::kind
     using delta     = delta_t;
 };
 
-template <kind_cpt kind_a, kind_cpt kind_b>
-requires equal_dimensions<
-    typename kind_a::dimension,
-    typename kind_b::dimension>
-struct conversion
+template <kind_cpt kind_a, kind_cpt kind_b> struct conversion
 {
     using prefix_cvr
         = prefix::convert<typename kind_a::prefix, typename kind_b::prefix>;
@@ -296,35 +292,35 @@ template <dimension_cpt dimension_t>
 using basic_kind = kind<dimension_t, prefix::none, ratio::base, delta::none>;
 
 template <kind_cpt kind_t>
-using clone = kind<
+using clone_kind = kind<
     typename kind_t::dimension,
     typename kind_t::prefix,
     typename kind_t::ratio,
     typename kind_t::delta>;
 
 template <kind_cpt kind_t, dimension_cpt dimension_t>
-using swap_dimension = kind<
+using swap_kind_dimension = kind<
     dimension_t,
     typename kind_t::prefix,
     typename kind_t::ratio,
     typename kind_t::delta>;
 
 template <kind_cpt kind_t, util::ratio_cpt prefix_t>
-using swap_prefix = kind<
+using swap_kind_prefix = kind<
     typename kind_t::dimension,
     prefix_t,
     typename kind_t::ratio,
     typename kind_t::delta>;
 
 template <kind_cpt kind_t, util::ratio_cpt ratio_t>
-using swap_ratio = kind<
+using swap_kind_ratio = kind<
     typename kind_t::dimension,
     typename kind_t::prefix,
     ratio_t,
     typename kind_t::delta>;
 
 template <kind_cpt kind_t, util::ratio_cpt delta_t>
-using swap_delta = kind<
+using swap_kind_delta = kind<
     typename kind_t::dimension,
     typename kind_t::prefix,
     typename kind_t::ratio,
@@ -346,6 +342,20 @@ struct derived_kind
         derived_ratio,
         derived_delta>;
 };
+
+template <kind_cpt kind_a, kind_cpt kind_b>
+using multiply_kinds = kind<
+    add_dimensions<typename kind_a::dimension, typename kind_b::dimension>,
+    std::ratio_multiply<typename kind_a::prefix, typename kind_b::prefix>,
+    std::ratio_multiply<typename kind_a::ratio, typename kind_b::ratio>,
+    std::ratio_add<typename kind_a::delta, typename kind_b::delta>>;
+
+template <kind_cpt kind_a, kind_cpt kind_b>
+using divide_kinds = kind<
+    subtract_dimensions<typename kind_a::dimension, typename kind_b::dimension>,
+    std::ratio_divide<typename kind_a::prefix, typename kind_b::prefix>,
+    std::ratio_divide<typename kind_a::ratio, typename kind_b::ratio>,
+    std::ratio_subtract<typename kind_a::delta, typename kind_b::delta>>;
 
 template <typename type>
 using is_magnitude = std::is_base_of<tag::magnitude, type>;
@@ -384,12 +394,12 @@ public:
         return _measurement;
     }
 
-    template <magnitude_cpt other_magnitude_t>
+    template <magnitude_cpt magnitude_t>
     [[nodiscard]]
     constexpr // NOLINTNEXTLINE: No explicit pls
-    operator other_magnitude_t () const noexcept
+    operator magnitude_t () const noexcept
     {
-        return convert_to<typename other_magnitude_t::magkind>();
+        return convert_to<typename magnitude_t::magkind>();
     }
 
     [[nodiscard]]
@@ -406,22 +416,74 @@ public:
         return magnitude { -_measurement };
     }
 
-    template <magnitude_cpt other_magnitude_t>
+    template <magnitude_cpt magnitude_t>
+    requires equal_dimensions<
+                 typename magkind::dimension,
+                 typename magnitude_t::magkind::dimension>
     [[nodiscard]]
     constexpr auto
-    operator+ (other_magnitude_t const mag) const noexcept -> magnitude
+    operator+ (magnitude_t const mag) const noexcept -> magnitude
     {
         magnitude const converted { mag };
         return magnitude { _measurement + converted._measurement };
     }
 
-    template <magnitude_cpt other_magnitude_t>
+    template <magnitude_cpt magnitude_t>
+    requires equal_dimensions<
+                 typename magkind::dimension,
+                 typename magnitude_t::magkind::dimension>
     [[nodiscard]]
     constexpr auto
-    operator- (other_magnitude_t const mag) const noexcept -> magnitude
+    operator- (magnitude_t const mag) const noexcept -> magnitude
     {
         magnitude const converted { mag };
         return magnitude { _measurement - converted._measurement };
+    }
+
+    template <magnitude_cpt magnitude_t>
+    [[nodiscard]]
+    constexpr auto
+    operator* (magnitude_t const mag) const noexcept
+        -> magnitude<
+            multiply_kinds<magkind, typename magnitude_t::magkind>,
+            internal_data_type>
+    {
+        using nkind = multiply_kinds<magkind, typename magnitude_t::magkind>;
+
+        using bk1 = basic_kind<typename magkind::dimension>;
+        using bk2 = basic_kind<typename magnitude_t::magkind::dimension>;
+        using bkp = multiply_kinds<bk1, bk2>;
+
+        auto const mag1 = convert_to<bk1>();
+        auto const mag2 = mag1.template convert_to<bk2>();
+
+        auto const magp
+            = magnitude<bkp, internal_data_type> { mag1.get_measurement()
+                                                   * mag2.get_measurement() };
+        return magp.template convert_to<nkind>();
+    }
+
+    template <magnitude_cpt magnitude_t>
+    [[nodiscard]]
+    constexpr auto
+    operator/ (magnitude_t const mag) const noexcept
+        -> magnitude<
+            divide_kinds<magkind, typename magnitude_t::magkind>,
+            internal_data_type>
+    {
+        using nkind = divide_kinds<magkind, typename magnitude_t::magkind>;
+
+        using bk1 = basic_kind<typename magkind::dimension>;
+        using bk2 = basic_kind<typename magnitude_t::magkind::dimension>;
+        using bkp = divide_kinds<bk1, bk2>;
+
+        auto const mag1 = convert_to<bk1>();
+        auto const mag2 = mag1.template convert_to<bk2>();
+
+        auto const magp
+            = magnitude<bkp, internal_data_type> { mag1.get_measurement()
+                                                   / mag2.get_measurement() };
+        return magp.template convert_to<nkind>();
     }
 
 private:
