@@ -1,43 +1,36 @@
-// vim: set ft=cpp:
-
 #pragma once
 
-#include <mooncat/units/length>
-#include <mooncat/units/mass>
-#include <mooncat/units/time>
+#include "units.hh"
+#include <wither/units/acceleration.hh>
+#include <wither/units/mass.hh>
 
-namespace lmc::units::force
+namespace units
 {
-using newtons = impl::cnt::unit_container<impl::def::definition_divide<
-    impl::def::definition_multiply<
-        mass::kilograms::definition,
-        length::meters::definition>,
-    impl::def::definition_squared<time::seconds::definition>>>;
-LMC_UNITS_ADD_PREFIXES_TO_CONTAINER(newtons)
 
-using dimension = newtons::definition::dimension;
-
-template <impl::cnt::cpt::unit_container container>
-using is_force_unit
-    = dimension::equals<typename container::definition::dimension>;
-
-template <impl::cnt::cpt::unit_container container>
-constexpr bool is_force_unit_v = is_force_unit<container>::value;
-
-using kilopond = impl::abbr::
-    derive<std::ratio_add<std::ratio<9>, std::ratio<16133, 20000>>, newtons>;
-
-using pounds = impl::abbr::
-    derive<std::ratio_add<std::ratio<4>, std::ratio<224111, 500000>>, newtons>;
-
-using poundal
-    = impl::abbr::derive<std::ratio<17281869297, 125000000000>, newtons>;
-
-using dynes = impl::abbr::derive<std::ratio<1, 100000>, newtons>;
-
-} // namespace lmc::units::force
-
-inline namespace ilmc
+namespace kind
 {
-LMC_UNITS_CREATE_PREFIXED_UNIT_LITERAL_OPERATOR(force, newtons)
-} // namespace ilmc
+
+using newtons  = impl::multiply_kinds<metres_per_second_squared, kilograms>;
+using kilopond = impl::
+    derived_kind<newtons, util::mixed_ratio<9, std::ratio<16133, 20000>>>;
+using pounds_of_force = impl::
+    derived_kind<newtons, util::mixed_ratio<4, std::ratio<224111, 500000>>>;
+using poundals
+    = impl::derived_kind<newtons, std::ratio<17281869297, 125000000000>>;
+using dynes = impl::derived_kind<newtons, std::ratio<1, 100000>>;
+
+} // namespace kind
+
+using newtons         = impl::magnitude<kind::newtons, double>;
+using kilopond        = impl::magnitude<kind::kilopond, double>;
+using pounds_of_force = impl::magnitude<kind::pounds_of_force, double>;
+using poundals        = impl::magnitude<kind::poundals, double>;
+using dynes           = impl::magnitude<kind::dynes, double>;
+
+namespace dim
+{
+
+} // namespace dim
+
+} // namespace units
+
