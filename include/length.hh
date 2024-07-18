@@ -23,8 +23,7 @@ using length = impl::dimension<
 namespace kind
 {
 
-using metres = impl::basic_kind<dim::length>;
-
+using metres      = impl::basic_kind<dim::length>;
 using attometres  = impl::swap_kind_prefix<metres, impl::prefix::atto>;
 using femtometres = impl::swap_kind_prefix<metres, impl::prefix::femto>;
 using picometres  = impl::swap_kind_prefix<metres, impl::prefix::pico>;
@@ -62,8 +61,7 @@ using rods           = impl::derived_kind<links, std::ratio<25>>;
 
 } // namespace kind
 
-using metres = impl::magnitude<kind::metres, double>;
-
+using metres      = impl::magnitude<kind::metres, double>;
 using attometres  = impl::magnitude<kind::attometres, double>;
 using femtometres = impl::magnitude<kind::femtometres, double>;
 using picometres  = impl::magnitude<kind::picometres, double>;
