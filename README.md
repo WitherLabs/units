@@ -92,6 +92,7 @@ Here, we use degrees fahrenheit as an example
       └ Kelvins are a base unit
 ```
 
-These are not really nested; they are merely derived. Each entity only bases off
-of the last and break off as independent units.
+These are not really nested; they are merely derived. Each entity bases off
+of another. After conversion ratios have been fully determined, the unit
+operates independently.
 
