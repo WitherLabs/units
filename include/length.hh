@@ -25,7 +25,6 @@ using length = impl::dimension<
 namespace kind
 {
 
-
 using metres      = impl::basic_kind<dim::length>; 
 using attometres  = impl::swap_kind_prefix<metres, impl::prefix::atto>;
 using femtometres = impl::swap_kind_prefix<metres, impl::prefix::femto>;
@@ -99,7 +98,7 @@ using nautical_miles = impl::magnitude<kind::nautical_miles, double>;
 using links          = impl::magnitude<kind::links,          double>;
 using rods           = impl::magnitude<kind::rods,           double>;
 
-
 } // namespace units
 
 // clang-format on
+
