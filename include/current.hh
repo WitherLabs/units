@@ -2,6 +2,8 @@
 
 #include <wither/units/units.hh>
 
+// clang-format off
+
 namespace units
 {
 
@@ -23,8 +25,7 @@ using current = impl::dimension<
 namespace kind
 {
 
-using amperes = impl::basic_kind<dim::current>;
-
+using amperes      = impl::basic_kind<dim::current>; 
 using attoamperes  = impl::swap_kind_prefix<amperes, impl::prefix::atto>;
 using femtoamperes = impl::swap_kind_prefix<amperes, impl::prefix::femto>;
 using picoamperes  = impl::swap_kind_prefix<amperes, impl::prefix::pico>;
@@ -45,25 +46,26 @@ using exaamperes   = impl::swap_kind_prefix<amperes, impl::prefix::exa>;
 
 } // namespace kind
 
-using amperes = impl::magnitude<kind::amperes, double>;
-
-using attoamperes  = impl::magnitude<kind::attoamperes, double>;
+using amperes      = impl::magnitude<kind::amperes,      double>;
+using attoamperes  = impl::magnitude<kind::attoamperes,  double>;
 using femtoamperes = impl::magnitude<kind::femtoamperes, double>;
-using picoamperes  = impl::magnitude<kind::picoamperes, double>;
-using nanoamperes  = impl::magnitude<kind::nanoamperes, double>;
+using picoamperes  = impl::magnitude<kind::picoamperes,  double>;
+using nanoamperes  = impl::magnitude<kind::nanoamperes,  double>;
 using microamperes = impl::magnitude<kind::microamperes, double>;
 using milliamperes = impl::magnitude<kind::milliamperes, double>;
 using centiamperes = impl::magnitude<kind::centiamperes, double>;
-using deciamperes  = impl::magnitude<kind::deciamperes, double>;
-using noneamperes  = impl::magnitude<kind::noneamperes, double>;
-using decaamperes  = impl::magnitude<kind::decaamperes, double>;
+using deciamperes  = impl::magnitude<kind::deciamperes,  double>;
+using noneamperes  = impl::magnitude<kind::noneamperes,  double>;
+using decaamperes  = impl::magnitude<kind::decaamperes,  double>;
 using hectoamperes = impl::magnitude<kind::hectoamperes, double>;
-using kiloamperes  = impl::magnitude<kind::kiloamperes, double>;
-using megaamperes  = impl::magnitude<kind::megaamperes, double>;
-using gigaamperes  = impl::magnitude<kind::gigaamperes, double>;
-using teraamperes  = impl::magnitude<kind::teraamperes, double>;
-using petaamperes  = impl::magnitude<kind::petaamperes, double>;
-using exaamperes   = impl::magnitude<kind::exaamperes, double>;
+using kiloamperes  = impl::magnitude<kind::kiloamperes,  double>;
+using megaamperes  = impl::magnitude<kind::megaamperes,  double>;
+using gigaamperes  = impl::magnitude<kind::gigaamperes,  double>;
+using teraamperes  = impl::magnitude<kind::teraamperes,  double>;
+using petaamperes  = impl::magnitude<kind::petaamperes,  double>;
+using exaamperes   = impl::magnitude<kind::exaamperes,   double>;
 
 } // namespace units
+
+// clang-format on
 
