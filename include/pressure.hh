@@ -30,7 +30,7 @@ using terapascals  = impl::swap_kind_prefix<pascals, impl::prefix::tera>;
 using petapascals  = impl::swap_kind_prefix<pascals, impl::prefix::peta>;
 using exapascals   = impl::swap_kind_prefix<pascals, impl::prefix::exa>;
 
-using bars                   = impl::swap_kind_prefix<pascals, std::ratio<100000000>>;
+using bars                   = impl::derive_kind_via_prefix<pascals, std::ratio<100000>>;
 using baryes                 = impl::divide_kinds<dynes, centimetres_squared>;
 using atmospheres            = impl::derived_kind<pascals, std::ratio<101325>>;
 using torrs                  = impl::derived_kind<atmospheres, std::ratio<1, 760>>;
