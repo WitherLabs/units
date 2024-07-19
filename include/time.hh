@@ -2,6 +2,8 @@
 
 #include <wither/units/units.hh>
 
+// clang-format off
+
 namespace units
 {
 
@@ -23,8 +25,7 @@ using time = impl::dimension<
 namespace kind
 {
 
-using seconds = impl::basic_kind<dim::time>;
-
+using seconds      = impl::basic_kind<dim::time>;    
 using attoseconds  = impl::swap_kind_prefix<seconds, impl::prefix::atto>;
 using femtoseconds = impl::swap_kind_prefix<seconds, impl::prefix::femto>;
 using picoseconds  = impl::swap_kind_prefix<seconds, impl::prefix::pico>;
@@ -43,55 +44,55 @@ using teraseconds  = impl::swap_kind_prefix<seconds, impl::prefix::tera>;
 using petaseconds  = impl::swap_kind_prefix<seconds, impl::prefix::peta>;
 using exaseconds   = impl::swap_kind_prefix<seconds, impl::prefix::exa>;
 
-using minutes    = impl::derived_kind<seconds, std::ratio<60>>;
-using hours      = impl::derived_kind<minutes, std::ratio<60>>;
-using days       = impl::derived_kind<hours, std::ratio<24>>;
-using weeks      = impl::derived_kind<days, std::ratio<7>>;
-using months_28  = impl::derived_kind<days, std::ratio<28>>;
-using months_29  = impl::derived_kind<days, std::ratio<29>>;
-using months_30  = impl::derived_kind<days, std::ratio<30>>;
-using months_31  = impl::derived_kind<days, std::ratio<31>>;
-using years      = impl::derived_kind<days, std::ratio<365>>;
-using leap_years = impl::derived_kind<days, std::ratio<366>>;
-using decades    = impl::derived_kind<years, std::ratio<10>>;
-using centuries  = impl::derived_kind<years, std::ratio<100>>;
-using eons       = impl::derived_kind<years, std::ratio<1000000000>>;
+using minutes    = impl::derived_kind<seconds, std::ratio<60,         1>>;
+using hours      = impl::derived_kind<minutes, std::ratio<60,         1>>;
+using days       = impl::derived_kind<hours,   std::ratio<24,         1>>;
+using weeks      = impl::derived_kind<days,    std::ratio<7,          1>>;
+using months_28  = impl::derived_kind<days,    std::ratio<28,         1>>;
+using months_29  = impl::derived_kind<days,    std::ratio<29,         1>>;
+using months_30  = impl::derived_kind<days,    std::ratio<30,         1>>;
+using months_31  = impl::derived_kind<days,    std::ratio<31,         1>>;
+using years      = impl::derived_kind<days,    std::ratio<365,        1>>;
+using leap_years = impl::derived_kind<days,    std::ratio<366,        1>>;
+using decades    = impl::derived_kind<years,   std::ratio<10,         1>>;
+using centuries  = impl::derived_kind<years,   std::ratio<100,        1>>;
+using eons       = impl::derived_kind<years,   std::ratio<1000000000, 1>>;
 
 } // namespace kind
 
-using seconds = impl::magnitude<kind::seconds, double>;
-
-using attoseconds  = impl::magnitude<kind::attoseconds, double>;
+using seconds      = impl::magnitude<kind::seconds,      double>;
+using attoseconds  = impl::magnitude<kind::attoseconds,  double>;
 using femtoseconds = impl::magnitude<kind::femtoseconds, double>;
-using picoseconds  = impl::magnitude<kind::picoseconds, double>;
-using nanoseconds  = impl::magnitude<kind::nanoseconds, double>;
+using picoseconds  = impl::magnitude<kind::picoseconds,  double>;
+using nanoseconds  = impl::magnitude<kind::nanoseconds,  double>;
 using microseconds = impl::magnitude<kind::microseconds, double>;
 using milliseconds = impl::magnitude<kind::milliseconds, double>;
 using centiseconds = impl::magnitude<kind::centiseconds, double>;
-using deciseconds  = impl::magnitude<kind::deciseconds, double>;
-using noneseconds  = impl::magnitude<kind::noneseconds, double>;
-using decaseconds  = impl::magnitude<kind::decaseconds, double>;
+using deciseconds  = impl::magnitude<kind::deciseconds,  double>;
+using noneseconds  = impl::magnitude<kind::noneseconds,  double>;
+using decaseconds  = impl::magnitude<kind::decaseconds,  double>;
 using hectoseconds = impl::magnitude<kind::hectoseconds, double>;
-using kiloseconds  = impl::magnitude<kind::kiloseconds, double>;
-using megaseconds  = impl::magnitude<kind::megaseconds, double>;
-using gigaseconds  = impl::magnitude<kind::gigaseconds, double>;
-using teraseconds  = impl::magnitude<kind::teraseconds, double>;
-using petaseconds  = impl::magnitude<kind::petaseconds, double>;
-using exaseconds   = impl::magnitude<kind::exaseconds, double>;
-
-using minutes    = impl::magnitude<kind::minutes, double>;
-using hours      = impl::magnitude<kind::hours, double>;
-using days       = impl::magnitude<kind::days, double>;
-using weeks      = impl::magnitude<kind::weeks, double>;
-using months_28  = impl::magnitude<kind::months_28, double>;
-using months_29  = impl::magnitude<kind::months_29, double>;
-using months_30  = impl::magnitude<kind::months_30, double>;
-using months_31  = impl::magnitude<kind::months_31, double>;
-using years      = impl::magnitude<kind::years, double>;
-using leap_years = impl::magnitude<kind::leap_years, double>;
-using decades    = impl::magnitude<kind::decades, double>;
-using centuries  = impl::magnitude<kind::centuries, double>;
-using eons       = impl::magnitude<kind::eons, double>;
+using kiloseconds  = impl::magnitude<kind::kiloseconds,  double>;
+using megaseconds  = impl::magnitude<kind::megaseconds,  double>;
+using gigaseconds  = impl::magnitude<kind::gigaseconds,  double>;
+using teraseconds  = impl::magnitude<kind::teraseconds,  double>;
+using petaseconds  = impl::magnitude<kind::petaseconds,  double>;
+using exaseconds   = impl::magnitude<kind::exaseconds,   double>;
+using minutes      = impl::magnitude<kind::minutes,      double>;
+using hours        = impl::magnitude<kind::hours,        double>;
+using days         = impl::magnitude<kind::days,         double>;
+using weeks        = impl::magnitude<kind::weeks,        double>;
+using months_28    = impl::magnitude<kind::months_28,    double>;
+using months_29    = impl::magnitude<kind::months_29,    double>;
+using months_30    = impl::magnitude<kind::months_30,    double>;
+using months_31    = impl::magnitude<kind::months_31,    double>;
+using years        = impl::magnitude<kind::years,        double>;
+using leap_years   = impl::magnitude<kind::leap_years,   double>;
+using decades      = impl::magnitude<kind::decades,      double>;
+using centuries    = impl::magnitude<kind::centuries,    double>;
+using eons         = impl::magnitude<kind::eons,         double>;
 
 } // namespace units
+
+// clang-format on
 
