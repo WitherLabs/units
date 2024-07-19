@@ -25,8 +25,7 @@ using temperature = impl::dimension<
 namespace kind
 {
 
-using kelvin = impl::basic_kind<dim::temperature>;
-
+using kelvin      = impl::basic_kind<dim::temperature>;
 using attokelvin  = impl::swap_kind_prefix<kelvin, impl::prefix::atto>;
 using femtokelvin = impl::swap_kind_prefix<kelvin, impl::prefix::femto>;
 using picokelvin  = impl::swap_kind_prefix<kelvin, impl::prefix::pico>;
