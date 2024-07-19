@@ -1,21 +1,31 @@
-// vim: set ft=cpp:
-
 #pragma once
 
-#include <mooncat/units/angle>
+#include <wither/units/angle.hh>
 
-namespace lmc::units::solid_angle
+namespace units
 {
 
-using steradians = impl::cnt::unit_container<
-    impl::def::definition_squared<angle::radians::definition>>;
-
-using dimension = steradians::definition::dimension;
-
-} // namespace lmc::units::solid_angle
-
-inline namespace ilmc
+namespace kind
 {
-LMC_UNITS_CREATE_UNIT_LITERAL_OPERATOR(solid_angle, steradians)
-} // namespace ilmc
+
+// clang-format off
+
+using steradians = impl::multiply_kinds<radians, radians>;
+
+// clang-format on
+
+} // namespace kind
+
+// clang-format off
+
+using steradians = impl::magnitude<kind::steradians, double>;
+
+// clang-format on
+
+namespace dim
+{
+
+} // namespace dim
+
+} // namespace units
 
