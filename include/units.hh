@@ -345,6 +345,11 @@ using derived_kind = kind<
     ratio::derive<typename kind_t::ratio, ratio_t>,
     delta::derive<typename kind_t::ratio, typename kind_t::delta, delta_t>>;
 
+template <kind_cpt kind_t, util::ratio_cpt ratio_t>
+using derive_kind_via_prefix = swap_kind_prefix<
+    kind_t,
+    std::ratio_multiply<typename kind_t::prefix, ratio_t>>;
+
 template <kind_cpt kind_a, kind_cpt kind_b>
 using multiply_kinds = kind<
     add_dimensions<typename kind_a::dimension, typename kind_b::dimension>,
