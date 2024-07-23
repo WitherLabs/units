@@ -60,6 +60,12 @@ main() -> int
 
 ```
 
+## Requirements: Adding Units to The Library
+1. Must be a well-known unit
+2. Must not have multiple definitions throughout history (under the same name)
+ **OR** Must be standardized under some historical agreement still up-to-date
+3. Must not be outdated
+
 ## Creating custom units
 Coming Soon. \
 It is currently possible to do so, however, there is no explicit api for it.
