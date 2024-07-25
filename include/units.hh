@@ -409,18 +409,8 @@ public:
             internal_data_type>
     {
         using nkind = multiply_kinds<magkind, typename magnitude_t::magkind>;
-
-        using bk1 = basic_kind<typename magkind::dimension>;
-        using bk2 = basic_kind<typename magnitude_t::magkind::dimension>;
-        using bkp = multiply_kinds<bk1, bk2>;
-
-        auto const mag1 = convert_to<bk1>();
-        auto const mag2 = mag.template convert_to<bk2>();
-
-        auto const magp
-            = magnitude<bkp, internal_data_type> { mag1.get_measurement()
-                                                   * mag2.get_measurement() };
-        return magp.template convert_to<nkind>();
+        return magnitude<nkind, internal_data_type> { get_measurement()
+                                                      * mag.get_measurement() };
     }
 
     [[nodiscard]]
@@ -439,32 +429,22 @@ public:
             internal_data_type>
     {
         using nkind = divide_kinds<magkind, typename magnitude_t::magkind>;
-
-        using bk1 = basic_kind<typename magkind::dimension>;
-        using bk2 = basic_kind<typename magnitude_t::magkind::dimension>;
-        using bkp = divide_kinds<bk1, bk2>;
-
-        auto const mag1 = convert_to<bk1>();
-        auto const mag2 = mag.template convert_to<bk2>();
-
-        auto const magp
-            = magnitude<bkp, internal_data_type> { mag1.get_measurement()
-                                                   / mag2.get_measurement() };
-        return magp.template convert_to<nkind>();
+        return magnitude<nkind, internal_data_type> { get_measurement()
+                                                      / mag.get_measurement() };
     }
 
 private:
     internal_data_type _measurement;
 };
 
-template <magnitude_cpt magnitude_t, typename internal_data_type>
+template <typename internal_data_type, magnitude_cpt magnitude_t>
 [[nodiscard]]
 constexpr auto
 swap_internal_data_type(magnitude_t mag
 ) noexcept -> magnitude<typename magnitude_t::kind, internal_data_type>
 {
     return magnitude<typename magnitude_t::kind, internal_data_type> {
-        mag.get_measurement()
+        static_cast<internal_data_type>(mag.get_measurement())
     };
 }
 
