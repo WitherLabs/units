@@ -448,7 +448,111 @@ swap_internal_data_type(magnitude_t mag
     };
 }
 
+template <dimension_cpt dimension_t, typename internal_data_type>
+using basic = magnitude<basic_kind<dimension_t>, internal_data_type>;
+
+template <magnitude_cpt mag_t>
+using clone
+    = magnitude<clone_kind<typename mag_t::magkind>, typename mag_t::idt>;
+
+template <magnitude_cpt mag_t, dimension_cpt dimension_t>
+using swap_dimension = magnitude<
+    swap_kind_dimension<typename mag_t::magkind, dimension_t>,
+    typename mag_t::idt>;
+
+template <util::ratio_cpt prefix_t, magnitude_cpt mag_t>
+using swap_prefix = magnitude<
+    swap_kind_prefix<prefix_t, typename mag_t::magkind>,
+    typename mag_t::idt>;
+
+template <magnitude_cpt mag_t, util::ratio_cpt ratio_t>
+using swap_ratio = magnitude<
+    swap_kind_ratio<typename mag_t::magkind, ratio_t>,
+    typename mag_t::idt>;
+
+template <magnitude_cpt mag_t, util::ratio_cpt delta_t>
+using swap_delta = magnitude<
+    swap_kind_delta<typename mag_t::magkind, delta_t>,
+    typename mag_t::idt>;
+
+template <util::ratio_cpt ratio_t, magnitude_cpt mag_t>
+using derive_prefix = magnitude<
+    derive_kind_prefix<ratio_t, typename mag_t::magkind>,
+    typename mag_t::idt>;
+
+template <util::ratio_cpt ratio_t, magnitude_cpt mag_t>
+using derive_ratio = magnitude<
+    derive_kind_ratio<ratio_t, typename mag_t::magkind>,
+    typename mag_t::idt>;
+
+template <util::ratio_cpt ratio_t, magnitude_cpt mag_t>
+using derive_delta = magnitude<
+    derive_kind_delta<ratio_t, typename mag_t::magkind>,
+    typename mag_t::idt>;
+
+template <magnitude_cpt mag_t>
+using reciprocal
+    = magnitude<kind_reciprocal<typename mag_t::magkind>, typename mag_t::idt>;
+
+template <magnitude_cpt mag_a, magnitude_cpt mag_b>
+using multiply = magnitude<
+    multiply_kinds<typename mag_a::magkind, typename mag_b::magkind>,
+    std::common_type_t<decltype(mag_a::idt), decltype(mag_b::idt)>>;
+
+template <magnitude_cpt mag_a, magnitude_cpt mag_b>
+using divide = multiply<mag_a, reciprocal<mag_b>>;
+
+template <magnitude_cpt mag_t> using square = multiply<mag_t, mag_t>;
+
+template <magnitude_cpt mag_t> using cube = multiply<square<mag_t>, mag_t>;
+
 } // namespace impl
+
+template <impl::magnitude_cpt mag_t>
+using atto = impl::swap_prefix<std::atto, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using femto = impl::swap_prefix<std::femto, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using pico = impl::swap_prefix<std::pico, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using nano = impl::swap_prefix<std::nano, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using micro = impl::swap_prefix<std::micro, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using milli = impl::swap_prefix<std::milli, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using centi = impl::swap_prefix<std::centi, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using deci = impl::swap_prefix<std::deci, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using deca = impl::swap_prefix<std::deca, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using hecto = impl::swap_prefix<std::hecto, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using kilo = impl::swap_prefix<std::kilo, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using mega = impl::swap_prefix<std::mega, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using giga = impl::swap_prefix<std::giga, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using tera = impl::swap_prefix<std::tera, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using peta = impl::swap_prefix<std::peta, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using exa = impl::swap_prefix<std::exa, mag_t>;
+
+template <impl::magnitude_cpt mag_t>
+using kibi = impl::swap_prefix<std::ratio<1024>, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using mebi = impl::swap_prefix<std::ratio<1048576>, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using gibi = impl::swap_prefix<std::ratio<1073741824>, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using tebi = impl::swap_prefix<std::ratio<1099511627776>, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using pebi = impl::swap_prefix<std::ratio<1125899907000000>, mag_t>;
+template <impl::magnitude_cpt mag_t>
+using exbi = impl::swap_prefix<std::ratio<1152921505000000000>, mag_t>;
 
 } // namespace units
 
