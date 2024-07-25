@@ -247,7 +247,7 @@ using swap_kind_dimension = kind<
     typename kind_t::ratio,
     typename kind_t::delta>;
 
-template <kind_cpt kind_t, util::ratio_cpt prefix_t>
+template <util::ratio_cpt prefix_t, kind_cpt kind_t>
 using swap_kind_prefix = kind<
     typename kind_t::dimension,
     prefix_t,
@@ -268,20 +268,31 @@ using swap_kind_delta = kind<
     typename kind_t::ratio,
     delta_t>;
 
-template <
-    kind_cpt        kind_t,
-    util::ratio_cpt ratio_t,
-    util::ratio_cpt delta_t = std::ratio<0>>
-using derived_kind = kind<
+template <util::ratio_cpt ratio_t, kind_cpt kind_t>
+using derive_kind_prefix = swap_kind_prefix<
+    std::ratio_multiply<typename kind_t::prefix, ratio_t>,
+    kind_t>;
+
+template <util::ratio_cpt ratio_t, kind_cpt kind_t>
+using derive_kind_ratio = kind<
     typename kind_t::dimension,
     typename kind_t::prefix,
     ratio::derive<typename kind_t::ratio, ratio_t>,
+    typename kind_t::delta>;
+
+template <util::ratio_cpt delta_t, kind_cpt kind_t>
+using derive_kind_delta = kind<
+    typename kind_t::dimension,
+    typename kind_t::prefix,
+    typename kind_t::ratio_t,
     delta::derive<typename kind_t::ratio, typename kind_t::delta, delta_t>>;
 
-template <kind_cpt kind_t, util::ratio_cpt ratio_t>
-using derive_kind_via_prefix = swap_kind_prefix<
-    kind_t,
-    std::ratio_multiply<typename kind_t::prefix, ratio_t>>;
+template <kind_cpt kind_t>
+using kind_reciprocal = kind<
+    reciprocal_dimension<typename kind_t::dimension>,
+    typename kind_t::prefix,
+    util::ratio_reciprocal<typename kind_t::ratio>,
+    util::ratio_reciprocal<typename kind_t::delta>>;
 
 template <kind_cpt kind_a, kind_cpt kind_b>
 using multiply_kinds = kind<
@@ -290,20 +301,13 @@ using multiply_kinds = kind<
     std::ratio_multiply<typename kind_a::ratio, typename kind_b::ratio>,
     std::ratio_add<typename kind_a::delta, typename kind_b::delta>>;
 
-template <kind_cpt kind_t>
-using kind_reciprocal = kind<
-    multiply_dimension<typename kind_t::dimension, std::ratio<-1>>,
-    typename kind_t::prefix,
-    util::ratio_reciprocal<typename kind_t::ratio>,
-    util::ratio_reciprocal<typename kind_t::delta>>;
-
 template <kind_cpt kind_a, kind_cpt kind_b>
 using divide_kinds = multiply_kinds<kind_a, kind_reciprocal<kind_b>>;
 
-template <kind_cpt kind_t> using kind_squared = multiply_kinds<kind_t, kind_t>;
+template <kind_cpt kind_t> using square_kind = multiply_kinds<kind_t, kind_t>;
 
 template <kind_cpt kind_t>
-using unit_cubed = multiply_kinds<kind_squared<kind_t>, kind_t>;
+using cube_kind = multiply_kinds<square_kind<kind_t>, kind_t>;
 
 template <typename type>
 using is_magnitude = std::is_base_of<tag::magnitude, type>;
