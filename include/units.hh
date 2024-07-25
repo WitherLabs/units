@@ -152,60 +152,7 @@ namespace prefix
 template <util::ratio_cpt prefix_a, util::ratio_cpt prefix_b>
 using convert = std::ratio_divide<prefix_a, prefix_b>;
 
-#if __INTMAX_WIDTH__ >= 96
-#    if __cpp_lib_ratio >= 202306L
-#        if __INTMAX_WIDTH__ >= 128
-using quecto = std::quecto;
-#        endif
-using ronto = std::ronto;
-#    endif
-using yocto = std::yocto;
-using zepto = std::zepto;
-#endif
-using atto  = std::atto;
-using femto = std::femto;
-using pico  = std::pico;
-using nano  = std::nano;
-using micro = std::micro;
-using milli = std::milli;
-using centi = std::centi;
-using deci  = std::deci;
-using none  = std::ratio<1>;
-using deca  = std::deca;
-using hecto = std::hecto;
-using kilo  = std::kilo;
-using mega  = std::mega;
-using giga  = std::giga;
-using tera  = std::tera;
-using peta  = std::peta;
-using exa   = std::exa;
-#if __INTMAX_WIDTH__ >= 96
-using zetta = std::zetta;
-using yotta = std::yotta;
-#    if __cpp_lib_ratio >= 202306L
-using ronna = std::ronna;
-#        if __INTMAX_WIDTH__ >= 128
-using quetta = std::quetta;
-#        endif
-#    endif
-#endif
-
-// Funny how it thinks they're not constant
-using kibi = std::ratio<1024>;                // NOLINT
-using mebi = std::ratio<1048576>;             // NOLINT
-using gibi = std::ratio<1073741824>;          // NOLINT
-using tebi = std::ratio<1099511627776>;       // NOLINT
-using pebi = std::ratio<1125899907000000>;    // NOLINT
-using exbi = std::ratio<1152921505000000000>; // NOLINT
-
-#if __INTMAX_WIDTH__ >= 96
-using zebi = std::ratio<1180591621000000000000>;
-#endif
-#if __INTMAX_WIDTH__ >= 128
-#    if __cpp_lib_ratio >= 202306L
-using yobi = std::ratio<1208925820000000000000000>;
-#    endif
-#endif
+using none = std::ratio<1>;
 
 } // namespace prefix
 
@@ -217,7 +164,7 @@ using convert = std::ratio_divide<ratio_a, ratio_b>;
 template <util::ratio_cpt ratio_a, util::ratio_cpt ratio_b>
 using derive = std::ratio_multiply<ratio_a, ratio_b>;
 
-using base = std::ratio<1, 1>;
+using basic = std::ratio<1, 1>;
 
 } // namespace ratio
 
@@ -284,7 +231,7 @@ template <kind_cpt kind_a, kind_cpt kind_b> struct conversion
 };
 
 template <dimension_cpt dimension_t>
-using basic_kind = kind<dimension_t, prefix::none, ratio::base, delta::none>;
+using basic_kind = kind<dimension_t, prefix::none, ratio::basic, delta::none>;
 
 template <kind_cpt kind_t>
 using clone_kind = kind<
