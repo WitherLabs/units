@@ -497,7 +497,7 @@ using reciprocal
 template <magnitude_cpt mag_a, magnitude_cpt mag_b>
 using multiply = magnitude<
     multiply_kinds<typename mag_a::magkind, typename mag_b::magkind>,
-    std::common_type_t<decltype(mag_a::idt), decltype(mag_b::idt)>>;
+    std::common_type_t<typename mag_a::idt, typename mag_b::idt>>;
 
 template <magnitude_cpt mag_a, magnitude_cpt mag_b>
 using divide = multiply<mag_a, reciprocal<mag_b>>;
