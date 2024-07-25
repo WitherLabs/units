@@ -323,6 +323,7 @@ struct magnitude: tag::magnitude
 {
 public:
     using magkind = kind_t;
+    using idt     = internal_data_type;
 
     explicit constexpr magnitude(internal_data_type measurement)
     : _measurement { measurement }
