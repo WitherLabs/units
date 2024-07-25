@@ -74,8 +74,8 @@ template <typename type>
 concept dimension_cpt = is_dimension_v<type>;
 
 template <
-    util::ratio_cpt _length,
     util::ratio_cpt _mass,
+    util::ratio_cpt _length,
     util::ratio_cpt _time,
     util::ratio_cpt _current,
     util::ratio_cpt _temperature,
@@ -83,8 +83,8 @@ template <
     util::ratio_cpt _luminous_intensity>
 struct dimension: tag::dimension
 {
-    using length             = _length;
     using mass               = _mass;
+    using length             = _length;
     using time               = _time;
     using current            = _current;
     using temperature        = _temperature;
@@ -96,8 +96,8 @@ struct dimension: tag::dimension
 
 template <dimension_cpt dim_a, dimension_cpt dim_b>
 static constexpr bool equal_dimensions
-    =  std::ratio_equal_v<typename dim_a::length,             typename dim_b::length>
-    && std::ratio_equal_v<typename dim_a::mass,               typename dim_b::mass>
+    =  std::ratio_equal_v<typename dim_a::mass,               typename dim_b::mass>
+    && std::ratio_equal_v<typename dim_a::length,             typename dim_b::length>
     && std::ratio_equal_v<typename dim_a::time,               typename dim_b::time>
     && std::ratio_equal_v<typename dim_a::current,            typename dim_b::current>
     && std::ratio_equal_v<typename dim_a::temperature,        typename dim_b::temperature>
@@ -106,8 +106,8 @@ static constexpr bool equal_dimensions
 
 template <dimension_cpt dim_a, dimension_cpt dim_b>
 using add_dimensions = dimension<
-    std::ratio_add<typename dim_a::length,             typename dim_b::length>,
     std::ratio_add<typename dim_a::mass,               typename dim_b::mass>,
+    std::ratio_add<typename dim_a::length,             typename dim_b::length>,
     std::ratio_add<typename dim_a::time,               typename dim_b::time>,
     std::ratio_add<typename dim_a::current,            typename dim_b::current>,
     std::ratio_add<typename dim_a::temperature,        typename dim_b::temperature>,
@@ -115,21 +115,10 @@ using add_dimensions = dimension<
     std::ratio_add<typename dim_a::luminous_intensity, typename dim_b::luminous_intensity>
     >;
 
-template <dimension_cpt dim_a, dimension_cpt dim_b>
-using subtract_dimensions = dimension<
-    std::ratio_subtract<typename dim_a::length,             typename dim_b::length>,
-    std::ratio_subtract<typename dim_a::mass,               typename dim_b::mass>,
-    std::ratio_subtract<typename dim_a::time,               typename dim_b::time>,
-    std::ratio_subtract<typename dim_a::current,            typename dim_b::current>,
-    std::ratio_subtract<typename dim_a::temperature,        typename dim_b::temperature>,
-    std::ratio_subtract<typename dim_a::substance,          typename dim_b::substance>,
-    std::ratio_subtract<typename dim_a::luminous_intensity, typename dim_b::luminous_intensity>
-    >;
-
 template <dimension_cpt dim_a, util::ratio_cpt factor>
 using multiply_dimension = dimension<
-    std::ratio_multiply<typename dim_a::length,             factor>,
     std::ratio_multiply<typename dim_a::mass,               factor>,
+    std::ratio_multiply<typename dim_a::length,             factor>,
     std::ratio_multiply<typename dim_a::time,               factor>,
     std::ratio_multiply<typename dim_a::current,            factor>,
     std::ratio_multiply<typename dim_a::temperature,        factor>,
@@ -137,16 +126,15 @@ using multiply_dimension = dimension<
     std::ratio_multiply<typename dim_a::luminous_intensity, factor>
     >;
 
+template <dimension_cpt dim_a, dimension_cpt dim_b>
+using subtract_dimensions = add_dimensions<dim_a, multiply_dimension<dim_b, std::ratio<-1>>>;
+
+
 template <dimension_cpt dim, util::ratio_cpt factor>
-using divide_dimension = dimension<
-    std::ratio_divide<typename dim::length,             factor>,
-    std::ratio_divide<typename dim::mass,               factor>,
-    std::ratio_divide<typename dim::time,               factor>,
-    std::ratio_divide<typename dim::current,            factor>,
-    std::ratio_divide<typename dim::temperature,        factor>,
-    std::ratio_divide<typename dim::substance,          factor>,
-    std::ratio_divide<typename dim::luminous_intensity, factor>
-    >;
+using divide_dimension = multiply_dimension<dim, util::ratio_reciprocal<factor>>;
+
+template <dimension_cpt dim_t>
+using reciprocal_dimension = multiply_dimension<dim_t, std::ratio<-1>>;
 
 // clang-format on
 
