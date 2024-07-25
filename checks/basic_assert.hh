@@ -8,10 +8,10 @@
 #include <wither/units/units.hh>
 
 static_assert(units::impl::equal_dimensions<
-              units::dim::length,
+              units::dimensions::length,
               units::impl::dimension<
-                  std::ratio<1>, // length
                   std::ratio<0>, // mass
+                  std::ratio<1>, // length
                   std::ratio<0>, // time
                   std::ratio<0>, // current
                   std::ratio<0>, // temperature
@@ -20,10 +20,10 @@ static_assert(units::impl::equal_dimensions<
                   >>);
 
 static_assert(units::impl::equal_dimensions<
-              units::dim::mass,
+              units::dimensions::mass,
               units::impl::dimension<
-                  std::ratio<0>, // length
                   std::ratio<1>, // mass
+                  std::ratio<0>, // length
                   std::ratio<0>, // time
                   std::ratio<0>, // current
                   std::ratio<0>, // temperature
@@ -32,7 +32,7 @@ static_assert(units::impl::equal_dimensions<
                   >>);
 
 static_assert(units::impl::equal_dimensions<
-              units::dim::time,
+              units::dimensions::time,
               units::impl::dimension<
                   std::ratio<0>, // length
                   std::ratio<0>, // mass
@@ -44,7 +44,7 @@ static_assert(units::impl::equal_dimensions<
                   >>);
 
 static_assert(units::impl::equal_dimensions<
-              units::dim::current,
+              units::dimensions::current,
               units::impl::dimension<
                   std::ratio<0>, // length
                   std::ratio<0>, // mass
@@ -56,7 +56,7 @@ static_assert(units::impl::equal_dimensions<
                   >>);
 
 static_assert(units::impl::equal_dimensions<
-              units::dim::temperature,
+              units::dimensions::temperature,
               units::impl::dimension<
                   std::ratio<0>, // length
                   std::ratio<0>, // mass
@@ -68,7 +68,7 @@ static_assert(units::impl::equal_dimensions<
                   >>);
 
 static_assert(units::impl::equal_dimensions<
-              units::dim::substance,
+              units::dimensions::substance,
               units::impl::dimension<
                   std::ratio<0>, // length
                   std::ratio<0>, // mass
@@ -80,7 +80,7 @@ static_assert(units::impl::equal_dimensions<
                   >>);
 
 static_assert(units::impl::equal_dimensions<
-              units::dim::luminous_intensity,
+              units::dimensions::luminous_intensity,
               units::impl::dimension<
                   std::ratio<0>, // length
                   std::ratio<0>, // mass
