@@ -4,7 +4,6 @@
 
 #include <cmath>
 #include <compare>
-#include <concepts>
 #include <cstdint>
 #include <ratio>
 
@@ -218,6 +217,7 @@ template <kind_cpt kind_a, kind_cpt kind_b> struct conversion
         = delta::convert<typename kind_a::delta, typename kind_b::delta>;
 
     template <typename internal_data_type>
+    requires std::is_arithmetic_v<internal_data_type>
     [[nodiscard]]
     static constexpr auto
     apply_to(internal_data_type measurement) -> internal_data_type
@@ -322,6 +322,7 @@ template <typename type>
 concept magnitude_cpt = is_magnitude_v<type>;
 
 template <kind_cpt kind_t, typename internal_data_type>
+requires std::is_arithmetic_v<internal_data_type>
 struct magnitude: tag::magnitude
 {
 public:
@@ -363,6 +364,15 @@ public:
     operator mag_t () const noexcept
     {
         return convert_to<typename mag_t::magkind>();
+    }
+
+    template <typename type_t>
+    requires std::is_arithmetic_v<type_t>
+    [[nodiscard]]
+    explicit constexpr
+    operator type_t () const noexcept
+    {
+        return static_cast<type_t>(_measurement);
     }
 
     [[nodiscard]]
@@ -425,10 +435,11 @@ public:
         this->_measurement -= converted.get_measurement();
     }
 
-    template <std::floating_point fp>
+    template <typename type_t>
+    requires std::is_arithmetic_v<type_t>
     [[nodiscard]]
     constexpr auto
-    operator* (fp value) -> magnitude
+    operator* (type_t value) -> magnitude
     {
         return magnitude { _measurement * value };
     }
@@ -444,10 +455,11 @@ public:
                                        * mag.get_measurement() };
     }
 
-    template <std::floating_point fp>
+    template <typename type_t>
+    requires std::is_arithmetic_v<type_t>
     [[nodiscard]]
     constexpr auto
-    operator/ (fp value) -> magnitude
+    operator/ (type_t value) -> magnitude
     {
         return magnitude { _measurement / value };
     }
@@ -491,13 +503,14 @@ public:
     template <magnitude_cpt mag_t>
     [[nodiscard]]
     constexpr auto
-    operator<=> (mag_t const &mag) const noexcept -> std::conditional_t<
-                                                      std::is_integral_v<idt>,
-                                                      std::strong_ordering,
-                                                      std::partial_ordering>
+    operator<=> (mag_t const &mag) const noexcept
+        -> std::conditional_t<
+            std::is_integral_v<std::common_type_t<idt, typename mag_t::idt>>,
+            std::strong_ordering,
+            std::partial_ordering>
     {
         using type = std::conditional_t<
-            std::is_integral_v<idt>,
+            std::is_integral_v<std::common_type_t<idt, typename mag_t::idt>>,
             std::strong_ordering,
             std::partial_ordering>;
 
