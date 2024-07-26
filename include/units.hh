@@ -284,7 +284,7 @@ template <util::ratio_cpt delta_t, kind_cpt kind_t>
 using derive_kind_delta = kind<
     typename kind_t::dimension,
     typename kind_t::prefix,
-    typename kind_t::ratio_t,
+    typename kind_t::ratio,
     delta::derive<typename kind_t::ratio, typename kind_t::delta, delta_t>>;
 
 template <kind_cpt kind_t>
@@ -307,7 +307,7 @@ using divide_kinds = multiply_kinds<kind_a, kind_reciprocal<kind_b>>;
 template <kind_cpt kind_t> using square_kind = multiply_kinds<kind_t, kind_t>;
 
 template <kind_cpt kind_t>
-using cube_kind = multiply_kinds<square_kind<kind_t>, kind_t>;
+using cubic_kind = multiply_kinds<square_kind<kind_t>, kind_t>;
 
 template <typename type>
 using is_magnitude = std::is_base_of<tag::magnitude, type>;
@@ -502,9 +502,34 @@ using multiply = magnitude<
 template <magnitude_cpt mag_a, magnitude_cpt mag_b>
 using divide = multiply<mag_a, reciprocal<mag_b>>;
 
+template <magnitude_cpt mag_a, magnitude_cpt... excess> struct multiply_all_1
+{
+    using value = mag_a;
+};
+
+template <magnitude_cpt mag_a, magnitude_cpt mag_b, magnitude_cpt... excess>
+struct multiply_all_2
+{
+    using value = multiply<mag_a, mag_b>;
+};
+
+template <magnitude_cpt... mag_v> struct multiply_all
+{
+    using value = std::conditional_t<
+        sizeof...(mag_v) == 0,
+        void,
+        std::conditional_t<
+            sizeof...(mag_v) == 1,
+            typename multiply_all_1<mag_v...>::value,
+            std::conditional_t<
+                sizeof...(mag_v) == 2,
+                typename multiply_all_2<mag_v...>::value,
+                multiply_all<mag_v...>>>>;
+};
+
 template <magnitude_cpt mag_t> using square = multiply<mag_t, mag_t>;
 
-template <magnitude_cpt mag_t> using cube = multiply<square<mag_t>, mag_t>;
+template <magnitude_cpt mag_t> using cubic = multiply<square<mag_t>, mag_t>;
 
 } // namespace impl
 
