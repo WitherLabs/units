@@ -6,7 +6,7 @@
 namespace units
 {
 
-using pascals = impl::multiply<newtons, square_metres>;
+using pascals = impl::divide<newtons, square_metres>;
 
 namespace dimensions
 {
