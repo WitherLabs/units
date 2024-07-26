@@ -1,31 +1,18 @@
 #pragma once
 
-#include <wither/units/angle.hh>
+#include <wither/units/area.hh>
 
 namespace units
 {
 
-namespace kind
+using steradians = impl::divide<square_metres, square_metres>;
+
+namespace dimensions
 {
 
-// clang-format off
+using solid_angle = steradians::magkind::dimension;
 
-using steradians = impl::multiply_kinds<radians, radians>;
-
-// clang-format on
-
-} // namespace kind
-
-// clang-format off
-
-using steradians = impl::magnitude<kind::steradians, double>;
-
-// clang-format on
-
-namespace dim
-{
-
-} // namespace dim
+} // namespace dimensions
 
 } // namespace units
 
