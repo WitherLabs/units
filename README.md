@@ -16,48 +16,35 @@ Sorry, postponed!
 Here is an example
 
 ```cpp
-#include <wither/units/length.hh>
+#include <wither/units/acceleration.hh>
 
 #include <iostream>
 #include <ostream>
 
-namespace
-{
-
-auto
-print_inches(units::inches inches) -> void
-{
-    std::println(std::cout, "{} inches", inches.get_measurement());
-}
-
-auto
-print_feet(units::feet feet) -> void
-{
-    std::println(std::cout, "{} feet", feet.get_measurement());
-}
-
-auto
-print_meters(units::meters meters) -> void
-{
-    std::println(std::cout, "{} meters", meters.get_measurement());
-}
-
-} // namespace
+// Uniform acceleration of 18.5 m/s to 46.1m/s over a span of 2.47s
 
 auto
 main() -> int
 {
-    // 10 meters
-    units::meters const distance { 10 };
+    constexpr units::metres_per_second v_i { 18.5L };
+    constexpr units::metres_per_second v_f { 46.1L };
+    constexpr units::seconds           time { 2.47L };
 
-    // Will automatically convert to inches and feet
-    print_meters(distance);
-    print_inches(distance);
-    print_feet(distance);
+    constexpr units::metres_per_second_squared acceleration
+        = (v_f - v_i) / time;
+
+    constexpr units::metres distance
+        = v_i * time + (0.5 * acceleration * time * time);
+
+    std::println(
+        std::cout,
+        "acceleration = {}ms^2\ndistance = {}m",
+        acceleration.get_measurement(),
+        distance.get_measurement()
+    );
 
     return 0;
 }
-
 ```
 
 ## Requirements: Adding Units to The Library

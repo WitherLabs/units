@@ -20,10 +20,11 @@ main() -> int
 
     std::println(
         std::cout,
-        "acceleration = {}ms^2; distance = {}m",
+        "acceleration = {}ms^2\ndistance = {}m",
         acceleration.get_measurement(),
         distance.get_measurement()
     );
+
     return 0;
 }
 
