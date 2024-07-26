@@ -5,12 +5,12 @@
 namespace units
 {
 
-using cubed_metres = impl::cube<metres>;
+using cubic_metres = impl::cubic<metres>;
 
 namespace dimensions
 {
 
-using volume = cubed_metres::magkind::dimension;
+using volume = cubic_metres::magkind::dimension;
 
 } // namespace dimensions
 
