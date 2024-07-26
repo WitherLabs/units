@@ -8,6 +8,7 @@ namespace units
 
 using watts_per_metre_kelvin
     = impl::divide<watts, impl::multiply<metres, kelvins>>;
+using watts_per_metre_celsius = impl::clone<watts_per_metre_kelvin>;
 
 namespace dimensions
 {

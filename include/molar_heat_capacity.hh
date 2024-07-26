@@ -9,6 +9,7 @@ namespace units
 
 using joules_per_mole_kelvin
     = impl::divide<joules, impl::multiply<moles, kelvins>>;
+using joules_per_mole_celsius = impl::clone<joules_per_mole_kelvin>;
 
 namespace dimensions
 {
