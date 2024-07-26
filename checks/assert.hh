@@ -1,3 +1,5 @@
+// All data sourced from https://metricsystem.net
+
 #include <wither/units/absorbed_dose_rate.hh>
 #include <wither/units/acceleration.hh>
 #include <wither/units/action.hh>
