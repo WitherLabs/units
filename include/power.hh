@@ -11,7 +11,7 @@ using watts = impl::divide<joules, seconds>;
 namespace dimensions
 {
 
-using energy = joules::magkind::dimension;
+using power = watts::magkind::dimension;
 
 } // namespace dimensions
 
