@@ -1,17 +1,17 @@
 #pragma once
 
-#include <wither/units/energy.hh>
-#include <wither/units/substance.hh>
+#include <wither/units/inductance.hh>
+#include <wither/units/length.hh>
 
 namespace units
 {
 
-using joule_per_mole = impl::divide<joules, moles>;
+using henries_per_metre = impl::divide<henries, metres>;
 
 namespace dimensions
 {
 
-using molar_energy = joule_per_mole::magkind::dimension;
+using permeability = henries_per_metre::magkind::dimension;
 
 } // namespace dimensions
 
