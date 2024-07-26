@@ -2,6 +2,7 @@
 
 #include <type_traits>
 
+#include <cmath>
 #include <compare>
 #include <concepts>
 #include <cstdint>
@@ -460,6 +461,18 @@ public:
         using nkind = divide_kinds<magkind, typename mag_t::magkind>;
         return magnitude<nkind, idt> { get_measurement()
                                        / mag.get_measurement() };
+    }
+
+    template <magnitude_cpt mag_t>
+    [[nodiscard]]
+    constexpr auto
+    operator% (mag_t const mag) const noexcept
+        -> magnitude<divide_kinds<magkind, typename mag_t::magkind>, idt>
+    {
+        using nkind = divide_kinds<magkind, typename mag_t::magkind>;
+        return magnitude<nkind, idt> {
+            std::fmod(_measurement, mag.get_measurement())
+        };
     }
 
     template <magnitude_cpt mag_t>
