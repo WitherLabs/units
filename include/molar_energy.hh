@@ -1,16 +1,17 @@
 #pragma once
 
-#include <wither/units/units.hh>
+#include <wither/units/energy.hh>
+#include <wither/units/substance.hh>
 
 namespace units
 {
 
-using unit = impl::basic<impl::no_dimension, long double>;
+using joules_per_mole = impl::divide<joules, moles>;
 
 namespace dimensions
 {
 
-using dim = unit::magkind::dimension;
+using molar_energy = joules_per_mole::magkind::dimension;
 
 } // namespace dimensions
 
