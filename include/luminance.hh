@@ -6,12 +6,12 @@
 namespace units
 {
 
-using luxes = impl::divide<lumens, square_metres>;
+using candelas_per_square_metre = impl::divide<lumens, square_metres>;
 
 namespace dimensions
 {
 
-using illuminance = luxes::magkind::dimension;
+using luminance = candelas_per_square_metre::magkind::dimension;
 
 } // namespace dimensions
 
