@@ -11,7 +11,7 @@ using ohms = impl::divide<volts, amperes>;
 namespace dimensions
 {
 
-using resistance = ohms::magkind::dimension;
+using electrical_resistance = ohms::magkind::dimension;
 
 } // namespace dimensions
 
