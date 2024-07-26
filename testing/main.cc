@@ -8,9 +8,9 @@
 auto
 main() -> int
 {
-    constexpr units::metres_per_second v_i { 18.5L };
-    constexpr units::metres_per_second v_f { 46.1L };
-    constexpr units::seconds           time { 2.47L };
+    constexpr units::metres_per_second v_i { 18.5 };
+    constexpr units::metres_per_second v_f { 46.1 };
+    constexpr units::seconds           time { 2.47 };
 
     constexpr units::metres_per_second_squared acceleration
         = (v_f - v_i) / time;

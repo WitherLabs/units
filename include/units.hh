@@ -2,7 +2,8 @@
 
 #include <type_traits>
 
-#include <concepts>
+#include <cmath>
+#include <compare>
 #include <cstdint>
 #include <ratio>
 
@@ -216,6 +217,7 @@ template <kind_cpt kind_a, kind_cpt kind_b> struct conversion
         = delta::convert<typename kind_a::delta, typename kind_b::delta>;
 
     template <typename internal_data_type>
+    requires std::is_arithmetic_v<internal_data_type>
     [[nodiscard]]
     static constexpr auto
     apply_to(internal_data_type measurement) -> internal_data_type
@@ -320,6 +322,7 @@ template <typename type>
 concept magnitude_cpt = is_magnitude_v<type>;
 
 template <kind_cpt kind_t, typename internal_data_type>
+requires std::is_arithmetic_v<internal_data_type>
 struct magnitude: tag::magnitude
 {
 public:
@@ -331,17 +334,27 @@ public:
     {
     }
 
-    template <kind_cpt new_kind_t>
-    requires equal_dimensions<
-                 typename new_kind_t::dimension,
-                 typename magkind::dimension>
+    template <typename type_t>
+    requires std::is_arithmetic_v<type_t>
+    explicit constexpr magnitude(type_t measurement)
+    : _measurement { static_cast<idt>(measurement) }
+    {
+    }
+
+    template <kind_cpt new_kind_t, typename new_idt_t = internal_data_type>
+    requires std::is_arithmetic_v<new_idt_t>
+              && equal_dimensions<
+                  typename new_kind_t::dimension,
+                  typename magkind::dimension>
 
     [[nodiscard]]
     constexpr auto
-    convert_to() const noexcept -> magnitude<new_kind_t, internal_data_type>
+    convert_to() const noexcept -> magnitude<new_kind_t, new_idt_t>
     {
-        return magnitude<new_kind_t, internal_data_type> {
-            conversion<kind_t, new_kind_t>::apply_to(_measurement)
+        return magnitude<new_kind_t, new_idt_t> {
+            conversion<kind_t, new_kind_t>::apply_to(
+                static_cast<new_idt_t>(_measurement)
+            )
         };
     }
 
@@ -352,22 +365,54 @@ public:
         return _measurement;
     }
 
-    template <magnitude_cpt magnitude_t>
+    template <magnitude_cpt mag_t>
     requires equal_dimensions<
-        typename magnitude_t::magkind::dimension,
-        typename magkind::dimension>
+        typename magkind::dimension,
+        typename mag_t::magkind::dimension>
     [[nodiscard]]
     constexpr // NOLINTNEXTLINE: No explicit pls
-    operator magnitude_t () const noexcept
+    operator mag_t () const noexcept
     {
-        return convert_to<typename magnitude_t::magkind>();
+        return convert_to<typename mag_t::magkind, typename mag_t::idt>();
+    }
+
+    template <typename type_t>
+    requires std::is_arithmetic_v<type_t>
+    [[nodiscard]]
+    explicit constexpr
+    operator type_t () const noexcept
+    {
+        return static_cast<type_t>(_measurement);
     }
 
     [[nodiscard]]
     constexpr auto
     operator+ () const noexcept -> magnitude
     {
-        return magnitude { _measurement };
+        return *this;
+    }
+
+    template <magnitude_cpt mag_t>
+    requires equal_dimensions<
+                 typename mag_t::magkind::dimension,
+                 typename magkind::dimension>
+    [[nodiscard]]
+    constexpr auto
+    operator+ (mag_t const mag) const noexcept -> magnitude
+    {
+        magnitude const converted { mag };
+        return magnitude { _measurement + converted._measurement };
+    }
+
+    template <magnitude_cpt mag_t>
+    requires equal_dimensions<
+                 typename mag_t::magkind::dimension,
+                 typename magkind::dimension>
+    constexpr auto
+    operator+= (mag_t const mag) noexcept -> void
+    {
+        magnitude const converted { mag };
+        this->_measurement += converted.get_measurement();
     }
 
     [[nodiscard]]
@@ -377,70 +422,117 @@ public:
         return magnitude { -_measurement };
     }
 
-    template <magnitude_cpt magnitude_t>
+    template <magnitude_cpt mag_t>
     requires equal_dimensions<
-                 typename magnitude_t::magkind::dimension,
+                 typename mag_t::magkind::dimension,
                  typename magkind::dimension>
     [[nodiscard]]
     constexpr auto
-    operator+ (magnitude_t const mag) const noexcept -> magnitude
-    {
-        magnitude const converted { mag };
-        return magnitude { _measurement + converted._measurement };
-    }
-
-    template <magnitude_cpt magnitude_t>
-    requires equal_dimensions<
-                 typename magnitude_t::magkind::dimension,
-                 typename magkind::dimension>
-    [[nodiscard]]
-    constexpr auto
-    operator- (magnitude_t const mag) const noexcept -> magnitude
+    operator- (mag_t const mag) const noexcept -> magnitude
     {
         magnitude const converted { mag };
         return magnitude { _measurement - converted._measurement };
     }
 
-    template <std::floating_point fp>
+    template <magnitude_cpt mag_t>
+    requires equal_dimensions<
+                 typename mag_t::magkind::dimension,
+                 typename magkind::dimension>
+    constexpr auto
+    operator-= (mag_t const mag) noexcept -> void
+    {
+        magnitude const converted { mag };
+        this->_measurement -= converted.get_measurement();
+    }
+
+    template <typename type_t>
+    requires std::is_arithmetic_v<type_t>
     [[nodiscard]]
     constexpr auto
-    operator* (fp value) -> magnitude
+    operator* (type_t value) -> magnitude
     {
         return magnitude { _measurement * value };
     }
 
-    template <magnitude_cpt magnitude_t>
+    template <magnitude_cpt mag_t>
     [[nodiscard]]
     constexpr auto
-    operator* (magnitude_t const mag) const noexcept
-        -> magnitude<
-            multiply_kinds<magkind, typename magnitude_t::magkind>,
-            internal_data_type>
+    operator* (mag_t const mag) const noexcept
+        -> magnitude<multiply_kinds<magkind, typename mag_t::magkind>, idt>
     {
-        using nkind = multiply_kinds<magkind, typename magnitude_t::magkind>;
-        return magnitude<nkind, internal_data_type> { get_measurement()
-                                                      * mag.get_measurement() };
+        using nkind = multiply_kinds<magkind, typename mag_t::magkind>;
+        return magnitude<nkind, idt> { get_measurement()
+                                       * mag.get_measurement() };
     }
 
-    template <std::floating_point fp>
+    template <typename type_t>
+    requires std::is_arithmetic_v<type_t>
     [[nodiscard]]
     constexpr auto
-    operator/ (fp value) -> magnitude
+    operator/ (type_t value) -> magnitude
     {
         return magnitude { _measurement / value };
     }
 
-    template <magnitude_cpt magnitude_t>
+    template <magnitude_cpt mag_t>
     [[nodiscard]]
     constexpr auto
-    operator/ (magnitude_t const mag) const noexcept
-        -> magnitude<
-            divide_kinds<magkind, typename magnitude_t::magkind>,
-            internal_data_type>
+    operator/ (mag_t const mag) const noexcept
+        -> magnitude<divide_kinds<magkind, typename mag_t::magkind>, idt>
     {
-        using nkind = divide_kinds<magkind, typename magnitude_t::magkind>;
-        return magnitude<nkind, internal_data_type> { get_measurement()
-                                                      / mag.get_measurement() };
+        using nkind = divide_kinds<magkind, typename mag_t::magkind>;
+        return magnitude<nkind, idt> { get_measurement()
+                                       / mag.get_measurement() };
+    }
+
+    template <magnitude_cpt mag_t>
+    [[nodiscard]]
+    constexpr auto
+    operator% (mag_t const mag) const noexcept
+        -> magnitude<divide_kinds<magkind, typename mag_t::magkind>, idt>
+    {
+        using nkind = divide_kinds<magkind, typename mag_t::magkind>;
+        return magnitude<nkind, idt> {
+            std::fmod(_measurement, mag.get_measurement())
+        };
+    }
+
+    template <magnitude_cpt mag_t>
+    [[nodiscard]]
+    constexpr auto
+    operator== (mag_t const &mag) const noexcept -> bool
+    {
+        typename mag_t::idt const omsm = magnitude { mag }._measurement;
+
+        using ntype = std::common_type_t<idt, typename mag_t::idt>;
+
+        return static_cast<ntype>(_measurement) == static_cast<ntype>(omsm);
+    }
+
+    template <magnitude_cpt mag_t>
+    [[nodiscard]]
+    constexpr auto
+    operator<=> (mag_t const &mag) const noexcept
+        -> std::conditional_t<
+            std::is_integral_v<std::common_type_t<idt, typename mag_t::idt>>,
+            std::strong_ordering,
+            std::partial_ordering>
+    {
+        using type = std::conditional_t<
+            std::is_integral_v<std::common_type_t<idt, typename mag_t::idt>>,
+            std::strong_ordering,
+            std::partial_ordering>;
+
+        typename mag_t::idt const omsm = magnitude { mag }._measurement;
+
+        using ntype = std::common_type_t<idt, typename mag_t::idt>;
+
+        auto const amsm = static_cast<ntype>(_measurement);
+        auto const bmsm = static_cast<ntype>(omsm);
+
+        return (amsm == bmsm) ? type::equivalent
+             : (amsm > bmsm)  ? type::greater
+                              : type::less;
     }
 
 private:
