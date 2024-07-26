@@ -6,12 +6,12 @@
 namespace units
 {
 
-using amperes_per_square_metre = impl::divide<amperes, metres>;
+using amperes_per_metre = impl::divide<amperes, metres>;
 
 namespace dimensions
 {
 
-using magnetic_field_strength = amperes_per_square_metre::magkind::dimension;
+using magnetic_field_strength = amperes_per_metre::magkind::dimension;
 
 } // namespace dimensions
 
