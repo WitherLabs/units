@@ -334,17 +334,27 @@ public:
     {
     }
 
-    template <kind_cpt new_kind_t>
-    requires equal_dimensions<
-                 typename new_kind_t::dimension,
-                 typename magkind::dimension>
+    template <typename type_t>
+    requires std::is_arithmetic_v<type_t>
+    explicit constexpr magnitude(type_t measurement)
+    : _measurement { static_cast<idt>(measurement) }
+    {
+    }
+
+    template <kind_cpt new_kind_t, typename new_idt_t = internal_data_type>
+    requires std::is_arithmetic_v<new_idt_t>
+              && equal_dimensions<
+                  typename new_kind_t::dimension,
+                  typename magkind::dimension>
 
     [[nodiscard]]
     constexpr auto
-    convert_to() const noexcept -> magnitude<new_kind_t, internal_data_type>
+    convert_to() const noexcept -> magnitude<new_kind_t, new_idt_t>
     {
-        return magnitude<new_kind_t, internal_data_type> {
-            conversion<kind_t, new_kind_t>::apply_to(_measurement)
+        return magnitude<new_kind_t, new_idt_t> {
+            conversion<kind_t, new_kind_t>::apply_to(
+                static_cast<new_idt_t>(_measurement)
+            )
         };
     }
 
@@ -357,13 +367,13 @@ public:
 
     template <magnitude_cpt mag_t>
     requires equal_dimensions<
-        typename mag_t::magkind::dimension,
-        typename magkind::dimension>
+        typename magkind::dimension,
+        typename mag_t::magkind::dimension>
     [[nodiscard]]
     constexpr // NOLINTNEXTLINE: No explicit pls
     operator mag_t () const noexcept
     {
-        return convert_to<typename mag_t::magkind>();
+        return convert_to<typename mag_t::magkind, typename mag_t::idt>();
     }
 
     template <typename type_t>
@@ -492,8 +502,7 @@ public:
     constexpr auto
     operator== (mag_t const &mag) const noexcept -> bool
     {
-        const decltype(mag_t::idt) omsm
-            = mag.template convert_to<magnitude>()._measurement;
+        typename mag_t::idt const omsm = magnitude { mag }._measurement;
 
         using ntype = std::common_type_t<idt, typename mag_t::idt>;
 
@@ -514,8 +523,7 @@ public:
             std::strong_ordering,
             std::partial_ordering>;
 
-        const decltype(mag_t::idt) omsm
-            = mag.template convert_to<magnitude>()._measurement;
+        typename mag_t::idt const omsm = magnitude { mag }._measurement;
 
         using ntype = std::common_type_t<idt, typename mag_t::idt>;
 
