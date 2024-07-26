@@ -2,6 +2,7 @@
 
 #include <type_traits>
 
+#include <compare>
 #include <concepts>
 #include <cstdint>
 #include <ratio>
@@ -441,6 +442,41 @@ public:
         using nkind = divide_kinds<magkind, typename magnitude_t::magkind>;
         return magnitude<nkind, internal_data_type> { get_measurement()
                                                       / mag.get_measurement() };
+    }
+
+    template <magnitude_cpt magnitude_t>
+    [[nodiscard]]
+    constexpr auto
+    operator== (magnitude_t const &mag) const noexcept -> bool
+    {
+        return _measurement == mag._measurement;
+    }
+
+    template <magnitude_cpt magnitude_t>
+    [[nodiscard]]
+    constexpr auto
+    operator!= (magnitude_t const &mag) const noexcept -> bool
+    {
+        return !operator== (mag);
+    }
+
+    template <magnitude_cpt magnitude_t>
+    [[nodiscard]]
+    constexpr auto
+    operator<=> (magnitude_t const &mag) const noexcept
+        -> std::conditional_t<
+            std::is_integral_v<idt>,
+            std::strong_ordering,
+            std::partial_ordering>
+    {
+        using type = std::conditional_t<
+            std::is_integral_v<idt>,
+            std::strong_ordering,
+            std::partial_ordering>;
+
+        return (_measurement == mag._measurement) ? type::equivalent
+             : (_measurement > mag._measurement)  ? type::greater
+                                                  : type::less;
     }
 
 private:
