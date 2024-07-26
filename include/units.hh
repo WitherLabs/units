@@ -226,7 +226,7 @@ template <kind_cpt kind_a, kind_cpt kind_b> struct conversion
         constexpr internal_data_type delta_v
             = util::ratio_to_real<delta_cvr, internal_data_type>();
 
-        return ratio_v * ((measurement * prefix_v) + delta_v);
+        return prefix_v * ratio_v * (measurement + delta_v);
     }
 };
 
@@ -290,7 +290,7 @@ using derive_kind_delta = kind<
 template <kind_cpt kind_t>
 using kind_reciprocal = kind<
     reciprocal_dimension<typename kind_t::dimension>,
-    typename kind_t::prefix,
+    util::ratio_reciprocal<typename kind_t::prefix>,
     util::ratio_reciprocal<typename kind_t::ratio>,
     util::ratio_reciprocal<typename kind_t::delta>>;
 
@@ -331,6 +331,10 @@ public:
     }
 
     template <kind_cpt new_kind_t>
+    requires equal_dimensions<
+                 typename new_kind_t::dimension,
+                 typename magkind::dimension>
+
     [[nodiscard]]
     constexpr auto
     convert_to() const noexcept -> magnitude<new_kind_t, internal_data_type>
@@ -348,6 +352,9 @@ public:
     }
 
     template <magnitude_cpt magnitude_t>
+    requires equal_dimensions<
+        typename magnitude_t::magkind::dimension,
+        typename magkind::dimension>
     [[nodiscard]]
     constexpr // NOLINTNEXTLINE: No explicit pls
     operator magnitude_t () const noexcept
@@ -371,8 +378,8 @@ public:
 
     template <magnitude_cpt magnitude_t>
     requires equal_dimensions<
-                 typename magkind::dimension,
-                 typename magnitude_t::magkind::dimension>
+                 typename magnitude_t::magkind::dimension,
+                 typename magkind::dimension>
     [[nodiscard]]
     constexpr auto
     operator+ (magnitude_t const mag) const noexcept -> magnitude
@@ -383,8 +390,8 @@ public:
 
     template <magnitude_cpt magnitude_t>
     requires equal_dimensions<
-                 typename magkind::dimension,
-                 typename magnitude_t::magkind::dimension>
+                 typename magnitude_t::magkind::dimension,
+                 typename magkind::dimension>
     [[nodiscard]]
     constexpr auto
     operator- (magnitude_t const mag) const noexcept -> magnitude
