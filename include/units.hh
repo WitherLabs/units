@@ -2,6 +2,7 @@
 
 #include <type_traits>
 
+#include <concepts>
 #include <cstdint>
 #include <ratio>
 
@@ -400,9 +401,10 @@ public:
         return magnitude { _measurement - converted._measurement };
     }
 
+    template <std::floating_point fp>
     [[nodiscard]]
     constexpr auto
-    operator* (internal_data_type value) -> magnitude
+    operator* (fp value) -> magnitude
     {
         return magnitude { _measurement * value };
     }
@@ -420,9 +422,10 @@ public:
                                                       * mag.get_measurement() };
     }
 
+    template <std::floating_point fp>
     [[nodiscard]]
     constexpr auto
-    operator/ (internal_data_type value) -> magnitude
+    operator/ (fp value) -> magnitude
     {
         return magnitude { _measurement / value };
     }
@@ -443,6 +446,20 @@ public:
 private:
     internal_data_type _measurement;
 };
+
+template <std::floating_point fp, magnitude_cpt mag_t>
+static constexpr auto
+operator* (fp lhs, mag_t rhs) -> mag_t
+{
+    return rhs * lhs;
+}
+
+template <std::floating_point fp, magnitude_cpt mag_t>
+static constexpr auto
+operator/ (fp lhs, mag_t rhs) -> mag_t
+{
+    return rhs / lhs;
+}
 
 template <typename internal_data_type, magnitude_cpt magnitude_t>
 [[nodiscard]]
