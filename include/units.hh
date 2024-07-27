@@ -3,14 +3,9 @@
 #include <type_traits>
 
 #include <cmath>
-#include <compare>
-#include <cstdint>
 #include <ratio>
 
-namespace units
-{
-
-namespace util
+namespace units::impl::util
 {
 
 template <typename> struct is_ratio: std::false_type
@@ -42,38 +37,24 @@ using ratio_reciprocal = std::conditional_t<
     std::ratio<0>,
     std::ratio<ratio_t::den, ratio_t::num>>;
 
-template <std::intmax_t iv, ratio_cpt ratio_t>
-using mixed_ratio = std::ratio_add<std::ratio<iv>, ratio_t>;
+} // namespace units::impl::util
 
-} // namespace util
-
-namespace impl
+namespace units::impl
 {
+
+// clang-format off
 
 namespace tag
 {
-struct dimension
-{
-};
-
-struct kind
-{
-};
-
-struct magnitude
-{
-};
-
+struct dimension {};
+struct kind {};
+struct magnitude {};
 } // namespace tag
 
-template <typename type>
-using is_dimension = std::is_base_of<tag::dimension, type>;
+// clang-format on
 
 template <typename type>
-constexpr bool is_dimension_v = is_dimension<type>::value;
-
-template <typename type>
-concept dimension_cpt = is_dimension_v<type>;
+concept dimension_cpt = std::is_base_of_v<tag::dimension, type>;
 
 template <
     util::ratio_cpt _mass,
@@ -131,7 +112,6 @@ using multiply_dimension = dimension<
 template <dimension_cpt dim_a, dimension_cpt dim_b>
 using subtract_dimensions = add_dimensions<dim_a, multiply_dimension<dim_b, std::ratio<-1>>>;
 
-
 template <dimension_cpt dim, util::ratio_cpt factor>
 using divide_dimension = multiply_dimension<dim, util::ratio_reciprocal<factor>>;
 
@@ -185,12 +165,8 @@ using none = std::ratio<0, 1>;
 
 } // namespace delta
 
-template <typename type> using is_kind = std::is_base_of<tag::kind, type>;
-
-template <typename type> constexpr bool is_kind_v = is_kind<type>::value;
-
 template <typename type>
-concept kind_cpt = is_kind_v<type>;
+concept kind_cpt = std::is_base_of_v<tag::kind, type>;
 
 template <
     dimension_cpt   dimension_t,
@@ -203,34 +179,6 @@ struct kind: tag::kind
     using prefix    = prefix_t;
     using ratio     = ratio_t;
     using delta     = delta_t;
-};
-
-template <kind_cpt kind_a, kind_cpt kind_b> struct conversion
-{
-    using prefix_cvr
-        = prefix::convert<typename kind_a::prefix, typename kind_b::prefix>;
-
-    using ratio_cvr
-        = ratio::convert<typename kind_a::ratio, typename kind_b::ratio>;
-
-    using delta_cvr
-        = delta::convert<typename kind_a::delta, typename kind_b::delta>;
-
-    template <typename internal_data_type>
-    requires std::is_arithmetic_v<internal_data_type>
-    [[nodiscard]]
-    static constexpr auto
-    apply_to(internal_data_type measurement) -> internal_data_type
-    {
-        constexpr internal_data_type prefix_v
-            = util::ratio_to_real<prefix_cvr, internal_data_type>();
-        constexpr internal_data_type ratio_v
-            = util::ratio_to_real<ratio_cvr, internal_data_type>();
-        constexpr internal_data_type delta_v
-            = util::ratio_to_real<delta_cvr, internal_data_type>();
-
-        return prefix_v * ratio_v * (measurement + delta_v);
-    }
 };
 
 template <dimension_cpt dimension_t>
@@ -312,24 +260,50 @@ template <kind_cpt kind_t> using square_kind = multiply_kinds<kind_t, kind_t>;
 template <kind_cpt kind_t>
 using cubic_kind = multiply_kinds<square_kind<kind_t>, kind_t>;
 
-template <typename type>
-using is_magnitude = std::is_base_of<tag::magnitude, type>;
+template <kind_cpt kind_a, kind_cpt kind_b> struct conversion
+{
+    using prefix_cvr
+        = prefix::convert<typename kind_a::prefix, typename kind_b::prefix>;
+
+    using ratio_cvr
+        = ratio::convert<typename kind_a::ratio, typename kind_b::ratio>;
+
+    using delta_cvr
+        = delta::convert<typename kind_a::delta, typename kind_b::delta>;
+
+    template <typename internal_data_type>
+    requires std::is_arithmetic_v<internal_data_type>
+    [[nodiscard]]
+    static constexpr auto
+    apply_to(internal_data_type measurement) -> internal_data_type
+    {
+        constexpr internal_data_type prefix_v
+            = util::ratio_to_real<prefix_cvr, internal_data_type>();
+        constexpr internal_data_type ratio_v
+            = util::ratio_to_real<ratio_cvr, internal_data_type>();
+        constexpr internal_data_type delta_v
+            = util::ratio_to_real<delta_cvr, internal_data_type>();
+
+        return prefix_v * ratio_v * (measurement + delta_v);
+    }
+};
 
 template <typename type>
-constexpr bool is_magnitude_v = is_magnitude<type>::value;
+concept magnitude_cpt = std::is_base_of_v<tag::magnitude, type>;
 
-template <typename type>
-concept magnitude_cpt = is_magnitude_v<type>;
+template <magnitude_cpt mag_a, magnitude_cpt mag_b>
+constexpr bool equal_idt
+    = std::is_same_v<typename mag_a::idt, typename mag_b::idt>;
 
-template <kind_cpt kind_t, typename internal_data_type>
-requires std::is_arithmetic_v<internal_data_type>
+template <kind_cpt kind_t, typename idt_t>
+requires std::is_arithmetic_v<idt_t>
 struct magnitude: tag::magnitude
 {
 public:
     using magkind = kind_t;
-    using idt     = internal_data_type;
+    using idt     = idt_t;
 
-    explicit constexpr magnitude(internal_data_type measurement)
+    explicit constexpr magnitude(idt_t measurement)
     : _measurement { measurement }
     {
     }
@@ -341,34 +315,49 @@ public:
     {
     }
 
-    template <kind_cpt new_kind_t, typename new_idt_t = internal_data_type>
-    requires std::is_arithmetic_v<new_idt_t>
+    template <kind_cpt new_kind_t>
+    requires equal_dimensions<
+                 typename new_kind_t::dimension,
+                 typename magkind::dimension>
+
+    [[nodiscard]]
+    constexpr auto
+    convert_to() const noexcept -> magnitude<new_kind_t, idt>
+    {
+        return magnitude<new_kind_t, idt> {
+            conversion<magkind, new_kind_t>::apply_to(_measurement)
+        };
+    }
+
+    template <magnitude_cpt mag_t>
+    requires equal_idt<magnitude, mag_t>
               && equal_dimensions<
-                  typename new_kind_t::dimension,
+                  typename mag_t::dimension,
                   typename magkind::dimension>
 
     [[nodiscard]]
     constexpr auto
-    convert_to() const noexcept -> magnitude<new_kind_t, new_idt_t>
+    convert_to() const noexcept -> magnitude<typename mag_t::magkind, idt>
     {
-        return magnitude<new_kind_t, new_idt_t> {
-            conversion<kind_t, new_kind_t>::apply_to(
-                static_cast<new_idt_t>(_measurement)
+        return magnitude<typename mag_t::magkind, idt> {
+            conversion<magkind, typename mag_t::magkind>::apply_to(
+                static_cast<idt>(_measurement)
             )
         };
     }
 
     [[nodiscard]]
     constexpr auto
-    get_measurement() const noexcept -> internal_data_type
+    get_measurement() const noexcept -> idt_t
     {
         return _measurement;
     }
 
     template <magnitude_cpt mag_t>
-    requires equal_dimensions<
-        typename magkind::dimension,
-        typename mag_t::magkind::dimension>
+    requires equal_idt<magnitude, mag_t>
+          && equal_dimensions<
+                 typename magkind::dimension,
+                 typename mag_t::magkind::dimension>
     [[nodiscard]]
     constexpr // NOLINTNEXTLINE: No explicit pls
     operator mag_t () const noexcept
@@ -393,9 +382,10 @@ public:
     }
 
     template <magnitude_cpt mag_t>
-    requires equal_dimensions<
-                 typename mag_t::magkind::dimension,
-                 typename magkind::dimension>
+    requires equal_idt<magnitude, mag_t>
+              && equal_dimensions<
+                  typename magkind::dimension,
+                  typename mag_t::magkind::dimension>
     [[nodiscard]]
     constexpr auto
     operator+ (mag_t const mag) const noexcept -> magnitude
@@ -405,9 +395,10 @@ public:
     }
 
     template <magnitude_cpt mag_t>
-    requires equal_dimensions<
-                 typename mag_t::magkind::dimension,
-                 typename magkind::dimension>
+    requires equal_idt<magnitude, mag_t>
+              && equal_dimensions<
+                  typename magkind::dimension,
+                  typename mag_t::magkind::dimension>
     constexpr auto
     operator+= (mag_t const mag) noexcept -> void
     {
@@ -423,9 +414,10 @@ public:
     }
 
     template <magnitude_cpt mag_t>
-    requires equal_dimensions<
-                 typename mag_t::magkind::dimension,
-                 typename magkind::dimension>
+    requires equal_idt<magnitude, mag_t>
+              && equal_dimensions<
+                  typename magkind::dimension,
+                  typename mag_t::magkind::dimension>
     [[nodiscard]]
     constexpr auto
     operator- (mag_t const mag) const noexcept -> magnitude
@@ -435,9 +427,10 @@ public:
     }
 
     template <magnitude_cpt mag_t>
-    requires equal_dimensions<
-                 typename mag_t::magkind::dimension,
-                 typename magkind::dimension>
+    requires equal_idt<magnitude, mag_t>
+              && equal_dimensions<
+                  typename magkind::dimension,
+                  typename mag_t::magkind::dimension>
     constexpr auto
     operator-= (mag_t const mag) noexcept -> void
     {
@@ -455,6 +448,7 @@ public:
     }
 
     template <magnitude_cpt mag_t>
+    requires equal_idt<magnitude, mag_t>
     [[nodiscard]]
     constexpr auto
     operator* (mag_t const mag) const noexcept
@@ -475,6 +469,7 @@ public:
     }
 
     template <magnitude_cpt mag_t>
+    requires equal_idt<magnitude, mag_t>
     [[nodiscard]]
     constexpr auto
     operator/ (mag_t const mag) const noexcept
@@ -486,6 +481,7 @@ public:
     }
 
     template <magnitude_cpt mag_t>
+    requires equal_idt<magnitude, mag_t>
     [[nodiscard]]
     constexpr auto
     operator% (mag_t const mag) const noexcept
@@ -498,6 +494,7 @@ public:
     }
 
     template <magnitude_cpt mag_t>
+    requires equal_idt<magnitude, mag_t>
     [[nodiscard]]
     constexpr auto
     operator== (mag_t const &mag) const noexcept -> bool
@@ -510,6 +507,7 @@ public:
     }
 
     template <magnitude_cpt mag_t>
+    requires equal_idt<magnitude, mag_t>
     [[nodiscard]]
     constexpr auto
     operator<=> (mag_t const &mag) const noexcept
@@ -525,47 +523,33 @@ public:
 
         typename mag_t::idt const omsm = magnitude { mag }._measurement;
 
-        using ntype = std::common_type_t<idt, typename mag_t::idt>;
-
-        auto const amsm = static_cast<ntype>(_measurement);
-        auto const bmsm = static_cast<ntype>(omsm);
-
-        return (amsm == bmsm) ? type::equivalent
-             : (amsm > bmsm)  ? type::greater
-                              : type::less;
+        return (_measurement == omsm) ? type::equivalent
+             : (_measurement > omsm)  ? type::greater
+                                      : type::less;
     }
 
 private:
-    internal_data_type _measurement;
+    idt_t _measurement;
 };
 
-template <std::floating_point fp, magnitude_cpt mag_t>
+template <typename type_t, magnitude_cpt mag_t>
+requires std::is_arithmetic_v<type_t>
 static constexpr auto
-operator* (fp lhs, mag_t rhs) -> mag_t
+operator* (type_t lhs, mag_t rhs) -> mag_t
 {
     return rhs * lhs;
 }
 
-template <std::floating_point fp, magnitude_cpt mag_t>
+template <typename type_t, magnitude_cpt mag_t>
+requires std::is_arithmetic_v<type_t>
 static constexpr auto
-operator/ (fp lhs, mag_t rhs) -> mag_t
+operator/ (type_t lhs, mag_t rhs) -> mag_t
 {
     return rhs / lhs;
 }
 
-template <typename internal_data_type, magnitude_cpt magnitude_t>
-[[nodiscard]]
-constexpr auto
-swap_internal_data_type(magnitude_t mag
-) noexcept -> magnitude<typename magnitude_t::kind, internal_data_type>
-{
-    return magnitude<typename magnitude_t::kind, internal_data_type> {
-        static_cast<internal_data_type>(mag.get_measurement())
-    };
-}
-
-template <dimension_cpt dimension_t, typename internal_data_type>
-using basic = magnitude<basic_kind<dimension_t>, internal_data_type>;
+template <impl::dimension_cpt dimension_t, typename idt_t>
+using basic = magnitude<basic_kind<dimension_t>, idt_t>;
 
 template <magnitude_cpt mag_t>
 using clone
@@ -618,82 +602,9 @@ using multiply = magnitude<
 template <magnitude_cpt mag_a, magnitude_cpt mag_b>
 using divide = multiply<mag_a, reciprocal<mag_b>>;
 
-template <magnitude_cpt mag_a, magnitude_cpt... excess> struct multiply_all_1
-{
-    using value = mag_a;
-};
-
-template <magnitude_cpt mag_a, magnitude_cpt mag_b, magnitude_cpt... excess>
-struct multiply_all_2
-{
-    using value = multiply<mag_a, mag_b>;
-};
-
-template <magnitude_cpt... mag_v> struct multiply_all
-{
-    using value = std::conditional_t<
-        sizeof...(mag_v) == 0,
-        void,
-        std::conditional_t<
-            sizeof...(mag_v) == 1,
-            typename multiply_all_1<mag_v...>::value,
-            std::conditional_t<
-                sizeof...(mag_v) == 2,
-                typename multiply_all_2<mag_v...>::value,
-                multiply_all<mag_v...>>>>;
-};
-
 template <magnitude_cpt mag_t> using square = multiply<mag_t, mag_t>;
 
 template <magnitude_cpt mag_t> using cubic = multiply<square<mag_t>, mag_t>;
 
-} // namespace impl
-
-template <impl::magnitude_cpt mag_t>
-using atto = impl::swap_prefix<std::atto, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using femto = impl::swap_prefix<std::femto, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using pico = impl::swap_prefix<std::pico, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using nano = impl::swap_prefix<std::nano, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using micro = impl::swap_prefix<std::micro, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using milli = impl::swap_prefix<std::milli, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using centi = impl::swap_prefix<std::centi, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using deci = impl::swap_prefix<std::deci, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using deca = impl::swap_prefix<std::deca, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using hecto = impl::swap_prefix<std::hecto, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using kilo = impl::swap_prefix<std::kilo, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using mega = impl::swap_prefix<std::mega, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using giga = impl::swap_prefix<std::giga, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using tera = impl::swap_prefix<std::tera, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using peta = impl::swap_prefix<std::peta, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using exa = impl::swap_prefix<std::exa, mag_t>;
-
-template <impl::magnitude_cpt mag_t>
-using kibi = impl::swap_prefix<std::ratio<1024>, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using mebi = impl::swap_prefix<std::ratio<1048576>, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using gibi = impl::swap_prefix<std::ratio<1073741824>, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using tebi = impl::swap_prefix<std::ratio<1099511627776>, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using pebi = impl::swap_prefix<std::ratio<1125899907000000>, mag_t>;
-template <impl::magnitude_cpt mag_t>
-using exbi = impl::swap_prefix<std::ratio<1152921505000000000>, mag_t>;
-
-} // namespace units
+} // namespace units::impl
 
