@@ -198,7 +198,7 @@ using swap_kind_dimension = kind<
     typename kind_t::ratio,
     typename kind_t::delta>;
 
-template <util::ratio_cpt prefix_t, kind_cpt kind_t>
+template <kind_cpt kind_t, util::ratio_cpt prefix_t>
 using swap_kind_prefix = kind<
     typename kind_t::dimension,
     prefix_t,
@@ -219,19 +219,19 @@ using swap_kind_delta = kind<
     typename kind_t::ratio,
     delta_t>;
 
-template <util::ratio_cpt ratio_t, kind_cpt kind_t>
+template <kind_cpt kind_t, util::ratio_cpt ratio_t>
 using derive_kind_prefix = swap_kind_prefix<
     std::ratio_multiply<typename kind_t::prefix, ratio_t>,
     kind_t>;
 
-template <util::ratio_cpt ratio_t, kind_cpt kind_t>
+template <kind_cpt kind_t, util::ratio_cpt ratio_t>
 using derive_kind_ratio = kind<
     typename kind_t::dimension,
     typename kind_t::prefix,
     ratio::derive<typename kind_t::ratio, ratio_t>,
     typename kind_t::delta>;
 
-template <util::ratio_cpt delta_t, kind_cpt kind_t>
+template <kind_cpt kind_t, util::ratio_cpt delta_t>
 using derive_kind_delta = kind<
     typename kind_t::dimension,
     typename kind_t::prefix,
@@ -271,18 +271,15 @@ template <kind_cpt kind_a, kind_cpt kind_b> struct conversion
     using delta_cvr
         = delta::convert<typename kind_a::delta, typename kind_b::delta>;
 
-    template <typename internal_data_type>
-    requires std::is_arithmetic_v<internal_data_type>
+    template <typename idt_t>
+    requires std::is_arithmetic_v<idt_t>
     [[nodiscard]]
     static constexpr auto
-    apply_to(internal_data_type measurement) -> internal_data_type
+    apply_to(idt_t measurement) -> idt_t
     {
-        constexpr internal_data_type prefix_v
-            = util::ratio_to_real<prefix_cvr, internal_data_type>();
-        constexpr internal_data_type ratio_v
-            = util::ratio_to_real<ratio_cvr, internal_data_type>();
-        constexpr internal_data_type delta_v
-            = util::ratio_to_real<delta_cvr, internal_data_type>();
+        constexpr idt_t prefix_v = util::ratio_to_real<prefix_cvr, idt_t>();
+        constexpr idt_t ratio_v  = util::ratio_to_real<ratio_cvr, idt_t>();
+        constexpr idt_t delta_v  = util::ratio_to_real<delta_cvr, idt_t>();
 
         return prefix_v * ratio_v * (measurement + delta_v);
     }
@@ -560,7 +557,7 @@ using swap_dimension = magnitude<
     swap_kind_dimension<typename mag_t::magkind, dimension_t>,
     typename mag_t::idt>;
 
-template <util::ratio_cpt prefix_t, magnitude_cpt mag_t>
+template <magnitude_cpt mag_t, util::ratio_cpt prefix_t>
 using swap_prefix = magnitude<
     swap_kind_prefix<prefix_t, typename mag_t::magkind>,
     typename mag_t::idt>;
@@ -575,17 +572,17 @@ using swap_delta = magnitude<
     swap_kind_delta<typename mag_t::magkind, delta_t>,
     typename mag_t::idt>;
 
-template <util::ratio_cpt ratio_t, magnitude_cpt mag_t>
+template <magnitude_cpt mag_t, util::ratio_cpt ratio_t>
 using derive_prefix = magnitude<
     derive_kind_prefix<ratio_t, typename mag_t::magkind>,
     typename mag_t::idt>;
 
-template <util::ratio_cpt ratio_t, magnitude_cpt mag_t>
+template <magnitude_cpt mag_t, util::ratio_cpt ratio_t>
 using derive_ratio = magnitude<
     derive_kind_ratio<ratio_t, typename mag_t::magkind>,
     typename mag_t::idt>;
 
-template <util::ratio_cpt ratio_t, magnitude_cpt mag_t>
+template <magnitude_cpt mag_t, util::ratio_cpt ratio_t>
 using derive_delta = magnitude<
     derive_kind_delta<ratio_t, typename mag_t::magkind>,
     typename mag_t::idt>;
