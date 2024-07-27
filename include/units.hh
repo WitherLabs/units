@@ -559,7 +559,7 @@ using swap_dimension = magnitude<
 
 template <magnitude_cpt mag_t, util::ratio_cpt prefix_t>
 using swap_prefix = magnitude<
-    swap_kind_prefix<prefix_t, typename mag_t::magkind>,
+    swap_kind_prefix<typename mag_t::magkind, prefix_t>,
     typename mag_t::idt>;
 
 template <magnitude_cpt mag_t, util::ratio_cpt ratio_t>
@@ -574,17 +574,17 @@ using swap_delta = magnitude<
 
 template <magnitude_cpt mag_t, util::ratio_cpt ratio_t>
 using derive_prefix = magnitude<
-    derive_kind_prefix<ratio_t, typename mag_t::magkind>,
+    derive_kind_prefix<typename mag_t::magkind, ratio_t>,
     typename mag_t::idt>;
 
 template <magnitude_cpt mag_t, util::ratio_cpt ratio_t>
 using derive_ratio = magnitude<
-    derive_kind_ratio<ratio_t, typename mag_t::magkind>,
+    derive_kind_ratio<typename mag_t::magkind, ratio_t>,
     typename mag_t::idt>;
 
 template <magnitude_cpt mag_t, util::ratio_cpt ratio_t>
 using derive_delta = magnitude<
-    derive_kind_delta<ratio_t, typename mag_t::magkind>,
+    derive_kind_delta<typename mag_t::magkind, ratio_t>,
     typename mag_t::idt>;
 
 template <magnitude_cpt mag_t>
